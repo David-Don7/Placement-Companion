@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — Placement Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- ===== Sidebar ===== -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">🎓</span>
+        <span>Placement&nbsp;Companion</span>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-house"></i></span> Dashboard</a>
+        <a href="aptitude.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-brain"></i></span> Aptitude</a>
+        <a href="dsa.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-code"></i></span> DSA Practice</a>
+        <a href="hr.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-comments"></i></span> HR Interview</a>
+        <a href="companies.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-building"></i></span> Companies</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="profile.html" class="nav-link active"><span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile</a>
+        <a href="login.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout</a>
+      </div>
+      <div class="sidebar-footer">
+        <div class="sidebar-user" onclick="window.location.href='profile.html'">
+          <div class="user-avatar">JD</div>
+          <div class="user-info"><div class="user-name">John Doe</div><div class="user-email">john@example.com</div></div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- ===== Main ===== -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+          <div>
+            <h1>Profile</h1>
+            <span class="breadcrumb">Dashboard / Profile</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="notification-btn"><i class="fa-solid fa-bell"></i><span class="badge">3</span></button>
+        </div>
+      </header>
+
+      <div class="page-content">
+
+        <!-- Profile Header Card -->
+        <div class="profile-header-card animate-fade-up">
+          <div class="profile-avatar">JD</div>
+          <h2>John Doe</h2>
+          <p class="profile-email">john.doe@example.com</p>
+          <p class="profile-joined">Joined February 2026</p>
+
+          <div class="profile-stats">
+            <div class="profile-stat">
+              <div class="stat-value">24</div>
+              <div class="stat-label">Quizzes</div>
+            </div>
+            <div class="profile-stat">
+              <div class="stat-value">47</div>
+              <div class="stat-label">DSA Solved</div>
+            </div>
+            <div class="profile-stat">
+              <div class="stat-value">15</div>
+              <div class="stat-label">HR Practiced</div>
+            </div>
+            <div class="profile-stat">
+              <div class="stat-value">5🔥</div>
+              <div class="stat-label">Day Streak</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Information -->
+        <div class="profile-section animate-fade-up delay-1">
+          <h3><i class="fa-solid fa-user-pen" style="margin-right:8px; color:var(--primary);"></i> Personal Information</h3>
+          <form onsubmit="return saveProfile(event)">
+            <div class="profile-form-group">
+              <div class="form-group">
+                <label for="profileName">Full Name</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-user input-icon"></i>
+                  <input type="text" id="profileName" value="John Doe" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="profileEmail">Email Address</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-envelope input-icon"></i>
+                  <input type="email" id="profileEmail" value="john.doe@example.com" />
+                </div>
+              </div>
+            </div>
+            <div class="profile-form-group">
+              <div class="form-group">
+                <label for="profileCollege">College / University</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-school input-icon"></i>
+                  <input type="text" id="profileCollege" value="XYZ Institute of Technology" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="profileBranch">Branch</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-code-branch input-icon"></i>
+                  <input type="text" id="profileBranch" value="Computer Science & Engineering" />
+                </div>
+              </div>
+            </div>
+            <div class="profile-form-group">
+              <div class="form-group">
+                <label for="profileYear">Current Year</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-calendar input-icon"></i>
+                  <input type="text" id="profileYear" value="Final Year (4th)" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="profileCGPA">CGPA</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-chart-simple input-icon"></i>
+                  <input type="text" id="profileCGPA" value="8.2" />
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fa-solid fa-floppy-disk"></i> Save Changes
+            </button>
+          </form>
+        </div>
+
+        <!-- Change Password -->
+        <div class="profile-section animate-fade-up delay-2">
+          <h3><i class="fa-solid fa-shield-halved" style="margin-right:8px; color:var(--primary);"></i> Change Password</h3>
+          <form onsubmit="return changePassword(event)">
+            <div class="profile-form-group">
+              <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-lock input-icon"></i>
+                  <input type="password" id="currentPassword" placeholder="Enter current password" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-key input-icon"></i>
+                  <input type="password" id="newPassword" placeholder="Enter new password" minlength="8" />
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-outline">
+              <i class="fa-solid fa-arrows-rotate"></i> Update Password
+            </button>
+          </form>
+        </div>
+
+        <!-- Preparation Overview -->
+        <div class="profile-section animate-fade-up delay-3">
+          <h3><i class="fa-solid fa-chart-pie" style="margin-right:8px; color:var(--primary);"></i> Preparation Overview</h3>
+
+          <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:24px;">
+            <!-- Aptitude -->
+            <div>
+              <h4 style="font-size:0.9rem; margin-bottom:16px; color:var(--text-light);">Aptitude Scores by Topic</h4>
+              <div class="progress-bar-container">
+                <div class="progress-label"><span>Quantitative</span><span>82%</span></div>
+                <div class="progress-bar"><div class="progress-fill purple" style="width:82%"></div></div>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-label"><span>Logical Reasoning</span><span>65%</span></div>
+                <div class="progress-bar"><div class="progress-fill blue" style="width:65%"></div></div>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-label"><span>Verbal Ability</span><span>70%</span></div>
+                <div class="progress-bar"><div class="progress-fill green" style="width:70%"></div></div>
+              </div>
+            </div>
+
+            <!-- DSA -->
+            <div>
+              <h4 style="font-size:0.9rem; margin-bottom:16px; color:var(--text-light);">DSA Progress by Category</h4>
+              <div class="progress-bar-container">
+                <div class="progress-label"><span>Arrays</span><span>75%</span></div>
+                <div class="progress-bar"><div class="progress-fill purple" style="width:75%"></div></div>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-label"><span>Strings</span><span>60%</span></div>
+                <div class="progress-bar"><div class="progress-fill blue" style="width:60%"></div></div>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-label"><span>Trees & Graphs</span><span>35%</span></div>
+                <div class="progress-bar"><div class="progress-fill red" style="width:35%"></div></div>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-label"><span>Dynamic Programming</span><span>10%</span></div>
+                <div class="progress-bar"><div class="progress-fill orange" style="width:10%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="profile-section animate-fade-up delay-4" style="border-color:rgba(239,68,68,0.3);">
+          <h3 style="color:var(--danger);"><i class="fa-solid fa-triangle-exclamation" style="margin-right:8px;"></i> Danger Zone</h3>
+          <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:16px; line-height:1.6;">
+            Deleting your account will permanently remove all your data including quiz history, DSA progress, HR responses, and application statuses. This action cannot be undone.
+          </p>
+          <button class="btn btn-danger" onclick="confirmDelete()">
+            <i class="fa-solid fa-trash"></i> Delete Account
+          </button>
+        </div>
+
+      </div><!-- /page-content -->
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    function saveProfile(e) {
+      e.preventDefault();
+      alert('Profile saved successfully! (Backend not connected yet)');
+      return false;
+    }
+
+    function changePassword(e) {
+      e.preventDefault();
+      alert('Password updated! (Backend not connected yet)');
+      return false;
+    }
+
+    function confirmDelete() {
+      if (confirm('Are you sure you want to delete your account? This action is irreversible.')) {
+        alert('Account deleted. (Backend not connected yet)');
+        window.location.href = 'login.html';
+      }
+    }
+  </script>
+</body>
+</html>

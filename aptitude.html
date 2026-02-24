@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aptitude — Placement Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- ===== Sidebar ===== -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">🎓</span>
+        <span>Placement&nbsp;Companion</span>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-house"></i></span> Dashboard
+        </a>
+        <a href="aptitude.html" class="nav-link active">
+          <span class="nav-icon"><i class="fa-solid fa-brain"></i></span> Aptitude
+        </a>
+        <a href="dsa.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-code"></i></span> DSA Practice
+        </a>
+        <a href="hr.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-comments"></i></span> HR Interview
+        </a>
+        <a href="companies.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-building"></i></span> Companies
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="profile.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile
+        </a>
+        <a href="login.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout
+        </a>
+      </div>
+      <div class="sidebar-footer">
+        <div class="sidebar-user" onclick="window.location.href='profile.html'">
+          <div class="user-avatar">JD</div>
+          <div class="user-info">
+            <div class="user-name">John Doe</div>
+            <div class="user-email">john@example.com</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- ===== Main Content ===== -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+          <div>
+            <h1>Aptitude Practice</h1>
+            <span class="breadcrumb">Dashboard / Aptitude</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-search">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" placeholder="Search topics..." />
+          </div>
+          <button class="notification-btn"><i class="fa-solid fa-bell"></i><span class="badge">3</span></button>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <!-- Page Header -->
+        <div class="page-header animate-fade-up">
+          <h2>Choose a Topic</h2>
+          <p>Select a category below to start a timed quiz. Each quiz has 10–20 multiple-choice questions.</p>
+        </div>
+
+        <!-- Topic Selection (default view) -->
+        <div id="topicView">
+          <div class="topic-grid animate-fade-up delay-1">
+            <!-- Quantitative -->
+            <div class="topic-card" onclick="startQuiz('quantitative')">
+              <div class="topic-icon" style="background:rgba(79,70,229,0.1); color:var(--primary);">🔢</div>
+              <h3>Quantitative Aptitude</h3>
+              <p>Number systems, percentages, profit/loss, time & work, probability</p>
+              <div class="topic-stats">32 questions · Avg score: 82%</div>
+            </div>
+            <!-- Logical -->
+            <div class="topic-card" onclick="startQuiz('logical')">
+              <div class="topic-icon" style="background:rgba(14,165,233,0.1); color:var(--secondary);">🧩</div>
+              <h3>Logical Reasoning</h3>
+              <p>Puzzles, coding-decoding, blood relations, seating arrangements</p>
+              <div class="topic-stats">28 questions · Avg score: 65%</div>
+            </div>
+            <!-- Verbal -->
+            <div class="topic-card" onclick="startQuiz('verbal')">
+              <div class="topic-icon" style="background:rgba(16,185,129,0.1); color:var(--success);">📝</div>
+              <h3>Verbal Ability</h3>
+              <p>Reading comprehension, synonyms, antonyms, sentence correction</p>
+              <div class="topic-stats">25 questions · Avg score: 70%</div>
+            </div>
+          </div>
+
+          <!-- Quiz History -->
+          <div class="card-flat animate-fade-up delay-2" style="margin-top:8px;">
+            <div class="section-header">
+              <h3>📜 Quiz History</h3>
+              <a href="#">View all →</a>
+            </div>
+            <div class="dsa-table-container" style="border:none;">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>Topic</th>
+                    <th>Score</th>
+                    <th>Questions</th>
+                    <th>Date</th>
+                    <th>Time Taken</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="topic-tag" style="background:rgba(79,70,229,0.1); color:var(--primary);">Quantitative</span></td>
+                    <td><span class="score-circle score-high">85%</span></td>
+                    <td>15/20</td>
+                    <td>Feb 23, 2026</td>
+                    <td>18 min</td>
+                  </tr>
+                  <tr>
+                    <td><span class="topic-tag" style="background:rgba(14,165,233,0.1); color:var(--secondary);">Logical</span></td>
+                    <td><span class="score-circle score-mid">60%</span></td>
+                    <td>9/15</td>
+                    <td>Feb 22, 2026</td>
+                    <td>14 min</td>
+                  </tr>
+                  <tr>
+                    <td><span class="topic-tag" style="background:rgba(16,185,129,0.1); color:var(--success);">Verbal</span></td>
+                    <td><span class="score-circle score-high">90%</span></td>
+                    <td>9/10</td>
+                    <td>Feb 21, 2026</td>
+                    <td>8 min</td>
+                  </tr>
+                  <tr>
+                    <td><span class="topic-tag" style="background:rgba(79,70,229,0.1); color:var(--primary);">Quantitative</span></td>
+                    <td><span class="score-circle score-low">45%</span></td>
+                    <td>9/20</td>
+                    <td>Feb 20, 2026</td>
+                    <td>22 min</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz View (hidden by default) -->
+        <div id="quizView" style="display:none;">
+          <div class="quiz-container">
+            <!-- Quiz Header -->
+            <div class="quiz-header">
+              <div class="quiz-progress">
+                <span class="question-count" id="questionCounter">Question 1 / 10</span>
+                <div class="progress-bar" style="width:200px;">
+                  <div class="progress-fill purple" id="quizProgressBar" style="width:10%"></div>
+                </div>
+              </div>
+              <div class="quiz-timer" id="quizTimer">
+                <i class="fa-solid fa-clock"></i> <span id="timerDisplay">15:00</span>
+              </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="question-card" id="questionCard">
+              <span class="difficulty-badge difficulty-medium">Medium</span>
+              <div class="question-number" id="questionLabel">Question 1</div>
+              <div class="question-text" id="questionText">
+                A train running at a speed of 60 km/hr crosses a pole in 9 seconds. What is the length of the train?
+              </div>
+              <div class="options-list" id="optionsList">
+                <div class="option-item" onclick="selectOption(this)">
+                  <span class="option-letter">A</span>
+                  <span>120 meters</span>
+                </div>
+                <div class="option-item" onclick="selectOption(this)">
+                  <span class="option-letter">B</span>
+                  <span>150 meters</span>
+                </div>
+                <div class="option-item" onclick="selectOption(this)">
+                  <span class="option-letter">C</span>
+                  <span>324 meters</span>
+                </div>
+                <div class="option-item" onclick="selectOption(this)">
+                  <span class="option-letter">D</span>
+                  <span>100 meters</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quiz Actions -->
+            <div class="quiz-actions">
+              <button class="btn btn-outline" onclick="prevQuestion()">
+                <i class="fa-solid fa-arrow-left"></i> Previous
+              </button>
+              <button class="btn btn-primary" onclick="nextQuestion()">
+                Next <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result View (hidden by default) -->
+        <div id="resultView" style="display:none;">
+          <div class="result-card">
+            <div class="result-icon">🎉</div>
+            <h2>Quiz Completed!</h2>
+            <div class="score text-gradient">85%</div>
+            <p class="score-label">You scored 17 out of 20 questions correctly</p>
+
+            <div class="result-stats">
+              <div class="result-stat">
+                <div class="stat-value" style="color:var(--success);">17</div>
+                <div class="stat-label">Correct</div>
+              </div>
+              <div class="result-stat">
+                <div class="stat-value" style="color:var(--danger);">3</div>
+                <div class="stat-label">Wrong</div>
+              </div>
+              <div class="result-stat">
+                <div class="stat-value" style="color:var(--info);">12:30</div>
+                <div class="stat-label">Time Taken</div>
+              </div>
+            </div>
+
+            <!-- Weak Topics -->
+            <div style="text-align:left; margin-bottom:24px;">
+              <h4 style="font-size:0.9rem; margin-bottom:12px; color:var(--text);">⚠️ Weak Areas Detected</h4>
+              <div class="progress-bar-container">
+                <div class="progress-label"><span>Time & Work</span><span>40%</span></div>
+                <div class="progress-bar"><div class="progress-fill red" style="width:40%"></div></div>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-label"><span>Probability</span><span>50%</span></div>
+                <div class="progress-bar"><div class="progress-fill orange" style="width:50%"></div></div>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:12px; justify-content:center;">
+              <button class="btn btn-primary" onclick="showView('topicView')">
+                <i class="fa-solid fa-rotate-left"></i> Try Another Quiz
+              </button>
+              <button class="btn btn-outline" onclick="window.location.href='dashboard.html'">
+                <i class="fa-solid fa-house"></i> Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /page-content -->
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    /* ---- Aptitude Page Logic ---- */
+    let currentQuestion = 1;
+    const totalQuestions = 10;
+    let timerInterval;
+
+    function showView(viewId) {
+      document.getElementById('topicView').style.display = viewId === 'topicView' ? 'block' : 'none';
+      document.getElementById('quizView').style.display = viewId === 'quizView' ? 'block' : 'none';
+      document.getElementById('resultView').style.display = viewId === 'resultView' ? 'block' : 'none';
+    }
+
+    function startQuiz(topic) {
+      showView('quizView');
+      currentQuestion = 1;
+      updateQuizUI();
+      startTimer(15 * 60); // 15 minutes
+    }
+
+    function selectOption(el) {
+      document.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function nextQuestion() {
+      if (currentQuestion < totalQuestions) {
+        currentQuestion++;
+        updateQuizUI();
+        // Re-animate question card
+        const card = document.getElementById('questionCard');
+        card.style.animation = 'none';
+        card.offsetHeight; // trigger reflow
+        card.style.animation = 'fadeInUp 0.4s ease-out';
+      } else {
+        clearInterval(timerInterval);
+        showView('resultView');
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 1) {
+        currentQuestion--;
+        updateQuizUI();
+      }
+    }
+
+    function updateQuizUI() {
+      document.getElementById('questionCounter').textContent = `Question ${currentQuestion} / ${totalQuestions}`;
+      document.getElementById('questionLabel').textContent = `Question ${currentQuestion}`;
+      document.getElementById('quizProgressBar').style.width = `${(currentQuestion / totalQuestions) * 100}%`;
+      document.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
+    }
+
+    function startTimer(seconds) {
+      clearInterval(timerInterval);
+      let remaining = seconds;
+      const display = document.getElementById('timerDisplay');
+      const timerEl = document.getElementById('quizTimer');
+
+      function tick() {
+        const m = Math.floor(remaining / 60);
+        const s = remaining % 60;
+        display.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        if (remaining <= 60) timerEl.classList.add('warning');
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          showView('resultView');
+        }
+        remaining--;
+      }
+
+      tick();
+      timerInterval = setInterval(tick, 1000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Companies — Placement Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- ===== Sidebar ===== -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">🎓</span>
+        <span>Placement&nbsp;Companion</span>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-house"></i></span> Dashboard</a>
+        <a href="aptitude.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-brain"></i></span> Aptitude</a>
+        <a href="dsa.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-code"></i></span> DSA Practice</a>
+        <a href="hr.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-comments"></i></span> HR Interview</a>
+        <a href="companies.html" class="nav-link active"><span class="nav-icon"><i class="fa-solid fa-building"></i></span> Companies</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="profile.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile</a>
+        <a href="login.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout</a>
+      </div>
+      <div class="sidebar-footer">
+        <div class="sidebar-user" onclick="window.location.href='profile.html'">
+          <div class="user-avatar">JD</div>
+          <div class="user-info"><div class="user-name">John Doe</div><div class="user-email">john@example.com</div></div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- ===== Main ===== -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+          <div>
+            <h1>Recruitment Tracker</h1>
+            <span class="breadcrumb">Dashboard / Companies</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-search">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" placeholder="Search companies..." id="companySearch" oninput="searchCompanies()" />
+          </div>
+          <button class="notification-btn"><i class="fa-solid fa-bell"></i><span class="badge">3</span></button>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <div class="page-header animate-fade-up">
+          <h2>Company Profiles &amp; Application Status</h2>
+          <p>Track companies visiting your campus, manage application status, and review past interview questions.</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="dsa-filters animate-fade-up delay-1" style="margin-bottom:28px;">
+          <span class="filter-chip active" onclick="filterCompanyStatus(this, 'all')">All</span>
+          <span class="filter-chip" onclick="filterCompanyStatus(this, 'not-applied')">Not Applied</span>
+          <span class="filter-chip" onclick="filterCompanyStatus(this, 'applied')">Applied</span>
+          <span class="filter-chip" onclick="filterCompanyStatus(this, 'interviewed')">Interviewed</span>
+          <span class="filter-chip" onclick="filterCompanyStatus(this, 'selected')">Selected</span>
+          <span class="filter-chip" onclick="filterCompanyStatus(this, 'rejected')">Rejected</span>
+        </div>
+
+        <!-- Company Cards Grid -->
+        <div class="company-grid animate-fade-up delay-2" id="companyGrid">
+
+          <!-- Google -->
+          <div class="company-card" data-status="applied" data-name="google">
+            <div class="company-card-header">
+              <div class="company-logo" style="background:rgba(66,133,244,0.1); color:#4285F4;">G</div>
+              <div class="company-info">
+                <h3>Google</h3>
+                <p>Software Engineer Intern</p>
+              </div>
+            </div>
+            <div class="company-card-body">
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+                <span>Eligibility: 7.0+ CGPA, CSE/IT</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
+                <span>Rounds: Online Test → Technical (2) → HR</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+                <span>CTC: ₹35–45 LPA</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-calendar"></i></span>
+                <span>Visit Date: March 15, 2026</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-clipboard-question"></i></span>
+                <span>Past Questions: Two Sum, LRU Cache, System Design</span>
+              </div>
+            </div>
+            <div class="company-card-footer">
+              <span class="status-badge applied">Applied</span>
+              <select class="status-select" onchange="updateStatus(this)">
+                <option value="not-applied">Not Applied</option>
+                <option value="applied" selected>Applied</option>
+                <option value="interviewed">Interviewed</option>
+                <option value="selected">Selected</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Microsoft -->
+          <div class="company-card" data-status="not-applied" data-name="microsoft">
+            <div class="company-card-header">
+              <div class="company-logo" style="background:rgba(0,120,212,0.1); color:#0078D4;">M</div>
+              <div class="company-info">
+                <h3>Microsoft</h3>
+                <p>SDE Intern</p>
+              </div>
+            </div>
+            <div class="company-card-body">
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+                <span>Eligibility: 7.5+ CGPA, All branches</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
+                <span>Rounds: Coding Test → Group Fly → Technical → HR</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+                <span>CTC: ₹40–50 LPA</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-calendar"></i></span>
+                <span>Visit Date: March 22, 2026</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-clipboard-question"></i></span>
+                <span>Past Questions: BST operations, DP, OOPS concepts</span>
+              </div>
+            </div>
+            <div class="company-card-footer">
+              <span class="status-badge not-applied">Not Applied</span>
+              <select class="status-select" onchange="updateStatus(this)">
+                <option value="not-applied" selected>Not Applied</option>
+                <option value="applied">Applied</option>
+                <option value="interviewed">Interviewed</option>
+                <option value="selected">Selected</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Amazon -->
+          <div class="company-card" data-status="interviewed" data-name="amazon">
+            <div class="company-card-header">
+              <div class="company-logo" style="background:rgba(255,153,0,0.1); color:#FF9900;">A</div>
+              <div class="company-info">
+                <h3>Amazon</h3>
+                <p>SDE-1</p>
+              </div>
+            </div>
+            <div class="company-card-body">
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+                <span>Eligibility: 6.5+ CGPA, CSE/IT/ECE</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
+                <span>Rounds: Online Assessment → Technical (3) → Bar Raiser</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+                <span>CTC: ₹30–40 LPA</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-calendar"></i></span>
+                <span>Visit Date: April 02, 2026</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-clipboard-question"></i></span>
+                <span>Past Questions: Sliding Window, Graphs, Leadership Principles</span>
+              </div>
+            </div>
+            <div class="company-card-footer">
+              <span class="status-badge interviewed">Interviewed</span>
+              <select class="status-select" onchange="updateStatus(this)">
+                <option value="not-applied">Not Applied</option>
+                <option value="applied">Applied</option>
+                <option value="interviewed" selected>Interviewed</option>
+                <option value="selected">Selected</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Infosys -->
+          <div class="company-card" data-status="selected" data-name="infosys">
+            <div class="company-card-header">
+              <div class="company-logo" style="background:rgba(0,115,187,0.1); color:#0073BB;">I</div>
+              <div class="company-info">
+                <h3>Infosys</h3>
+                <p>Systems Engineer</p>
+              </div>
+            </div>
+            <div class="company-card-body">
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+                <span>Eligibility: 6.0+ CGPA, All branches</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
+                <span>Rounds: Online Test → Technical → HR</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+                <span>CTC: ₹6–9 LPA</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-calendar"></i></span>
+                <span>Visit Date: February 10, 2026</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-clipboard-question"></i></span>
+                <span>Past Questions: Pseudo Code, SQL, Puzzles</span>
+              </div>
+            </div>
+            <div class="company-card-footer">
+              <span class="status-badge selected">Selected</span>
+              <select class="status-select" onchange="updateStatus(this)">
+                <option value="not-applied">Not Applied</option>
+                <option value="applied">Applied</option>
+                <option value="interviewed">Interviewed</option>
+                <option value="selected" selected>Selected</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- TCS -->
+          <div class="company-card" data-status="rejected" data-name="tcs">
+            <div class="company-card-header">
+              <div class="company-logo" style="background:rgba(40,58,120,0.1); color:#283a78;">T</div>
+              <div class="company-info">
+                <h3>TCS</h3>
+                <p>Digital Cadre</p>
+              </div>
+            </div>
+            <div class="company-card-body">
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+                <span>Eligibility: 6.0+ CGPA, All branches</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
+                <span>Rounds: TCS NQT → Technical → Managerial → HR</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+                <span>CTC: ₹7–11 LPA</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-calendar"></i></span>
+                <span>Visit Date: January 20, 2026</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-clipboard-question"></i></span>
+                <span>Past Questions: Verbal, Quant, Coding (C/Java)</span>
+              </div>
+            </div>
+            <div class="company-card-footer">
+              <span class="status-badge rejected">Rejected</span>
+              <select class="status-select" onchange="updateStatus(this)">
+                <option value="not-applied">Not Applied</option>
+                <option value="applied">Applied</option>
+                <option value="interviewed">Interviewed</option>
+                <option value="selected">Selected</option>
+                <option value="rejected" selected>Rejected</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Wipro -->
+          <div class="company-card" data-status="not-applied" data-name="wipro">
+            <div class="company-card-header">
+              <div class="company-logo" style="background:rgba(62,31,105,0.1); color:#3e1f69;">W</div>
+              <div class="company-info">
+                <h3>Wipro</h3>
+                <p>Project Engineer</p>
+              </div>
+            </div>
+            <div class="company-card-body">
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+                <span>Eligibility: 6.0+ CGPA, All branches</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
+                <span>Rounds: Online Test → Technical → HR</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+                <span>CTC: ₹5–7.5 LPA</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-calendar"></i></span>
+                <span>Visit Date: April 10, 2026</span>
+              </div>
+              <div class="company-detail">
+                <span class="detail-icon"><i class="fa-solid fa-clipboard-question"></i></span>
+                <span>Past Questions: Aptitude, Coding (basic), Essay</span>
+              </div>
+            </div>
+            <div class="company-card-footer">
+              <span class="status-badge not-applied">Not Applied</span>
+              <select class="status-select" onchange="updateStatus(this)">
+                <option value="not-applied" selected>Not Applied</option>
+                <option value="applied">Applied</option>
+                <option value="interviewed">Interviewed</option>
+                <option value="selected">Selected</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+
+        </div><!-- /company-grid -->
+      </div><!-- /page-content -->
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    /* ---- Companies Page Logic ---- */
+
+    function updateStatus(select) {
+      const card = select.closest('.company-card');
+      const badge = card.querySelector('.status-badge');
+      const val = select.value;
+      card.dataset.status = val;
+
+      // Update badge
+      badge.className = 'status-badge ' + val;
+      const labels = {
+        'not-applied': 'Not Applied',
+        'applied': 'Applied',
+        'interviewed': 'Interviewed',
+        'selected': 'Selected',
+        'rejected': 'Rejected'
+      };
+      badge.textContent = labels[val];
+    }
+
+    function filterCompanyStatus(chip, status) {
+      document.querySelectorAll('.dsa-filters .filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+
+      document.querySelectorAll('.company-card').forEach(card => {
+        if (status === 'all' || card.dataset.status === status) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function searchCompanies() {
+      const q = document.getElementById('companySearch').value.toLowerCase();
+      document.querySelectorAll('.company-card').forEach(card => {
+        const name = card.dataset.name;
+        card.style.display = name.includes(q) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DSA Practice — Placement Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- ===== Sidebar ===== -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">🎓</span>
+        <span>Placement&nbsp;Companion</span>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-house"></i></span> Dashboard</a>
+        <a href="aptitude.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-brain"></i></span> Aptitude</a>
+        <a href="dsa.html" class="nav-link active"><span class="nav-icon"><i class="fa-solid fa-code"></i></span> DSA Practice</a>
+        <a href="hr.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-comments"></i></span> HR Interview</a>
+        <a href="companies.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-building"></i></span> Companies</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="profile.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile</a>
+        <a href="login.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout</a>
+      </div>
+      <div class="sidebar-footer">
+        <div class="sidebar-user" onclick="window.location.href='profile.html'">
+          <div class="user-avatar">JD</div>
+          <div class="user-info"><div class="user-name">John Doe</div><div class="user-email">john@example.com</div></div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- ===== Main ===== -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+          <div>
+            <h1>DSA Practice</h1>
+            <span class="breadcrumb">Dashboard / DSA Practice</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-search">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" placeholder="Search problems..." id="dsaSearch" oninput="filterProblems()" />
+          </div>
+          <button class="notification-btn"><i class="fa-solid fa-bell"></i><span class="badge">3</span></button>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <!-- Stats Summary -->
+        <div class="dashboard-grid animate-fade-up" style="grid-template-columns: repeat(4,1fr); margin-bottom:28px;">
+          <div class="stat-card stat-green">
+            <div class="stat-icon"><i class="fa-solid fa-check-double"></i></div>
+            <div class="stat-info">
+              <h3>47 / 120</h3>
+              <p>Problems Solved</p>
+            </div>
+          </div>
+          <div class="stat-card stat-purple">
+            <div class="stat-icon"><i class="fa-solid fa-fire"></i></div>
+            <div class="stat-info">
+              <h3>5</h3>
+              <p>Day Streak</p>
+            </div>
+          </div>
+          <div class="stat-card stat-blue">
+            <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+            <div class="stat-info">
+              <h3>12</h3>
+              <p>Easy Solved</p>
+            </div>
+          </div>
+          <div class="stat-card stat-orange">
+            <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
+            <div class="stat-info">
+              <h3>8</h3>
+              <p>Hard Solved</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Topic Progress Cards -->
+        <div class="page-header animate-fade-up delay-1">
+          <h2>Topic Progress</h2>
+          <p>Track your progress across all major DSA categories.</p>
+        </div>
+
+        <div class="topic-grid animate-fade-up delay-1" style="grid-template-columns: repeat(4,1fr); margin-bottom:32px;">
+          <div class="topic-card">
+            <div class="topic-icon" style="background:rgba(79,70,229,0.1); color:var(--primary);">📦</div>
+            <h3>Arrays</h3>
+            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill purple" style="width:75%"></div></div>
+            <div class="topic-stats" style="margin-top:8px;">15/20 solved</div>
+          </div>
+          <div class="topic-card">
+            <div class="topic-icon" style="background:rgba(14,165,233,0.1); color:var(--secondary);">🔤</div>
+            <h3>Strings</h3>
+            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill blue" style="width:60%"></div></div>
+            <div class="topic-stats" style="margin-top:8px;">9/15 solved</div>
+          </div>
+          <div class="topic-card">
+            <div class="topic-icon" style="background:rgba(16,185,129,0.1); color:var(--success);">🔗</div>
+            <h3>Linked List</h3>
+            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill green" style="width:40%"></div></div>
+            <div class="topic-stats" style="margin-top:8px;">6/15 solved</div>
+          </div>
+          <div class="topic-card">
+            <div class="topic-icon" style="background:rgba(245,158,11,0.1); color:var(--accent);">📚</div>
+            <h3>Stack</h3>
+            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill orange" style="width:50%"></div></div>
+            <div class="topic-stats" style="margin-top:8px;">5/10 solved</div>
+          </div>
+          <div class="topic-card">
+            <div class="topic-icon" style="background:rgba(239,68,68,0.1); color:var(--danger);">📋</div>
+            <h3>Queue</h3>
+            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill red" style="width:30%"></div></div>
+            <div class="topic-stats" style="margin-top:8px;">3/10 solved</div>
+          </div>
+          <div class="topic-card">
+            <div class="topic-icon" style="background:rgba(59,130,246,0.1); color:var(--info);">🌳</div>
+            <h3>Trees</h3>
+            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill blue" style="width:35%"></div></div>
+            <div class="topic-stats" style="margin-top:8px;">7/20 solved</div>
+          </div>
+          <div class="topic-card">
+            <div class="topic-icon" style="background:rgba(168,85,247,0.1); color:#a855f7;">🕸️</div>
+            <h3>Graphs</h3>
+            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill purple" style="width:15%"></div></div>
+            <div class="topic-stats" style="margin-top:8px;">2/15 solved</div>
+          </div>
+          <div class="topic-card">
+            <div class="topic-icon" style="background:rgba(245,158,11,0.1); color:var(--accent);">🧮</div>
+            <h3>Dynamic Programming</h3>
+            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill orange" style="width:10%"></div></div>
+            <div class="topic-stats" style="margin-top:8px;">2/20 solved</div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="section-header animate-fade-up delay-2">
+          <h3>💻 All Problems</h3>
+        </div>
+        <div class="dsa-filters animate-fade-up delay-2">
+          <span class="filter-chip active" onclick="filterByTopic(this, 'all')">All</span>
+          <span class="filter-chip" onclick="filterByTopic(this, 'arrays')">Arrays</span>
+          <span class="filter-chip" onclick="filterByTopic(this, 'strings')">Strings</span>
+          <span class="filter-chip" onclick="filterByTopic(this, 'linked-list')">Linked List</span>
+          <span class="filter-chip" onclick="filterByTopic(this, 'stack')">Stack</span>
+          <span class="filter-chip" onclick="filterByTopic(this, 'queue')">Queue</span>
+          <span class="filter-chip" onclick="filterByTopic(this, 'trees')">Trees</span>
+          <span class="filter-chip" onclick="filterByTopic(this, 'graphs')">Graphs</span>
+          <span class="filter-chip" onclick="filterByTopic(this, 'dp')">DP</span>
+          <!-- Difficulty filters -->
+          <span style="color:var(--text-muted); margin:0 4px;">|</span>
+          <span class="filter-chip" onclick="filterByDifficulty(this, 'easy')">🟢 Easy</span>
+          <span class="filter-chip" onclick="filterByDifficulty(this, 'medium')">🟡 Medium</span>
+          <span class="filter-chip" onclick="filterByDifficulty(this, 'hard')">🔴 Hard</span>
+        </div>
+
+        <!-- Problem Table -->
+        <div class="dsa-table-container animate-fade-up delay-3">
+          <table class="dsa-table" id="dsaTable">
+            <thead>
+              <tr>
+                <th style="width:50px;">Status</th>
+                <th>Problem</th>
+                <th>Topic</th>
+                <th>Difficulty</th>
+                <th>Solution</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-topic="arrays" data-difficulty="easy">
+                <td><div class="solved-check checked" onclick="toggleSolved(this)"><i class="fa-solid fa-check" style="font-size:0.7rem;"></i></div></td>
+                <td><span class="problem-title" onclick="openProblemModal('Two Sum')">Two Sum</span></td>
+                <td><span class="topic-tag" style="background:rgba(79,70,229,0.1); color:var(--primary);">Arrays</span></td>
+                <td><span class="difficulty-badge difficulty-easy">Easy</span></td>
+                <td><button class="btn btn-sm btn-outline" onclick="openProblemModal('Two Sum')"><i class="fa-solid fa-eye"></i> View</button></td>
+              </tr>
+              <tr data-topic="arrays" data-difficulty="medium">
+                <td><div class="solved-check checked" onclick="toggleSolved(this)"><i class="fa-solid fa-check" style="font-size:0.7rem;"></i></div></td>
+                <td><span class="problem-title" onclick="openProblemModal('Best Time to Buy and Sell Stock')">Best Time to Buy and Sell Stock</span></td>
+                <td><span class="topic-tag" style="background:rgba(79,70,229,0.1); color:var(--primary);">Arrays</span></td>
+                <td><span class="difficulty-badge difficulty-medium">Medium</span></td>
+                <td><button class="btn btn-sm btn-outline" onclick="openProblemModal('Best Time to Buy and Sell Stock')"><i class="fa-solid fa-eye"></i> View</button></td>
+              </tr>
+              <tr data-topic="strings" data-difficulty="easy">
+                <td><div class="solved-check checked" onclick="toggleSolved(this)"><i class="fa-solid fa-check" style="font-size:0.7rem;"></i></div></td>
+                <td><span class="problem-title">Reverse String</span></td>
+                <td><span class="topic-tag" style="background:rgba(14,165,233,0.1); color:var(--secondary);">Strings</span></td>
+                <td><span class="difficulty-badge difficulty-easy">Easy</span></td>
+                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
+              </tr>
+              <tr data-topic="linked-list" data-difficulty="medium">
+                <td><div class="solved-check" onclick="toggleSolved(this)"></div></td>
+                <td><span class="problem-title">Reverse Linked List</span></td>
+                <td><span class="topic-tag" style="background:rgba(16,185,129,0.1); color:var(--success);">Linked List</span></td>
+                <td><span class="difficulty-badge difficulty-medium">Medium</span></td>
+                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
+              </tr>
+              <tr data-topic="stack" data-difficulty="easy">
+                <td><div class="solved-check checked" onclick="toggleSolved(this)"><i class="fa-solid fa-check" style="font-size:0.7rem;"></i></div></td>
+                <td><span class="problem-title">Valid Parentheses</span></td>
+                <td><span class="topic-tag" style="background:rgba(245,158,11,0.1); color:var(--accent);">Stack</span></td>
+                <td><span class="difficulty-badge difficulty-easy">Easy</span></td>
+                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
+              </tr>
+              <tr data-topic="trees" data-difficulty="medium">
+                <td><div class="solved-check" onclick="toggleSolved(this)"></div></td>
+                <td><span class="problem-title">Binary Tree Inorder Traversal</span></td>
+                <td><span class="topic-tag" style="background:rgba(59,130,246,0.1); color:var(--info);">Trees</span></td>
+                <td><span class="difficulty-badge difficulty-medium">Medium</span></td>
+                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
+              </tr>
+              <tr data-topic="graphs" data-difficulty="hard">
+                <td><div class="solved-check" onclick="toggleSolved(this)"></div></td>
+                <td><span class="problem-title">Number of Islands</span></td>
+                <td><span class="topic-tag" style="background:rgba(168,85,247,0.1); color:#a855f7;">Graphs</span></td>
+                <td><span class="difficulty-badge difficulty-hard">Hard</span></td>
+                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
+              </tr>
+              <tr data-topic="dp" data-difficulty="hard">
+                <td><div class="solved-check" onclick="toggleSolved(this)"></div></td>
+                <td><span class="problem-title">Longest Common Subsequence</span></td>
+                <td><span class="topic-tag" style="background:rgba(245,158,11,0.1); color:var(--accent);">DP</span></td>
+                <td><span class="difficulty-badge difficulty-hard">Hard</span></td>
+                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
+              </tr>
+              <tr data-topic="arrays" data-difficulty="hard">
+                <td><div class="solved-check" onclick="toggleSolved(this)"></div></td>
+                <td><span class="problem-title">Merge Intervals</span></td>
+                <td><span class="topic-tag" style="background:rgba(79,70,229,0.1); color:var(--primary);">Arrays</span></td>
+                <td><span class="difficulty-badge difficulty-hard">Hard</span></td>
+                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
+              </tr>
+              <tr data-topic="queue" data-difficulty="medium">
+                <td><div class="solved-check" onclick="toggleSolved(this)"></div></td>
+                <td><span class="problem-title">Implement Queue using Stacks</span></td>
+                <td><span class="topic-tag" style="background:rgba(239,68,68,0.1); color:var(--danger);">Queue</span></td>
+                <td><span class="difficulty-badge difficulty-medium">Medium</span></td>
+                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div><!-- /page-content -->
+    </main>
+  </div>
+
+  <!-- Problem Detail Modal -->
+  <div class="modal-overlay" id="problemModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Two Sum</h2>
+        <button class="modal-close" onclick="closeProblemModal()">✕</button>
+      </div>
+      <div>
+        <span class="difficulty-badge difficulty-easy" style="margin-bottom:16px; display:inline-block;">Easy</span>
+        <span class="topic-tag" style="background:rgba(79,70,229,0.1); color:var(--primary); margin-left:8px;">Arrays</span>
+      </div>
+      <h4 style="margin-top:20px; margin-bottom:8px; font-size:0.95rem;">Problem Statement</h4>
+      <p style="font-size:0.9rem; color:var(--text-light); line-height:1.7; margin-bottom:20px;">
+        Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers such that they add up to <code>target</code>. You may assume that each input would have exactly one solution, and you may not use the same element twice.
+      </p>
+      <h4 style="margin-bottom:8px; font-size:0.95rem;">💡 Solution Approach</h4>
+      <div style="background:var(--bg); border-radius:var(--radius-sm); padding:16px; font-size:0.85rem; color:var(--text-light); line-height:1.7;">
+        <p><strong>Brute Force:</strong> Use two nested loops to check every pair — O(n²).</p>
+        <p style="margin-top:8px;"><strong>Optimal (Hash Map):</strong> Iterate through the array, for each element check if (target − element) exists in a hash map. If yes, return the indices. Otherwise, store the element. Time: O(n), Space: O(n).</p>
+      </div>
+      <div style="margin-top:24px; display:flex; gap:12px;">
+        <button class="btn btn-success btn-sm" onclick="closeProblemModal()"><i class="fa-solid fa-check"></i> Mark as Solved</button>
+        <button class="btn btn-outline btn-sm" onclick="closeProblemModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    /* ---- DSA Page Logic ---- */
+    function toggleSolved(el) {
+      el.classList.toggle('checked');
+      if (el.classList.contains('checked')) {
+        el.innerHTML = '<i class="fa-solid fa-check" style="font-size:0.7rem;"></i>';
+      } else {
+        el.innerHTML = '';
+      }
+    }
+
+    function filterByTopic(chip, topic) {
+      // Update active chip (topic chips only)
+      document.querySelectorAll('.dsa-filters .filter-chip').forEach((c, i) => {
+        if (i < 9) c.classList.remove('active');
+      });
+      chip.classList.add('active');
+
+      const rows = document.querySelectorAll('#dsaTable tbody tr');
+      rows.forEach(row => {
+        if (topic === 'all' || row.dataset.topic === topic) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function filterByDifficulty(chip, difficulty) {
+      const rows = document.querySelectorAll('#dsaTable tbody tr');
+      rows.forEach(row => {
+        if (row.dataset.difficulty === difficulty) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function filterProblems() {
+      const query = document.getElementById('dsaSearch').value.toLowerCase();
+      const rows = document.querySelectorAll('#dsaTable tbody tr');
+      rows.forEach(row => {
+        const title = row.querySelector('.problem-title').textContent.toLowerCase();
+        row.style.display = title.includes(query) ? '' : 'none';
+      });
+    }
+
+    function openProblemModal(title) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('problemModal').classList.add('active');
+    }
+
+    function closeProblemModal() {
+      document.getElementById('problemModal').classList.remove('active');
+    }
+
+    // Close modal on overlay click
+    document.getElementById('problemModal').addEventListener('click', function(e) {
+      if (e.target === this) closeProblemModal();
+    });
+  </script>
+</body>
+</html>

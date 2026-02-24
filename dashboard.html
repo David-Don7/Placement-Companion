@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Placement Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- ===== Sidebar ===== -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">🎓</span>
+        <span>Placement&nbsp;Companion</span>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-link active">
+          <span class="nav-icon"><i class="fa-solid fa-house"></i></span> Dashboard
+        </a>
+        <a href="aptitude.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-brain"></i></span> Aptitude
+          <span class="nav-badge">New</span>
+        </a>
+        <a href="dsa.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-code"></i></span> DSA Practice
+        </a>
+        <a href="hr.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-comments"></i></span> HR Interview
+        </a>
+        <a href="companies.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-building"></i></span> Companies
+          <span class="nav-badge">5</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="profile.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile
+        </a>
+        <a href="login.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user" onclick="window.location.href='profile.html'">
+          <div class="user-avatar">JD</div>
+          <div class="user-info">
+            <div class="user-name">John Doe</div>
+            <div class="user-email">john@example.com</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- ===== Main Content ===== -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div>
+            <h1>Dashboard</h1>
+            <span class="breadcrumb">Welcome back, John! 👋</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-search">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" placeholder="Search anything..." />
+          </div>
+          <button class="notification-btn" data-tooltip="Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span class="badge">3</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content">
+
+        <!-- Stat Cards Row -->
+        <div class="dashboard-grid animate-fade-up">
+          <div class="stat-card stat-purple">
+            <div class="stat-icon"><i class="fa-solid fa-clipboard-question"></i></div>
+            <div class="stat-info">
+              <h3>24</h3>
+              <p>Quizzes Taken</p>
+              <span class="stat-change up">↑ 12% this week</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-blue">
+            <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="stat-info">
+              <h3>78%</h3>
+              <p>Avg. Aptitude Score</p>
+              <span class="stat-change up">↑ 5% improvement</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-green">
+            <div class="stat-icon"><i class="fa-solid fa-laptop-code"></i></div>
+            <div class="stat-info">
+              <h3>47</h3>
+              <p>DSA Problems Solved</p>
+              <span class="stat-change up">↑ 8 this week</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-orange">
+            <div class="stat-icon"><i class="fa-solid fa-microphone"></i></div>
+            <div class="stat-info">
+              <h3>15</h3>
+              <p>HR Questions Practiced</p>
+              <span class="stat-change up">↑ 3 today</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Streak Widget -->
+        <div class="streak-widget animate-fade-up delay-1">
+          <div class="streak-header">
+            <h3>🔥 Weekly Streak</h3>
+            <span>Keep it going!</span>
+          </div>
+          <div class="streak-count">5 Days</div>
+          <div class="streak-label">You're on fire! Don't break the chain.</div>
+          <div class="streak-days">
+            <div class="streak-day active">M</div>
+            <div class="streak-day active">T</div>
+            <div class="streak-day active">W</div>
+            <div class="streak-day active">T</div>
+            <div class="streak-day active">F</div>
+            <div class="streak-day inactive">S</div>
+            <div class="streak-day inactive">S</div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="dashboard-charts animate-fade-up delay-2">
+          <!-- Progress Chart -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Preparation Progress</h3>
+              <div class="tabs" style="margin-bottom:0;">
+                <span class="tab active">Week</span>
+                <span class="tab">Month</span>
+                <span class="tab">All</span>
+              </div>
+            </div>
+            <div class="chart-placeholder">
+              <div class="chart-icon">📊</div>
+              <span>Chart.js will render here</span>
+              <span style="font-size:0.75rem; margin-top:4px; color:var(--text-muted);">Connected in Phase 7</span>
+            </div>
+          </div>
+
+          <!-- Topic Breakdown -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Topic Breakdown</h3>
+            </div>
+            <div style="padding: 0 4px;">
+              <div class="progress-bar-container">
+                <div class="progress-label">
+                  <span>Quantitative</span><span>82%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill purple" style="width:82%"></div>
+                </div>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-label">
+                  <span>Logical Reasoning</span><span>65%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill blue" style="width:65%"></div>
+                </div>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-label">
+                  <span>Verbal Ability</span><span>70%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill green" style="width:70%"></div>
+                </div>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-label">
+                  <span>Arrays &amp; Strings</span><span>90%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill orange" style="width:90%"></div>
+                </div>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-label">
+                  <span>Trees &amp; Graphs</span><span>40%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill red" style="width:40%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Companies + Activity -->
+        <div class="dashboard-charts animate-fade-up delay-3">
+          <!-- Upcoming Companies -->
+          <div class="card-flat">
+            <div class="section-header">
+              <h3>🏢 Upcoming Companies</h3>
+              <a href="companies.html">View all →</a>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <!-- Company Row 1 -->
+              <div style="display:flex; align-items:center; gap:14px; padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border); transition:all var(--transition);" onmouseover="this.style.boxShadow='var(--shadow)'" onmouseout="this.style.boxShadow='none'">
+                <div class="company-logo" style="background:rgba(66,133,244,0.1); color:#4285F4; font-size:1.2rem; width:44px; height:44px;">G</div>
+                <div style="flex:1;">
+                  <div style="font-weight:600; font-size:0.95rem;">Google</div>
+                  <div style="font-size:0.8rem; color:var(--text-light);">Mar 15, 2026 · On-campus</div>
+                </div>
+                <span class="status-badge applied">Applied</span>
+              </div>
+              <!-- Company Row 2 -->
+              <div style="display:flex; align-items:center; gap:14px; padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border); transition:all var(--transition);" onmouseover="this.style.boxShadow='var(--shadow)'" onmouseout="this.style.boxShadow='none'">
+                <div class="company-logo" style="background:rgba(0,120,212,0.1); color:#0078D4; font-size:1.2rem; width:44px; height:44px;">M</div>
+                <div style="flex:1;">
+                  <div style="font-weight:600; font-size:0.95rem;">Microsoft</div>
+                  <div style="font-size:0.8rem; color:var(--text-light);">Mar 22, 2026 · On-campus</div>
+                </div>
+                <span class="status-badge not-applied">Not Applied</span>
+              </div>
+              <!-- Company Row 3 -->
+              <div style="display:flex; align-items:center; gap:14px; padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border); transition:all var(--transition);" onmouseover="this.style.boxShadow='var(--shadow)'" onmouseout="this.style.boxShadow='none'">
+                <div class="company-logo" style="background:rgba(255,153,0,0.1); color:#FF9900; font-size:1.2rem; width:44px; height:44px;">A</div>
+                <div style="flex:1;">
+                  <div style="font-weight:600; font-size:0.95rem;">Amazon</div>
+                  <div style="font-size:0.8rem; color:var(--text-light);">Apr 02, 2026 · Virtual</div>
+                </div>
+                <span class="status-badge interviewed">Interviewed</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="activity-feed">
+            <div class="section-header">
+              <h3>📋 Recent Activity</h3>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(16,185,129,0.1); color:var(--success);">
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <div>
+                <div class="activity-text"><strong>Solved</strong> "Two Sum" in Arrays</div>
+                <div class="activity-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(79,70,229,0.1); color:var(--primary);">
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <div>
+                <div class="activity-text">Scored <strong>85%</strong> on Quantitative Quiz</div>
+                <div class="activity-time">5 hours ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(245,158,11,0.1); color:var(--accent);">
+                <i class="fa-solid fa-comment"></i>
+              </div>
+              <div>
+                <div class="activity-text">Practiced <strong>HR question</strong>: "Tell me about yourself"</div>
+                <div class="activity-time">Yesterday</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(59,130,246,0.1); color:var(--info);">
+                <i class="fa-solid fa-building"></i>
+              </div>
+              <div>
+                <div class="activity-text"><strong>Applied</strong> to Google — SDE Intern</div>
+                <div class="activity-time">2 days ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(239,68,68,0.1); color:var(--danger);">
+                <i class="fa-solid fa-fire"></i>
+              </div>
+              <div>
+                <div class="activity-text"><strong>5-day streak</strong> reached! 🔥</div>
+                <div class="activity-time">2 days ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /page-content -->
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

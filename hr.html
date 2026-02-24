@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HR Interview — Placement Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- ===== Sidebar ===== -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">🎓</span>
+        <span>Placement&nbsp;Companion</span>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-house"></i></span> Dashboard</a>
+        <a href="aptitude.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-brain"></i></span> Aptitude</a>
+        <a href="dsa.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-code"></i></span> DSA Practice</a>
+        <a href="hr.html" class="nav-link active"><span class="nav-icon"><i class="fa-solid fa-comments"></i></span> HR Interview</a>
+        <a href="companies.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-building"></i></span> Companies</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="profile.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile</a>
+        <a href="login.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout</a>
+      </div>
+      <div class="sidebar-footer">
+        <div class="sidebar-user" onclick="window.location.href='profile.html'">
+          <div class="user-avatar">JD</div>
+          <div class="user-info"><div class="user-name">John Doe</div><div class="user-email">john@example.com</div></div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- ===== Main ===== -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+          <div>
+            <h1>HR Interview Simulator</h1>
+            <span class="breadcrumb">Dashboard / HR Interview</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="notification-btn"><i class="fa-solid fa-bell"></i><span class="badge">3</span></button>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <!-- Stats -->
+        <div class="dashboard-grid animate-fade-up" style="grid-template-columns: repeat(3,1fr); margin-bottom:32px;">
+          <div class="stat-card stat-orange">
+            <div class="stat-icon"><i class="fa-solid fa-microphone"></i></div>
+            <div class="stat-info">
+              <h3>15</h3>
+              <p>Questions Practiced</p>
+            </div>
+          </div>
+          <div class="stat-card stat-green">
+            <div class="stat-icon"><i class="fa-solid fa-bookmark"></i></div>
+            <div class="stat-info">
+              <h3>8</h3>
+              <p>Saved Responses</p>
+            </div>
+          </div>
+          <div class="stat-card stat-blue">
+            <div class="stat-icon"><i class="fa-solid fa-chart-simple"></i></div>
+            <div class="stat-info">
+              <h3>72%</h3>
+              <p>Keyword Match Score</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulator Area -->
+        <div class="hr-simulator animate-fade-up delay-1">
+          <div class="hr-question-card" id="hrQuestionCard">
+            <div class="hr-label"><i class="fa-solid fa-shuffle"></i> Random HR Question</div>
+            <div class="hr-question-text" id="hrQuestionText">
+              Tell me about yourself.
+            </div>
+
+            <textarea class="hr-answer-area" id="hrAnswer" placeholder="Type your answer here... Practice answering as you would in a real interview."></textarea>
+
+            <!-- Tips -->
+            <div class="hr-tips">
+              <h4><i class="fa-solid fa-lightbulb"></i> Key Points to Include</h4>
+              <ul id="hrTips">
+                <li>Start with a brief professional introduction</li>
+                <li>Mention your education and relevant skills</li>
+                <li>Highlight key projects or achievements</li>
+                <li>Connect your background to the role</li>
+                <li>Keep it concise — 1 to 2 minutes</li>
+              </ul>
+            </div>
+
+            <!-- Model Answer (hidden until toggled) -->
+            <div class="model-answer" id="modelAnswer">
+              <h4><i class="fa-solid fa-check-circle"></i> Model Answer</h4>
+              <p id="modelAnswerText">
+                "I'm a final-year Computer Science student at XYZ University. I have a strong foundation in data structures, algorithms, and full-stack web development. During my internship at ABC Corp, I developed a REST API that reduced page load times by 40%. I'm passionate about solving complex problems and building scalable systems. I'm excited about this opportunity because it aligns with my goal of working on impactful products."
+              </p>
+            </div>
+
+            <!-- Actions -->
+            <div style="display:flex; gap:12px; margin-top:24px; flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="submitHRAnswer()">
+                <i class="fa-solid fa-paper-plane"></i> Submit Answer
+              </button>
+              <button class="btn btn-outline" onclick="toggleModelAnswer()">
+                <i class="fa-solid fa-eye"></i> Show Model Answer
+              </button>
+              <button class="btn btn-outline" onclick="getNextQuestion()">
+                <i class="fa-solid fa-shuffle"></i> Next Question
+              </button>
+            </div>
+          </div>
+
+          <!-- Feedback Card (shown after submit) -->
+          <div class="card-flat" id="feedbackCard" style="display:none; margin-bottom:24px; animation: fadeInUp 0.4s ease-out;">
+            <h3 style="font-size:1rem; font-weight:600; margin-bottom:16px;"><i class="fa-solid fa-chart-bar"></i> Feedback</h3>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:16px;">
+              <div class="result-stat">
+                <div class="stat-value" style="color:var(--success);" id="matchScore">75%</div>
+                <div class="stat-label">Keyword Match</div>
+              </div>
+              <div class="result-stat">
+                <div class="stat-value" style="color:var(--info);" id="wordCount">0</div>
+                <div class="stat-label">Word Count</div>
+              </div>
+              <div class="result-stat">
+                <div class="stat-value" style="color:var(--accent);" id="feedbackRating">Good</div>
+                <div class="stat-label">Rating</div>
+              </div>
+            </div>
+            <div id="feedbackText" style="font-size:0.875rem; color:var(--text-light); line-height:1.6;"></div>
+          </div>
+
+          <!-- Previous Responses -->
+          <div class="hr-history animate-fade-up delay-2">
+            <div class="section-header">
+              <h3>📝 Previous Responses</h3>
+            </div>
+            <div class="hr-history-item">
+              <div class="history-question">Why should we hire you?</div>
+              <div class="history-answer">"I bring a unique combination of technical skills and problem-solving ability. My experience with React and Node.js, combined with my competitive programming background, makes me a strong fit for this role..."</div>
+              <div class="history-date">Feb 23, 2026</div>
+            </div>
+            <div class="hr-history-item">
+              <div class="history-question">What are your strengths and weaknesses?</div>
+              <div class="history-answer">"My biggest strength is my ability to quickly learn and adapt to new technologies. As for weaknesses, I sometimes spend too much time perfecting code, but I've been working on balancing quality with deadlines..."</div>
+              <div class="history-date">Feb 22, 2026</div>
+            </div>
+            <div class="hr-history-item">
+              <div class="history-question">Where do you see yourself in 5 years?</div>
+              <div class="history-answer">"In five years, I see myself as a senior engineer leading a team, contributing to impactful projects, and mentoring junior developers..."</div>
+              <div class="history-date">Feb 21, 2026</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /page-content -->
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    /* ---- HR Page Logic ---- */
+
+    const hrQuestions = [
+      {
+        question: "Tell me about yourself.",
+        tips: [
+          "Start with a brief professional introduction",
+          "Mention your education and relevant skills",
+          "Highlight key projects or achievements",
+          "Connect your background to the role",
+          "Keep it concise — 1 to 2 minutes"
+        ],
+        modelAnswer: "I'm a final-year Computer Science student at XYZ University. I have a strong foundation in data structures, algorithms, and full-stack web development. During my internship at ABC Corp, I developed a REST API that reduced page load times by 40%. I'm passionate about solving complex problems and building scalable systems.",
+        keywords: ["student", "computer science", "skills", "project", "experience", "internship", "passionate"]
+      },
+      {
+        question: "Why should we hire you?",
+        tips: [
+          "Match your skills to the job requirements",
+          "Provide specific examples of achievements",
+          "Show enthusiasm for the company",
+          "Demonstrate cultural fit",
+          "Be confident but not arrogant"
+        ],
+        modelAnswer: "I bring a strong combination of technical skills and practical experience. I've built full-stack applications, solved 200+ DSA problems, and led a team project that won our college hackathon. I'm eager to contribute and learn at your organization.",
+        keywords: ["skills", "experience", "projects", "team", "contribute", "learn", "technical"]
+      },
+      {
+        question: "What are your strengths and weaknesses?",
+        tips: [
+          "Pick strengths relevant to the role",
+          "Be honest about weaknesses",
+          "Show how you're improving on weaknesses",
+          "Give examples for each strength",
+          "Avoid cliché answers"
+        ],
+        modelAnswer: "My biggest strength is problem-solving — I enjoy breaking down complex challenges. I'm also a quick learner and comfortable with multiple technologies. My weakness is that I sometimes over-analyze problems before acting, but I've been improving by setting time limits for decision-making.",
+        keywords: ["problem-solving", "strength", "weakness", "improving", "learn", "example", "honest"]
+      },
+      {
+        question: "Where do you see yourself in 5 years?",
+        tips: [
+          "Show ambition but be realistic",
+          "Align with the company's growth",
+          "Mention leadership or mentoring goals",
+          "Express desire for continuous learning",
+          "Avoid saying you want to leave the company"
+        ],
+        modelAnswer: "In five years, I see myself as a senior engineer, leading a team on impactful projects. I want to deepen my expertise in system design and contribute to mentoring junior developers, all while growing with the organization.",
+        keywords: ["senior", "leader", "grow", "team", "learn", "mentor", "impact"]
+      },
+      {
+        question: "Tell me about a challenging project you worked on.",
+        tips: [
+          "Use the STAR method (Situation, Task, Action, Result)",
+          "Choose a technically relevant project",
+          "Explain what made it challenging",
+          "Highlight what you learned",
+          "Quantify results if possible"
+        ],
+        modelAnswer: "During my internship, I was tasked with optimizing a database query pipeline that was causing 3-second delays. I analyzed the query execution plans, added proper indexing, and implemented caching with Redis. The result was a 70% improvement in response time. I learned the importance of profiling before optimizing.",
+        keywords: ["project", "challenge", "team", "solution", "result", "learned", "improved"]
+      },
+      {
+        question: "Why do you want to work at our company?",
+        tips: [
+          "Research the company beforehand",
+          "Mention specific products, missions, or values",
+          "Connect your goals and interests to the company",
+          "Show genuine enthusiasm",
+          "Avoid generic answers"
+        ],
+        modelAnswer: "I've been following your company's work on cloud-native solutions and open-source contributions. Your engineering culture of innovation and learning aligns perfectly with my career goals. I'm excited about the opportunity to work on products used by millions.",
+        keywords: ["company", "mission", "product", "culture", "excited", "goal", "innovation"]
+      }
+    ];
+
+    let currentHRIndex = 0;
+
+    function loadQuestion(index) {
+      const q = hrQuestions[index];
+      document.getElementById('hrQuestionText').textContent = q.question;
+      document.getElementById('hrAnswer').value = '';
+      document.getElementById('modelAnswerText').textContent = '"' + q.modelAnswer + '"';
+      document.getElementById('modelAnswer').classList.remove('show');
+      document.getElementById('feedbackCard').style.display = 'none';
+
+      const tipsList = document.getElementById('hrTips');
+      tipsList.innerHTML = q.tips.map(t => `<li>${t}</li>`).join('');
+
+      // Re-animate
+      const card = document.getElementById('hrQuestionCard');
+      card.style.animation = 'none';
+      card.offsetHeight;
+      card.style.animation = 'fadeInUp 0.4s ease-out';
+    }
+
+    function getNextQuestion() {
+      currentHRIndex = (currentHRIndex + 1) % hrQuestions.length;
+      loadQuestion(currentHRIndex);
+    }
+
+    function toggleModelAnswer() {
+      document.getElementById('modelAnswer').classList.toggle('show');
+    }
+
+    function submitHRAnswer() {
+      const answer = document.getElementById('hrAnswer').value.trim();
+      if (!answer) {
+        alert('Please type your answer before submitting.');
+        return;
+      }
+
+      const q = hrQuestions[currentHRIndex];
+      const words = answer.toLowerCase().split(/\s+/);
+      const wordCount = words.length;
+
+      // Simple keyword match
+      let matched = 0;
+      q.keywords.forEach(kw => {
+        if (answer.toLowerCase().includes(kw)) matched++;
+      });
+      const matchPercent = Math.round((matched / q.keywords.length) * 100);
+
+      let rating = 'Needs Work';
+      let feedbackMsg = '';
+      if (matchPercent >= 80) {
+        rating = 'Excellent';
+        feedbackMsg = 'Great job! Your answer covers most key points. It is well-structured and relevant.';
+      } else if (matchPercent >= 60) {
+        rating = 'Good';
+        feedbackMsg = 'Good answer! Consider including more specific examples and cover a few more key areas.';
+      } else if (matchPercent >= 40) {
+        rating = 'Fair';
+        feedbackMsg = 'Decent attempt. Try to include more relevant keywords and structure your answer using the STAR method.';
+      } else {
+        feedbackMsg = 'Your answer could be improved. Review the tips and model answer, then try again.';
+      }
+
+      document.getElementById('matchScore').textContent = matchPercent + '%';
+      document.getElementById('wordCount').textContent = wordCount;
+      document.getElementById('feedbackRating').textContent = rating;
+      document.getElementById('feedbackText').textContent = feedbackMsg;
+      document.getElementById('feedbackCard').style.display = 'block';
+      document.getElementById('feedbackCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+</body>
+</html>

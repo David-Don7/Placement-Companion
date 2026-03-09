@@ -30,7 +30,7 @@
       <div class="nav-section">
         <div class="nav-section-title">Account</div>
         <a href="profile.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile</a>
-        <a href="login.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout</a>
+        <a href="#" class="nav-link" onclick="logout()"><span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout</a>
       </div>
       <div class="sidebar-footer">
         <div class="sidebar-user" onclick="window.location.href='profile.html'">
@@ -175,152 +175,141 @@
   </div>
 
   <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
   <script>
-    /* ---- HR Page Logic ---- */
+    /* ---- HR Page Logic (API-connected) ---- */
+    if (!requireAuth()) { /* redirected */ }
+    else { updateSidebarUser(); loadHRPage(); }
 
-    const hrQuestions = [
-      {
-        question: "Tell me about yourself.",
-        tips: [
-          "Start with a brief professional introduction",
-          "Mention your education and relevant skills",
-          "Highlight key projects or achievements",
-          "Connect your background to the role",
-          "Keep it concise — 1 to 2 minutes"
-        ],
-        modelAnswer: "I'm a final-year Computer Science student at XYZ University. I have a strong foundation in data structures, algorithms, and full-stack web development. During my internship at ABC Corp, I developed a REST API that reduced page load times by 40%. I'm passionate about solving complex problems and building scalable systems.",
-        keywords: ["student", "computer science", "skills", "project", "experience", "internship", "passionate"]
-      },
-      {
-        question: "Why should we hire you?",
-        tips: [
-          "Match your skills to the job requirements",
-          "Provide specific examples of achievements",
-          "Show enthusiasm for the company",
-          "Demonstrate cultural fit",
-          "Be confident but not arrogant"
-        ],
-        modelAnswer: "I bring a strong combination of technical skills and practical experience. I've built full-stack applications, solved 200+ DSA problems, and led a team project that won our college hackathon. I'm eager to contribute and learn at your organization.",
-        keywords: ["skills", "experience", "projects", "team", "contribute", "learn", "technical"]
-      },
-      {
-        question: "What are your strengths and weaknesses?",
-        tips: [
-          "Pick strengths relevant to the role",
-          "Be honest about weaknesses",
-          "Show how you're improving on weaknesses",
-          "Give examples for each strength",
-          "Avoid cliché answers"
-        ],
-        modelAnswer: "My biggest strength is problem-solving — I enjoy breaking down complex challenges. I'm also a quick learner and comfortable with multiple technologies. My weakness is that I sometimes over-analyze problems before acting, but I've been improving by setting time limits for decision-making.",
-        keywords: ["problem-solving", "strength", "weakness", "improving", "learn", "example", "honest"]
-      },
-      {
-        question: "Where do you see yourself in 5 years?",
-        tips: [
-          "Show ambition but be realistic",
-          "Align with the company's growth",
-          "Mention leadership or mentoring goals",
-          "Express desire for continuous learning",
-          "Avoid saying you want to leave the company"
-        ],
-        modelAnswer: "In five years, I see myself as a senior engineer, leading a team on impactful projects. I want to deepen my expertise in system design and contribute to mentoring junior developers, all while growing with the organization.",
-        keywords: ["senior", "leader", "grow", "team", "learn", "mentor", "impact"]
-      },
-      {
-        question: "Tell me about a challenging project you worked on.",
-        tips: [
-          "Use the STAR method (Situation, Task, Action, Result)",
-          "Choose a technically relevant project",
-          "Explain what made it challenging",
-          "Highlight what you learned",
-          "Quantify results if possible"
-        ],
-        modelAnswer: "During my internship, I was tasked with optimizing a database query pipeline that was causing 3-second delays. I analyzed the query execution plans, added proper indexing, and implemented caching with Redis. The result was a 70% improvement in response time. I learned the importance of profiling before optimizing.",
-        keywords: ["project", "challenge", "team", "solution", "result", "learned", "improved"]
-      },
-      {
-        question: "Why do you want to work at our company?",
-        tips: [
-          "Research the company beforehand",
-          "Mention specific products, missions, or values",
-          "Connect your goals and interests to the company",
-          "Show genuine enthusiasm",
-          "Avoid generic answers"
-        ],
-        modelAnswer: "I've been following your company's work on cloud-native solutions and open-source contributions. Your engineering culture of innovation and learning aligns perfectly with my career goals. I'm excited about the opportunity to work on products used by millions.",
-        keywords: ["company", "mission", "product", "culture", "excited", "goal", "innovation"]
-      }
-    ];
+    let currentHRQuestion = null;
 
-    let currentHRIndex = 0;
-
-    function loadQuestion(index) {
-      const q = hrQuestions[index];
-      document.getElementById('hrQuestionText').textContent = q.question;
-      document.getElementById('hrAnswer').value = '';
-      document.getElementById('modelAnswerText').textContent = '"' + q.modelAnswer + '"';
-      document.getElementById('modelAnswer').classList.remove('show');
-      document.getElementById('feedbackCard').style.display = 'none';
-
-      const tipsList = document.getElementById('hrTips');
-      tipsList.innerHTML = q.tips.map(t => `<li>${t}</li>`).join('');
-
-      // Re-animate
-      const card = document.getElementById('hrQuestionCard');
-      card.style.animation = 'none';
-      card.offsetHeight;
-      card.style.animation = 'fadeInUp 0.4s ease-out';
+    async function loadHRPage() {
+      await Promise.all([loadHRStats(), getNextQuestion(), loadHRHistory()]);
     }
 
-    function getNextQuestion() {
-      currentHRIndex = (currentHRIndex + 1) % hrQuestions.length;
-      loadQuestion(currentHRIndex);
+    async function loadHRStats() {
+      try {
+        const res = await apiGetHRStats();
+        if (!res || !res.success) return;
+        const d = res.data;
+        const statValues = document.querySelectorAll('.stat-card .stat-info h3');
+        if (statValues[0]) statValues[0].textContent = d.totalPracticed;
+        if (statValues[1]) statValues[1].textContent = d.savedCount;
+        if (statValues[2]) statValues[2].textContent = d.avgMatchScore + '%';
+      } catch (err) { console.error('HR stats error:', err); }
+    }
+
+    async function getNextQuestion() {
+      try {
+        const res = await apiGetRandomHR();
+        if (!res || !res.success) return;
+        currentHRQuestion = res.data;
+        document.getElementById('hrQuestionText').textContent = currentHRQuestion.question;
+        document.getElementById('hrAnswer').value = '';
+        document.getElementById('feedbackCard').style.display = 'none';
+
+        // Update tips
+        const tipsList = document.getElementById('hrTips');
+        if (currentHRQuestion.tips && currentHRQuestion.tips.length) {
+          tipsList.innerHTML = currentHRQuestion.tips.map(t => `<li>${t}</li>`).join('');
+        } else {
+          tipsList.innerHTML = '<li>Structure your answer clearly</li><li>Use specific examples</li>';
+        }
+
+        // Hide model answer
+        document.getElementById('modelAnswer').classList.remove('show');
+
+        // Animate
+        const card = document.getElementById('hrQuestionCard');
+        card.style.animation = 'none';
+        card.offsetHeight;
+        card.style.animation = 'fadeInUp 0.4s ease-out';
+      } catch (err) {
+        showToast('Failed to load question', 'error');
+      }
     }
 
     function toggleModelAnswer() {
+      if (currentHRQuestion && currentHRQuestion.solution) {
+        document.getElementById('modelAnswerText').textContent = '"' + currentHRQuestion.solution + '"';
+      }
       document.getElementById('modelAnswer').classList.toggle('show');
     }
 
-    function submitHRAnswer() {
+    async function submitHRAnswer() {
       const answer = document.getElementById('hrAnswer').value.trim();
       if (!answer) {
-        alert('Please type your answer before submitting.');
+        showToast('Please type your answer before submitting.', 'error');
         return;
       }
 
-      const q = hrQuestions[currentHRIndex];
-      const words = answer.toLowerCase().split(/\s+/);
-      const wordCount = words.length;
-
-      // Simple keyword match
-      let matched = 0;
-      q.keywords.forEach(kw => {
-        if (answer.toLowerCase().includes(kw)) matched++;
-      });
-      const matchPercent = Math.round((matched / q.keywords.length) * 100);
-
-      let rating = 'Needs Work';
-      let feedbackMsg = '';
-      if (matchPercent >= 80) {
-        rating = 'Excellent';
-        feedbackMsg = 'Great job! Your answer covers most key points. It is well-structured and relevant.';
-      } else if (matchPercent >= 60) {
-        rating = 'Good';
-        feedbackMsg = 'Good answer! Consider including more specific examples and cover a few more key areas.';
-      } else if (matchPercent >= 40) {
-        rating = 'Fair';
-        feedbackMsg = 'Decent attempt. Try to include more relevant keywords and structure your answer using the STAR method.';
-      } else {
-        feedbackMsg = 'Your answer could be improved. Review the tips and model answer, then try again.';
+      if (!currentHRQuestion) {
+        showToast('No question loaded.', 'error');
+        return;
       }
 
-      document.getElementById('matchScore').textContent = matchPercent + '%';
-      document.getElementById('wordCount').textContent = wordCount;
-      document.getElementById('feedbackRating').textContent = rating;
-      document.getElementById('feedbackText').textContent = feedbackMsg;
-      document.getElementById('feedbackCard').style.display = 'block';
-      document.getElementById('feedbackCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      try {
+        const res = await apiSubmitHR(currentHRQuestion._id, answer);
+        if (!res || !res.success) return;
+        const d = res.data;
+
+        document.getElementById('matchScore').textContent = d.matchScore + '%';
+        document.getElementById('wordCount').textContent = d.wordCount;
+        document.getElementById('feedbackRating').textContent = d.rating;
+
+        let feedbackMsg = '';
+        if (d.rating === 'Excellent') feedbackMsg = 'Great job! Your answer covers most key points.';
+        else if (d.rating === 'Good') feedbackMsg = 'Good answer! Consider including more specific examples.';
+        else if (d.rating === 'Average') feedbackMsg = 'Decent attempt. Try to include more relevant keywords and use the STAR method.';
+        else feedbackMsg = 'Your answer could be improved. Review the tips and model answer, then try again.';
+        feedbackMsg += ` Matched keywords: ${d.matchedKeywords.join(', ') || 'none'} (${d.matchedKeywords.length}/${d.totalKeywords})`;
+        document.getElementById('feedbackText').textContent = feedbackMsg;
+
+        // Show model answer in feedback
+        if (d.modelAnswer) {
+          document.getElementById('modelAnswerText').textContent = '"' + d.modelAnswer + '"';
+        }
+
+        document.getElementById('feedbackCard').style.display = 'block';
+        document.getElementById('feedbackCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        showToast('Answer submitted!', 'success');
+        await loadHRStats();
+        await loadHRHistory();
+      } catch (err) {
+        showToast('Failed to submit answer', 'error');
+      }
+    }
+
+    async function loadHRHistory() {
+      try {
+        const res = await apiGetHRHistory();
+        if (!res || !res.success) return;
+        const container = document.querySelector('.hr-history');
+        if (!container) return;
+
+        const header = container.querySelector('.section-header');
+        const existingItems = container.querySelectorAll('.hr-history-item');
+        existingItems.forEach(el => el.remove());
+
+        if (res.data.length === 0) {
+          container.insertAdjacentHTML('beforeend', '<p style="color:var(--text-muted);font-size:0.9rem;padding:12px;">No previous responses yet.</p>');
+          return;
+        }
+
+        res.data.forEach(a => {
+          const date = new Date(a.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+          const qText = a.questionId ? a.questionId.question : 'Unknown question';
+          const truncated = a.userAnswer.length > 150 ? a.userAnswer.substring(0, 150) + '...' : a.userAnswer;
+          container.insertAdjacentHTML('beforeend', `
+            <div class="hr-history-item">
+              <div class="history-question">${qText}</div>
+              <div class="history-answer">"${truncated}"</div>
+              <div class="history-date">${date} · Match: ${a.matchScore}%</div>
+            </div>
+          `);
+        });
+      } catch (err) { console.error('HR history error:', err); }
     }
   </script>
 </body>

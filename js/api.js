@@ -1,0 +1,224 @@
+/* ============================================
+   PLACEMENT COMPANION — API Utility Module
+   ============================================ */
+
+const API_BASE = '/api';
+
+// ---- Token Management ----
+function getToken() {
+  return localStorage.getItem('pc_token');
+}
+
+function setToken(token) {
+  localStorage.setItem('pc_token', token);
+}
+
+function removeToken() {
+  localStorage.removeItem('pc_token');
+  localStorage.removeItem('pc_user');
+}
+
+function getUser() {
+  const u = localStorage.getItem('pc_user');
+  return u ? JSON.parse(u) : null;
+}
+
+function setUser(user) {
+  localStorage.setItem('pc_user', JSON.stringify(user));
+}
+
+function isLoggedIn() {
+  return !!getToken();
+}
+
+// ---- Auth Guard — redirect to login if not authenticated ----
+function requireAuth() {
+  if (!isLoggedIn()) {
+    window.location.href = 'login.html';
+    return false;
+  }
+  return true;
+}
+
+// ---- Fetch wrapper with auth header ----
+async function apiFetch(endpoint, options = {}) {
+  const token = getToken();
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(options.headers || {})
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}${endpoint}`, {
+      ...options,
+      headers
+    });
+
+    const data = await res.json();
+
+    // If 401, token invalid — redirect to login
+    if (res.status === 401) {
+      removeToken();
+      window.location.href = 'login.html';
+      return null;
+    }
+
+    if (!res.ok) {
+      throw new Error(data.message || 'API request failed');
+    }
+
+    return data;
+  } catch (err) {
+    console.error(`API Error [${endpoint}]:`, err.message);
+    throw err;
+  }
+}
+
+// ---- Auth API methods ----
+async function apiLogin(email, password) {
+  const data = await apiFetch('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ email, password })
+  });
+  if (data && data.success) {
+    setToken(data.token);
+    setUser(data.user);
+  }
+  return data;
+}
+
+async function apiRegister(name, email, password) {
+  const data = await apiFetch('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({ name, email, password })
+  });
+  if (data && data.success) {
+    setToken(data.token);
+    setUser(data.user);
+  }
+  return data;
+}
+
+async function apiGetMe() {
+  return apiFetch('/auth/me');
+}
+
+async function apiUpdateProfile(profileData) {
+  return apiFetch('/auth/profile', {
+    method: 'PUT',
+    body: JSON.stringify(profileData)
+  });
+}
+
+async function apiChangePassword(currentPassword, newPassword) {
+  return apiFetch('/auth/password', {
+    method: 'PUT',
+    body: JSON.stringify({ currentPassword, newPassword })
+  });
+}
+
+async function apiDeleteAccount() {
+  return apiFetch('/auth/account', { method: 'DELETE' });
+}
+
+// ---- Quiz API methods ----
+async function apiGetQuizQuestions(topic, limit = 10) {
+  return apiFetch(`/quiz/questions/${encodeURIComponent(topic)}?limit=${limit}`);
+}
+
+async function apiSubmitQuiz(topic, answers, timeTaken) {
+  return apiFetch('/quiz/submit', {
+    method: 'POST',
+    body: JSON.stringify({ topic, answers, timeTaken })
+  });
+}
+
+async function apiGetQuizHistory() {
+  return apiFetch('/quiz/history');
+}
+
+async function apiGetQuizStats() {
+  return apiFetch('/quiz/stats');
+}
+
+// ---- DSA API methods ----
+async function apiGetDSAProblems(topic, difficulty) {
+  let query = '/dsa/problems?';
+  if (topic) query += `topic=${encodeURIComponent(topic)}&`;
+  if (difficulty) query += `difficulty=${encodeURIComponent(difficulty)}`;
+  return apiFetch(query);
+}
+
+async function apiGetDSAProblem(id) {
+  return apiFetch(`/dsa/problems/${id}`);
+}
+
+async function apiToggleDSASolved(id) {
+  return apiFetch(`/dsa/problems/${id}/toggle`, { method: 'POST' });
+}
+
+async function apiGetDSAStats() {
+  return apiFetch('/dsa/stats');
+}
+
+// ---- HR API methods ----
+async function apiGetRandomHR() {
+  return apiFetch('/hr/random');
+}
+
+async function apiSubmitHR(questionId, userAnswer) {
+  return apiFetch('/hr/submit', {
+    method: 'POST',
+    body: JSON.stringify({ questionId, userAnswer })
+  });
+}
+
+async function apiGetHRHistory() {
+  return apiFetch('/hr/history');
+}
+
+async function apiGetHRStats() {
+  return apiFetch('/hr/stats');
+}
+
+// ---- Company API methods ----
+async function apiGetCompanies() {
+  return apiFetch('/company');
+}
+
+async function apiUpdateCompanyStatus(companyId, status) {
+  return apiFetch(`/company/${companyId}/status`, {
+    method: 'PUT',
+    body: JSON.stringify({ status })
+  });
+}
+
+// ---- Progress / Dashboard API methods ----
+async function apiGetDashboardStats() {
+  return apiFetch('/progress/dashboard');
+}
+
+async function apiGetActivity() {
+  return apiFetch('/progress/activity');
+}
+
+// ---- Update sidebar user info across pages ----
+function updateSidebarUser() {
+  const user = getUser();
+  if (!user) return;
+  
+  const initials = user.name ? user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) : '??';
+  
+  document.querySelectorAll('.user-avatar').forEach(el => { el.textContent = initials; });
+  document.querySelectorAll('.user-name').forEach(el => { el.textContent = user.name || 'User'; });
+  document.querySelectorAll('.user-email').forEach(el => { el.textContent = user.email || ''; });
+}
+
+// ---- Logout helper ----
+function logout() {
+  removeToken();
+  window.location.href = 'login.html';
+}

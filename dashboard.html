@@ -46,7 +46,7 @@
         <a href="profile.html" class="nav-link">
           <span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile
         </a>
-        <a href="login.html" class="nav-link">
+        <a href="#" class="nav-link" onclick="logout()">
           <span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout
         </a>
       </div>
@@ -175,7 +175,7 @@
             <div class="chart-header">
               <h3>Topic Breakdown</h3>
             </div>
-            <div style="padding: 0 4px;">
+            <div style="padding: 0 4px;" id="topicBreakdownBars">
               <div class="progress-bar-container">
                 <div class="progress-label">
                   <span>Quantitative</span><span>82%</span>
@@ -228,7 +228,7 @@
               <h3>🏢 Upcoming Companies</h3>
               <a href="companies.html">View all →</a>
             </div>
-            <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; flex-direction:column; gap:12px;" id="upcomingCompanies">
               <!-- Company Row 1 -->
               <div style="display:flex; align-items:center; gap:14px; padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border); transition:all var(--transition);" onmouseover="this.style.boxShadow='var(--shadow)'" onmouseout="this.style.boxShadow='none'">
                 <div class="company-logo" style="background:rgba(66,133,244,0.1); color:#4285F4; font-size:1.2rem; width:44px; height:44px;">G</div>
@@ -260,7 +260,7 @@
           </div>
 
           <!-- Recent Activity -->
-          <div class="activity-feed">
+          <div class="activity-feed" id="activityFeed">
             <div class="section-header">
               <h3>📋 Recent Activity</h3>
             </div>
@@ -317,5 +317,147 @@
   </div>
 
   <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    if (!requireAuth()) { /* redirected */ }
+    else {
+      updateSidebarUser();
+      const user = getUser();
+      // Update welcome message
+      const breadcrumb = document.querySelector('.breadcrumb');
+      if (breadcrumb && user) breadcrumb.textContent = `Welcome back, ${user.name.split(' ')[0]}! 👋`;
+
+      loadDashboard();
+    }
+
+    async function loadDashboard() {
+      try {
+        const res = await apiGetDashboardStats();
+        if (!res || !res.success) return;
+        const d = res.data;
+        const s = d.stats;
+
+        // Update stat cards
+        const statValues = document.querySelectorAll('.stat-card .stat-info h3');
+        if (statValues[0]) statValues[0].textContent = s.totalQuizzes;
+        if (statValues[1]) statValues[1].textContent = s.avgScore + '%';
+        if (statValues[2]) statValues[2].textContent = s.dsaSolved;
+        if (statValues[3]) statValues[3].textContent = s.hrPracticed;
+
+        // Update streak
+        const streakCount = document.querySelector('.streak-count');
+        if (streakCount) streakCount.textContent = s.streak + ' Days';
+
+        // Update streak days visual
+        const streakDays = document.querySelectorAll('.streak-day');
+        streakDays.forEach((day, i) => {
+          if (i < s.streak && i < 7) {
+            day.classList.add('active');
+            day.classList.remove('inactive');
+          } else {
+            day.classList.remove('active');
+            day.classList.add('inactive');
+          }
+        });
+
+        // Update topic breakdown progress bars
+        const topicBreakdown = document.getElementById('topicBreakdownBars');
+        if (topicBreakdown && d.topicStats) {
+          let html = '';
+          const colors = { 'Quantitative': 'purple', 'Logical Reasoning': 'blue', 'Verbal Ability': 'green' };
+          for (const [topic, stat] of Object.entries(d.topicStats)) {
+            const color = colors[topic] || 'purple';
+            html += `<div class="progress-bar-container">
+              <div class="progress-label"><span>${topic}</span><span>${stat.avg}%</span></div>
+              <div class="progress-bar"><div class="progress-fill ${color}" style="width:${stat.avg}%"></div></div>
+            </div>`;
+          }
+          // Add DSA topic stats
+          if (d.dsaTopicStats) {
+            const dsaColors = ['orange', 'blue', 'green', 'red', 'purple'];
+            let ci = 0;
+            for (const [topic, stat] of Object.entries(d.dsaTopicStats)) {
+              const pct = stat.total > 0 ? Math.round((stat.solved / stat.total) * 100) : 0;
+              html += `<div class="progress-bar-container">
+                <div class="progress-label"><span>${topic}</span><span>${pct}%</span></div>
+                <div class="progress-bar"><div class="progress-fill ${dsaColors[ci % dsaColors.length]}" style="width:${pct}%"></div></div>
+              </div>`;
+              ci++;
+            }
+          }
+          topicBreakdown.innerHTML = html || '<p style="color:var(--text-muted);font-size:0.9rem;">No data yet. Start practicing!</p>';
+        }
+
+        // Update upcoming companies
+        const upcomingEl = document.getElementById('upcomingCompanies');
+        if (upcomingEl && d.upcomingCompanies) {
+          if (d.upcomingCompanies.length === 0) {
+            upcomingEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem;">No upcoming companies.</p>';
+          } else {
+            upcomingEl.innerHTML = d.upcomingCompanies.map(c => {
+              const date = new Date(c.visitDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+              return `<div style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);transition:all var(--transition);" onmouseover="this.style.boxShadow='var(--shadow)'" onmouseout="this.style.boxShadow='none'">
+                <div class="company-logo" style="background:rgba(79,70,229,0.1);color:var(--primary);font-size:1.2rem;width:44px;height:44px;">${c.name[0]}</div>
+                <div style="flex:1;">
+                  <div style="font-weight:600;font-size:0.95rem;">${c.name}</div>
+                  <div style="font-size:0.8rem;color:var(--text-light);">${date} · ${c.role}</div>
+                </div>
+                <span class="status-badge ${c.status}">${c.status.replace('-', ' ')}</span>
+              </div>`;
+            }).join('');
+          }
+        }
+
+        // Load activity
+        loadActivity();
+      } catch (err) {
+        console.error('Dashboard load error:', err);
+      }
+    }
+
+    async function loadActivity() {
+      try {
+        const res = await apiGetActivity();
+        if (!res || !res.success) return;
+        const activityEl = document.getElementById('activityFeed');
+        if (!activityEl) return;
+
+        if (res.data.length === 0) {
+          activityEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem;">No recent activity. Start practicing!</p>';
+          return;
+        }
+
+        const icons = {
+          quiz: { bg: 'rgba(79,70,229,0.1)', color: 'var(--primary)', icon: 'fa-star' },
+          dsa: { bg: 'rgba(16,185,129,0.1)', color: 'var(--success)', icon: 'fa-check' },
+          hr: { bg: 'rgba(245,158,11,0.1)', color: 'var(--accent)', icon: 'fa-comment' }
+        };
+
+        activityEl.innerHTML = res.data.map(a => {
+          const ic = icons[a.type] || icons.quiz;
+          const ago = timeAgo(new Date(a.date));
+          return `<div class="activity-item">
+            <div class="activity-icon" style="background:${ic.bg};color:${ic.color};"><i class="fa-solid ${ic.icon}"></i></div>
+            <div>
+              <div class="activity-text"><strong>${a.title}</strong></div>
+              <div class="activity-time">${ago}</div>
+            </div>
+          </div>`;
+        }).join('');
+      } catch (err) { console.error('Activity load error:', err); }
+    }
+
+    function timeAgo(date) {
+      const seconds = Math.floor((new Date() - date) / 1000);
+      if (seconds < 60) return 'just now';
+      const minutes = Math.floor(seconds / 60);
+      if (minutes < 60) return minutes + ' min ago';
+      const hours = Math.floor(minutes / 60);
+      if (hours < 24) return hours + ' hours ago';
+      const days = Math.floor(hours / 24);
+      if (days < 7) return days + ' days ago';
+      return date.toLocaleDateString();
+    }
+  </script>
 </body>
 </html>

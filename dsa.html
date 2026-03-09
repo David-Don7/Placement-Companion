@@ -30,7 +30,7 @@
       <div class="nav-section">
         <div class="nav-section-title">Account</div>
         <a href="profile.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile</a>
-        <a href="login.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout</a>
+        <a href="#" class="nav-link" onclick="logout()"><span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout</a>
       </div>
       <div class="sidebar-footer">
         <div class="sidebar-user" onclick="window.location.href='profile.html'">
@@ -164,7 +164,7 @@
           <span class="filter-chip" onclick="filterByTopic(this, 'queue')">Queue</span>
           <span class="filter-chip" onclick="filterByTopic(this, 'trees')">Trees</span>
           <span class="filter-chip" onclick="filterByTopic(this, 'graphs')">Graphs</span>
-          <span class="filter-chip" onclick="filterByTopic(this, 'dp')">DP</span>
+          <span class="filter-chip" onclick="filterByTopic(this, 'dynamic-programming')">DP</span>
           <!-- Difficulty filters -->
           <span style="color:var(--text-muted); margin:0 4px;">|</span>
           <span class="filter-chip" onclick="filterByDifficulty(this, 'easy')">🟢 Easy</span>
@@ -185,76 +185,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr data-topic="arrays" data-difficulty="easy">
-                <td><div class="solved-check checked" onclick="toggleSolved(this)"><i class="fa-solid fa-check" style="font-size:0.7rem;"></i></div></td>
-                <td><span class="problem-title" onclick="openProblemModal('Two Sum')">Two Sum</span></td>
-                <td><span class="topic-tag" style="background:rgba(79,70,229,0.1); color:var(--primary);">Arrays</span></td>
-                <td><span class="difficulty-badge difficulty-easy">Easy</span></td>
-                <td><button class="btn btn-sm btn-outline" onclick="openProblemModal('Two Sum')"><i class="fa-solid fa-eye"></i> View</button></td>
-              </tr>
-              <tr data-topic="arrays" data-difficulty="medium">
-                <td><div class="solved-check checked" onclick="toggleSolved(this)"><i class="fa-solid fa-check" style="font-size:0.7rem;"></i></div></td>
-                <td><span class="problem-title" onclick="openProblemModal('Best Time to Buy and Sell Stock')">Best Time to Buy and Sell Stock</span></td>
-                <td><span class="topic-tag" style="background:rgba(79,70,229,0.1); color:var(--primary);">Arrays</span></td>
-                <td><span class="difficulty-badge difficulty-medium">Medium</span></td>
-                <td><button class="btn btn-sm btn-outline" onclick="openProblemModal('Best Time to Buy and Sell Stock')"><i class="fa-solid fa-eye"></i> View</button></td>
-              </tr>
-              <tr data-topic="strings" data-difficulty="easy">
-                <td><div class="solved-check checked" onclick="toggleSolved(this)"><i class="fa-solid fa-check" style="font-size:0.7rem;"></i></div></td>
-                <td><span class="problem-title">Reverse String</span></td>
-                <td><span class="topic-tag" style="background:rgba(14,165,233,0.1); color:var(--secondary);">Strings</span></td>
-                <td><span class="difficulty-badge difficulty-easy">Easy</span></td>
-                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
-              </tr>
-              <tr data-topic="linked-list" data-difficulty="medium">
-                <td><div class="solved-check" onclick="toggleSolved(this)"></div></td>
-                <td><span class="problem-title">Reverse Linked List</span></td>
-                <td><span class="topic-tag" style="background:rgba(16,185,129,0.1); color:var(--success);">Linked List</span></td>
-                <td><span class="difficulty-badge difficulty-medium">Medium</span></td>
-                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
-              </tr>
-              <tr data-topic="stack" data-difficulty="easy">
-                <td><div class="solved-check checked" onclick="toggleSolved(this)"><i class="fa-solid fa-check" style="font-size:0.7rem;"></i></div></td>
-                <td><span class="problem-title">Valid Parentheses</span></td>
-                <td><span class="topic-tag" style="background:rgba(245,158,11,0.1); color:var(--accent);">Stack</span></td>
-                <td><span class="difficulty-badge difficulty-easy">Easy</span></td>
-                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
-              </tr>
-              <tr data-topic="trees" data-difficulty="medium">
-                <td><div class="solved-check" onclick="toggleSolved(this)"></div></td>
-                <td><span class="problem-title">Binary Tree Inorder Traversal</span></td>
-                <td><span class="topic-tag" style="background:rgba(59,130,246,0.1); color:var(--info);">Trees</span></td>
-                <td><span class="difficulty-badge difficulty-medium">Medium</span></td>
-                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
-              </tr>
-              <tr data-topic="graphs" data-difficulty="hard">
-                <td><div class="solved-check" onclick="toggleSolved(this)"></div></td>
-                <td><span class="problem-title">Number of Islands</span></td>
-                <td><span class="topic-tag" style="background:rgba(168,85,247,0.1); color:#a855f7;">Graphs</span></td>
-                <td><span class="difficulty-badge difficulty-hard">Hard</span></td>
-                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
-              </tr>
-              <tr data-topic="dp" data-difficulty="hard">
-                <td><div class="solved-check" onclick="toggleSolved(this)"></div></td>
-                <td><span class="problem-title">Longest Common Subsequence</span></td>
-                <td><span class="topic-tag" style="background:rgba(245,158,11,0.1); color:var(--accent);">DP</span></td>
-                <td><span class="difficulty-badge difficulty-hard">Hard</span></td>
-                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
-              </tr>
-              <tr data-topic="arrays" data-difficulty="hard">
-                <td><div class="solved-check" onclick="toggleSolved(this)"></div></td>
-                <td><span class="problem-title">Merge Intervals</span></td>
-                <td><span class="topic-tag" style="background:rgba(79,70,229,0.1); color:var(--primary);">Arrays</span></td>
-                <td><span class="difficulty-badge difficulty-hard">Hard</span></td>
-                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
-              </tr>
-              <tr data-topic="queue" data-difficulty="medium">
-                <td><div class="solved-check" onclick="toggleSolved(this)"></div></td>
-                <td><span class="problem-title">Implement Queue using Stacks</span></td>
-                <td><span class="topic-tag" style="background:rgba(239,68,68,0.1); color:var(--danger);">Queue</span></td>
-                <td><span class="difficulty-badge difficulty-medium">Medium</span></td>
-                <td><button class="btn btn-sm btn-outline"><i class="fa-solid fa-eye"></i> View</button></td>
-              </tr>
+              <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px;">Loading problems...</td></tr>
             </tbody>
           </table>
         </div>
@@ -291,42 +222,134 @@
   </div>
 
   <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
   <script>
-    /* ---- DSA Page Logic ---- */
-    function toggleSolved(el) {
-      el.classList.toggle('checked');
-      if (el.classList.contains('checked')) {
-        el.innerHTML = '<i class="fa-solid fa-check" style="font-size:0.7rem;"></i>';
-      } else {
-        el.innerHTML = '';
+    /* ---- DSA Page Logic (API-connected) ---- */
+    if (!requireAuth()) { /* redirected */ }
+    else { updateSidebarUser(); loadDSAPage(); }
+
+    let allProblems = [];
+    let activeTopicFilter = 'all';
+    let activeDifficultyFilter = null;
+
+    async function loadDSAPage() {
+      try {
+        const [problemsRes, statsRes] = await Promise.all([
+          apiGetDSAProblems(),
+          apiGetDSAStats()
+        ]);
+
+        if (problemsRes && problemsRes.success) {
+          allProblems = problemsRes.data;
+          renderProblems(allProblems);
+        }
+
+        if (statsRes && statsRes.success) {
+          updateDSAStats(statsRes.data);
+        }
+      } catch (err) {
+        console.error('DSA load error:', err);
+        showToast('Failed to load DSA data', 'error');
       }
     }
 
+    function updateDSAStats(stats) {
+      const statValues = document.querySelectorAll('.stat-card .stat-info h3');
+      if (statValues[0]) statValues[0].textContent = `${stats.solvedCount} / ${stats.totalProblems}`;
+
+      const topicCards = document.querySelectorAll('.topic-grid .topic-card');
+      const topicOrder = ['Arrays', 'Strings', 'Linked List', 'Stack', 'Queue', 'Trees', 'Graphs', 'Dynamic Programming'];
+
+      topicCards.forEach((card, i) => {
+        const topic = topicOrder[i];
+        if (topic && stats.topicStats[topic]) {
+          const s = stats.topicStats[topic];
+          const pct = s.total > 0 ? Math.round((s.solved / s.total) * 100) : 0;
+          const bar = card.querySelector('.progress-fill');
+          const text = card.querySelector('.topic-stats');
+          if (bar) bar.style.width = pct + '%';
+          if (text) text.textContent = `${s.solved}/${s.total} solved`;
+        }
+      });
+    }
+
+    function renderProblems(problems) {
+      const tbody = document.querySelector('#dsaTable tbody');
+      if (!tbody) return;
+
+      if (problems.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px;">No problems found.</td></tr>';
+        return;
+      }
+
+      const topicColors = {
+        'Arrays': { bg: 'rgba(79,70,229,0.1)', color: 'var(--primary)' },
+        'Strings': { bg: 'rgba(14,165,233,0.1)', color: 'var(--secondary)' },
+        'Linked List': { bg: 'rgba(16,185,129,0.1)', color: 'var(--success)' },
+        'Stack': { bg: 'rgba(245,158,11,0.1)', color: 'var(--accent)' },
+        'Queue': { bg: 'rgba(239,68,68,0.1)', color: 'var(--danger)' },
+        'Trees': { bg: 'rgba(59,130,246,0.1)', color: 'var(--info)' },
+        'Graphs': { bg: 'rgba(168,85,247,0.1)', color: '#a855f7' },
+        'Dynamic Programming': { bg: 'rgba(245,158,11,0.1)', color: 'var(--accent)' }
+      };
+
+      tbody.innerHTML = problems.map(p => {
+        const tc = topicColors[p.topic] || { bg: 'rgba(79,70,229,0.1)', color: 'var(--primary)' };
+        const topicSlug = p.topic.toLowerCase().replace(/\s+/g, '-');
+        return `<tr data-topic="${topicSlug}" data-difficulty="${p.difficulty}" data-id="${p._id}">
+          <td><div class="solved-check${p.solved ? ' checked' : ''}" onclick="toggleSolved(this, '${p._id}')">
+            ${p.solved ? '<i class="fa-solid fa-check" style="font-size:0.7rem;"></i>' : ''}
+          </div></td>
+          <td><span class="problem-title" onclick="openProblemModal('${p._id}')">${p.question}</span></td>
+          <td><span class="topic-tag" style="background:${tc.bg};color:${tc.color};">${p.topic}</span></td>
+          <td><span class="difficulty-badge difficulty-${p.difficulty}">${p.difficulty.charAt(0).toUpperCase() + p.difficulty.slice(1)}</span></td>
+          <td><button class="btn btn-sm btn-outline" onclick="openProblemModal('${p._id}')"><i class="fa-solid fa-eye"></i> View</button></td>
+        </tr>`;
+      }).join('');
+    }
+
+    async function toggleSolved(el, id) {
+      try {
+        const res = await apiToggleDSASolved(id);
+        if (res && res.success) {
+          el.classList.toggle('checked');
+          if (el.classList.contains('checked')) {
+            el.innerHTML = '<i class="fa-solid fa-check" style="font-size:0.7rem;"></i>';
+            showToast('Marked as solved!', 'success');
+          } else {
+            el.innerHTML = '';
+            showToast('Unmarked', 'info');
+          }
+          const statsRes = await apiGetDSAStats();
+          if (statsRes && statsRes.success) updateDSAStats(statsRes.data);
+        }
+      } catch (err) { showToast('Failed to update', 'error'); }
+    }
+
     function filterByTopic(chip, topic) {
-      // Update active chip (topic chips only)
       document.querySelectorAll('.dsa-filters .filter-chip').forEach((c, i) => {
         if (i < 9) c.classList.remove('active');
       });
       chip.classList.add('active');
-
-      const rows = document.querySelectorAll('#dsaTable tbody tr');
-      rows.forEach(row => {
-        if (topic === 'all' || row.dataset.topic === topic) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
-        }
-      });
+      activeTopicFilter = topic;
+      applyFilters();
     }
 
     function filterByDifficulty(chip, difficulty) {
+      activeDifficultyFilter = activeDifficultyFilter === difficulty ? null : difficulty;
+      document.querySelectorAll('.dsa-filters .filter-chip').forEach((c, i) => {
+        if (i >= 9) c.classList.remove('active');
+      });
+      if (activeDifficultyFilter) chip.classList.add('active');
+      applyFilters();
+    }
+
+    function applyFilters() {
       const rows = document.querySelectorAll('#dsaTable tbody tr');
       rows.forEach(row => {
-        if (row.dataset.difficulty === difficulty) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
-        }
+        const topicMatch = activeTopicFilter === 'all' || row.dataset.topic === activeTopicFilter;
+        const diffMatch = !activeDifficultyFilter || row.dataset.difficulty === activeDifficultyFilter;
+        row.style.display = (topicMatch && diffMatch) ? '' : 'none';
       });
     }
 
@@ -334,21 +357,56 @@
       const query = document.getElementById('dsaSearch').value.toLowerCase();
       const rows = document.querySelectorAll('#dsaTable tbody tr');
       rows.forEach(row => {
-        const title = row.querySelector('.problem-title').textContent.toLowerCase();
-        row.style.display = title.includes(query) ? '' : 'none';
+        const title = row.querySelector('.problem-title');
+        if (title) row.style.display = title.textContent.toLowerCase().includes(query) ? '' : 'none';
       });
     }
 
-    function openProblemModal(title) {
-      document.getElementById('modalTitle').textContent = title;
-      document.getElementById('problemModal').classList.add('active');
+    async function openProblemModal(id) {
+      try {
+        const res = await apiGetDSAProblem(id);
+        if (!res || !res.success) return;
+        const p = res.data;
+        const modal = document.getElementById('problemModal');
+        const modalInner = modal.querySelector('.modal');
+        modalInner.innerHTML = `
+          <div class="modal-header">
+            <h2>${p.question}</h2>
+            <button class="modal-close" onclick="closeProblemModal()">✕</button>
+          </div>
+          <div>
+            <span class="difficulty-badge difficulty-${p.difficulty}" style="margin-bottom:16px;display:inline-block;">${p.difficulty.charAt(0).toUpperCase()+p.difficulty.slice(1)}</span>
+            <span class="topic-tag" style="margin-left:8px;">${p.topic}</span>
+          </div>
+          <h4 style="margin-top:20px;margin-bottom:8px;font-size:0.95rem;">💡 Solution Approach</h4>
+          <div style="background:var(--bg);border-radius:var(--radius-sm);padding:16px;font-size:0.85rem;color:var(--text-light);line-height:1.7;">
+            <p>${p.solution || 'No solution available.'}</p>
+          </div>
+          <div style="margin-top:24px;display:flex;gap:12px;">
+            <button class="btn ${p.solved ? 'btn-outline' : 'btn-success'} btn-sm" onclick="toggleSolvedModal('${p._id}')">
+              <i class="fa-solid fa-check"></i> ${p.solved ? 'Unmark Solved' : 'Mark as Solved'}
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="closeProblemModal()">Close</button>
+          </div>`;
+        modal.classList.add('active');
+      } catch (err) { showToast('Failed to load problem', 'error'); }
+    }
+
+    async function toggleSolvedModal(id) {
+      try {
+        const res = await apiToggleDSASolved(id);
+        if (res && res.success) {
+          showToast(res.data.solved ? 'Marked as solved!' : 'Unmarked', res.data.solved ? 'success' : 'info');
+          closeProblemModal();
+          loadDSAPage();
+        }
+      } catch (err) { showToast('Failed to update', 'error'); }
     }
 
     function closeProblemModal() {
       document.getElementById('problemModal').classList.remove('active');
     }
 
-    // Close modal on overlay click
     document.getElementById('problemModal').addEventListener('click', function(e) {
       if (e.target === this) closeProblemModal();
     });

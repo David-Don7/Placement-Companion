@@ -30,7 +30,7 @@
       <div class="nav-section">
         <div class="nav-section-title">Account</div>
         <a href="profile.html" class="nav-link active"><span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile</a>
-        <a href="login.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout</a>
+        <a href="#" onclick="logout()" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout</a>
       </div>
       <div class="sidebar-footer">
         <div class="sidebar-user" onclick="window.location.href='profile.html'">
@@ -178,38 +178,16 @@
             <!-- Aptitude -->
             <div>
               <h4 style="font-size:0.9rem; margin-bottom:16px; color:var(--text-light);">Aptitude Scores by Topic</h4>
-              <div class="progress-bar-container">
-                <div class="progress-label"><span>Quantitative</span><span>82%</span></div>
-                <div class="progress-bar"><div class="progress-fill purple" style="width:82%"></div></div>
-              </div>
-              <div class="progress-bar-container">
-                <div class="progress-label"><span>Logical Reasoning</span><span>65%</span></div>
-                <div class="progress-bar"><div class="progress-fill blue" style="width:65%"></div></div>
-              </div>
-              <div class="progress-bar-container">
-                <div class="progress-label"><span>Verbal Ability</span><span>70%</span></div>
-                <div class="progress-bar"><div class="progress-fill green" style="width:70%"></div></div>
+              <div id="aptitudeBars">
+                <p style="color:var(--text-muted);font-size:0.85rem;">Loading...</p>
               </div>
             </div>
 
             <!-- DSA -->
             <div>
               <h4 style="font-size:0.9rem; margin-bottom:16px; color:var(--text-light);">DSA Progress by Category</h4>
-              <div class="progress-bar-container">
-                <div class="progress-label"><span>Arrays</span><span>75%</span></div>
-                <div class="progress-bar"><div class="progress-fill purple" style="width:75%"></div></div>
-              </div>
-              <div class="progress-bar-container">
-                <div class="progress-label"><span>Strings</span><span>60%</span></div>
-                <div class="progress-bar"><div class="progress-fill blue" style="width:60%"></div></div>
-              </div>
-              <div class="progress-bar-container">
-                <div class="progress-label"><span>Trees & Graphs</span><span>35%</span></div>
-                <div class="progress-bar"><div class="progress-fill red" style="width:35%"></div></div>
-              </div>
-              <div class="progress-bar-container">
-                <div class="progress-label"><span>Dynamic Programming</span><span>10%</span></div>
-                <div class="progress-bar"><div class="progress-fill orange" style="width:10%"></div></div>
+              <div id="dsaBars">
+                <p style="color:var(--text-muted);font-size:0.85rem;">Loading...</p>
               </div>
             </div>
           </div>
@@ -231,23 +209,157 @@
   </div>
 
   <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
   <script>
-    function saveProfile(e) {
+    /* ---- Profile Page Logic (API-connected) ---- */
+    if (!requireAuth()) { /* redirected */ }
+    else { updateSidebarUser(); loadProfile(); }
+
+    async function loadProfile() {
+      try {
+        const res = await apiGetMe();
+        if (!res || !res.success) return;
+        const u = res.data;
+
+        // Fill form fields
+        document.getElementById('profileName').value = u.name || '';
+        document.getElementById('profileEmail').value = u.email || '';
+        document.getElementById('profileCollege').value = u.college || '';
+        document.getElementById('profileBranch').value = u.branch || '';
+        document.getElementById('profileYear').value = u.year || '';
+        document.getElementById('profileCGPA').value = u.cgpa || '';
+
+        // Profile header
+        const initials = u.name ? u.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2) : 'U';
+        const avatarEl = document.querySelector('.profile-avatar');
+        if (avatarEl) avatarEl.textContent = initials;
+        const nameEl = document.querySelector('.profile-header-card h2');
+        if (nameEl) nameEl.textContent = u.name || 'User';
+        const emailEl = document.querySelector('.profile-email');
+        if (emailEl) emailEl.textContent = u.email || '';
+        const joinedEl = document.querySelector('.profile-joined');
+        if (joinedEl && u.createdAt) {
+          const d = new Date(u.createdAt);
+          joinedEl.textContent = 'Joined ' + d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        }
+
+        // Load stats
+        loadProfileStats();
+      } catch (err) {
+        showToast('Failed to load profile', 'error');
+      }
+    }
+
+    async function loadProfileStats() {
+      try {
+        const res = await apiGetDashboardStats();
+        if (!res || !res.success) return;
+        const d = res.data;
+        const s = d.stats;
+
+        // Header stat values
+        const statVals = document.querySelectorAll('.profile-stat .stat-value');
+        if (statVals[0]) statVals[0].textContent = s.totalQuizzes || 0;
+        if (statVals[1]) statVals[1].textContent = s.dsaSolved || 0;
+        if (statVals[2]) statVals[2].textContent = s.hrPracticed || 0;
+        if (statVals[3]) statVals[3].textContent = (s.streak || 0) + '\uD83D\uDD25';
+
+        // Aptitude topic bars
+        const aptContainer = document.getElementById('aptitudeBars');
+        if (aptContainer && d.topicStats) {
+          let html = '';
+          const colors = { 'Quantitative': 'purple', 'Logical Reasoning': 'blue', 'Verbal Ability': 'green' };
+          for (const [topic, stat] of Object.entries(d.topicStats)) {
+            const color = colors[topic] || 'purple';
+            html += `<div class="progress-bar-container">
+              <div class="progress-label"><span>${topic}</span><span>${stat.avg}%</span></div>
+              <div class="progress-bar"><div class="progress-fill ${color}" style="width:${stat.avg}%"></div></div>
+            </div>`;
+          }
+          aptContainer.innerHTML = html || '<p style="color:var(--text-muted);font-size:0.85rem;">No quiz data yet</p>';
+        }
+
+        // DSA topic bars
+        const dsaContainer = document.getElementById('dsaBars');
+        if (dsaContainer && d.dsaTopicStats) {
+          let html = '';
+          const colors = ['purple', 'blue', 'green', 'orange', 'red'];
+          let ci = 0;
+          for (const [topic, stat] of Object.entries(d.dsaTopicStats)) {
+            const pct = stat.total ? Math.round((stat.solved / stat.total) * 100) : 0;
+            html += `<div class="progress-bar-container">
+              <div class="progress-label"><span>${topic}</span><span>${stat.solved}/${stat.total} (${pct}%)</span></div>
+              <div class="progress-bar"><div class="progress-fill ${colors[ci % colors.length]}" style="width:${pct}%"></div></div>
+            </div>`;
+            ci++;
+          }
+          dsaContainer.innerHTML = html || '<p style="color:var(--text-muted);font-size:0.85rem;">No DSA data yet</p>';
+        }
+      } catch (err) { /* silent */ }
+    }
+
+    async function saveProfile(e) {
       e.preventDefault();
-      alert('Profile saved successfully! (Backend not connected yet)');
+      const data = {
+        name: document.getElementById('profileName').value.trim(),
+        email: document.getElementById('profileEmail').value.trim(),
+        college: document.getElementById('profileCollege').value.trim(),
+        branch: document.getElementById('profileBranch').value.trim(),
+        year: document.getElementById('profileYear').value.trim(),
+        cgpa: document.getElementById('profileCGPA').value.trim()
+      };
+      if (!data.name || !data.email) { showToast('Name and email are required', 'error'); return false; }
+      try {
+        const res = await apiUpdateProfile(data);
+        if (res.success) {
+          setUser(res.data);
+          updateSidebarUser();
+          loadProfile();
+          showToast('Profile updated!', 'success');
+        } else {
+          showToast(res.message || 'Update failed', 'error');
+        }
+      } catch (err) {
+        showToast('Failed to update profile', 'error');
+      }
       return false;
     }
 
-    function changePassword(e) {
+    async function changePassword(e) {
       e.preventDefault();
-      alert('Password updated! (Backend not connected yet)');
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      if (!currentPassword || !newPassword) { showToast('Both fields are required', 'error'); return false; }
+      if (newPassword.length < 8) { showToast('New password must be at least 8 characters', 'error'); return false; }
+      try {
+        const res = await apiChangePassword(currentPassword, newPassword);
+        if (res.success) {
+          showToast('Password updated!', 'success');
+          document.getElementById('currentPassword').value = '';
+          document.getElementById('newPassword').value = '';
+        } else {
+          showToast(res.message || 'Failed to change password', 'error');
+        }
+      } catch (err) {
+        showToast('Failed to change password', 'error');
+      }
       return false;
     }
 
-    function confirmDelete() {
-      if (confirm('Are you sure you want to delete your account? This action is irreversible.')) {
-        alert('Account deleted. (Backend not connected yet)');
-        window.location.href = 'login.html';
+    async function confirmDelete() {
+      if (!confirm('Are you sure you want to delete your account? This action is irreversible.')) return;
+      try {
+        const res = await apiDeleteAccount();
+        if (res.success) {
+          removeToken();
+          localStorage.removeItem('pc_user');
+          showToast('Account deleted', 'success');
+          setTimeout(() => window.location.href = 'login.html', 1000);
+        } else {
+          showToast(res.message || 'Failed to delete account', 'error');
+        }
+      } catch (err) {
+        showToast('Failed to delete account', 'error');
       }
     }
   </script>

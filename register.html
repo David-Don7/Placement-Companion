@@ -95,7 +95,7 @@
 
         <div class="auth-divider">or</div>
 
-        <button class="btn btn-outline btn-full" onclick="window.location.href='dashboard.html'">
+        <button class="btn btn-outline btn-full" onclick="demoLogin()">
           <i class="fa-solid fa-user-astronaut"></i> Try Demo Without Account
         </button>
 
@@ -107,17 +107,47 @@
   </div>
 
   <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
   <script>
-    function handleRegister(e) {
+    if (isLoggedIn()) window.location.href = 'dashboard.html';
+
+    async function handleRegister(e) {
       e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
       const pw = document.getElementById('password').value;
       const cpw = document.getElementById('confirmPassword').value;
       if (pw !== cpw) {
-        alert('Passwords do not match!');
+        showToast('Passwords do not match!', 'error');
         return false;
       }
-      // Placeholder — will connect to backend later
-      window.location.href = 'dashboard.html';
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating account...';
+
+      try {
+        const data = await apiRegister(name, email, pw);
+        if (data && data.success) {
+          showToast('Account created!', 'success');
+          setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+        }
+      } catch (err) {
+        showToast(err.message || 'Registration failed', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+      }
+    }
+
+    async function demoLogin() {
+      try {
+        try {
+          const data = await apiLogin('demo@placement.com', 'demo1234');
+          if (data && data.success) { window.location.href = 'dashboard.html'; return; }
+        } catch (e) {
+          const data = await apiRegister('Demo User', 'demo@placement.com', 'demo1234');
+          if (data && data.success) { window.location.href = 'dashboard.html'; return; }
+        }
+      } catch (err) { showToast('Demo login failed', 'error'); }
     }
   </script>
 </body>

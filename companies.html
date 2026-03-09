@@ -30,7 +30,7 @@
       <div class="nav-section">
         <div class="nav-section-title">Account</div>
         <a href="profile.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile</a>
-        <a href="login.html" class="nav-link"><span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout</a>
+        <a href="#" class="nav-link" onclick="logout()"><span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout</a>
       </div>
       <div class="sidebar-footer">
         <div class="sidebar-user" onclick="window.location.href='profile.html'">
@@ -79,290 +79,101 @@
 
         <!-- Company Cards Grid -->
         <div class="company-grid animate-fade-up delay-2" id="companyGrid">
-
-          <!-- Google -->
-          <div class="company-card" data-status="applied" data-name="google">
-            <div class="company-card-header">
-              <div class="company-logo" style="background:rgba(66,133,244,0.1); color:#4285F4;">G</div>
-              <div class="company-info">
-                <h3>Google</h3>
-                <p>Software Engineer Intern</p>
-              </div>
-            </div>
-            <div class="company-card-body">
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
-                <span>Eligibility: 7.0+ CGPA, CSE/IT</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
-                <span>Rounds: Online Test → Technical (2) → HR</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
-                <span>CTC: ₹35–45 LPA</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-calendar"></i></span>
-                <span>Visit Date: March 15, 2026</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-clipboard-question"></i></span>
-                <span>Past Questions: Two Sum, LRU Cache, System Design</span>
-              </div>
-            </div>
-            <div class="company-card-footer">
-              <span class="status-badge applied">Applied</span>
-              <select class="status-select" onchange="updateStatus(this)">
-                <option value="not-applied">Not Applied</option>
-                <option value="applied" selected>Applied</option>
-                <option value="interviewed">Interviewed</option>
-                <option value="selected">Selected</option>
-                <option value="rejected">Rejected</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Microsoft -->
-          <div class="company-card" data-status="not-applied" data-name="microsoft">
-            <div class="company-card-header">
-              <div class="company-logo" style="background:rgba(0,120,212,0.1); color:#0078D4;">M</div>
-              <div class="company-info">
-                <h3>Microsoft</h3>
-                <p>SDE Intern</p>
-              </div>
-            </div>
-            <div class="company-card-body">
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
-                <span>Eligibility: 7.5+ CGPA, All branches</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
-                <span>Rounds: Coding Test → Group Fly → Technical → HR</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
-                <span>CTC: ₹40–50 LPA</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-calendar"></i></span>
-                <span>Visit Date: March 22, 2026</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-clipboard-question"></i></span>
-                <span>Past Questions: BST operations, DP, OOPS concepts</span>
-              </div>
-            </div>
-            <div class="company-card-footer">
-              <span class="status-badge not-applied">Not Applied</span>
-              <select class="status-select" onchange="updateStatus(this)">
-                <option value="not-applied" selected>Not Applied</option>
-                <option value="applied">Applied</option>
-                <option value="interviewed">Interviewed</option>
-                <option value="selected">Selected</option>
-                <option value="rejected">Rejected</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Amazon -->
-          <div class="company-card" data-status="interviewed" data-name="amazon">
-            <div class="company-card-header">
-              <div class="company-logo" style="background:rgba(255,153,0,0.1); color:#FF9900;">A</div>
-              <div class="company-info">
-                <h3>Amazon</h3>
-                <p>SDE-1</p>
-              </div>
-            </div>
-            <div class="company-card-body">
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
-                <span>Eligibility: 6.5+ CGPA, CSE/IT/ECE</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
-                <span>Rounds: Online Assessment → Technical (3) → Bar Raiser</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
-                <span>CTC: ₹30–40 LPA</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-calendar"></i></span>
-                <span>Visit Date: April 02, 2026</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-clipboard-question"></i></span>
-                <span>Past Questions: Sliding Window, Graphs, Leadership Principles</span>
-              </div>
-            </div>
-            <div class="company-card-footer">
-              <span class="status-badge interviewed">Interviewed</span>
-              <select class="status-select" onchange="updateStatus(this)">
-                <option value="not-applied">Not Applied</option>
-                <option value="applied">Applied</option>
-                <option value="interviewed" selected>Interviewed</option>
-                <option value="selected">Selected</option>
-                <option value="rejected">Rejected</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Infosys -->
-          <div class="company-card" data-status="selected" data-name="infosys">
-            <div class="company-card-header">
-              <div class="company-logo" style="background:rgba(0,115,187,0.1); color:#0073BB;">I</div>
-              <div class="company-info">
-                <h3>Infosys</h3>
-                <p>Systems Engineer</p>
-              </div>
-            </div>
-            <div class="company-card-body">
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
-                <span>Eligibility: 6.0+ CGPA, All branches</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
-                <span>Rounds: Online Test → Technical → HR</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
-                <span>CTC: ₹6–9 LPA</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-calendar"></i></span>
-                <span>Visit Date: February 10, 2026</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-clipboard-question"></i></span>
-                <span>Past Questions: Pseudo Code, SQL, Puzzles</span>
-              </div>
-            </div>
-            <div class="company-card-footer">
-              <span class="status-badge selected">Selected</span>
-              <select class="status-select" onchange="updateStatus(this)">
-                <option value="not-applied">Not Applied</option>
-                <option value="applied">Applied</option>
-                <option value="interviewed">Interviewed</option>
-                <option value="selected" selected>Selected</option>
-                <option value="rejected">Rejected</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- TCS -->
-          <div class="company-card" data-status="rejected" data-name="tcs">
-            <div class="company-card-header">
-              <div class="company-logo" style="background:rgba(40,58,120,0.1); color:#283a78;">T</div>
-              <div class="company-info">
-                <h3>TCS</h3>
-                <p>Digital Cadre</p>
-              </div>
-            </div>
-            <div class="company-card-body">
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
-                <span>Eligibility: 6.0+ CGPA, All branches</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
-                <span>Rounds: TCS NQT → Technical → Managerial → HR</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
-                <span>CTC: ₹7–11 LPA</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-calendar"></i></span>
-                <span>Visit Date: January 20, 2026</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-clipboard-question"></i></span>
-                <span>Past Questions: Verbal, Quant, Coding (C/Java)</span>
-              </div>
-            </div>
-            <div class="company-card-footer">
-              <span class="status-badge rejected">Rejected</span>
-              <select class="status-select" onchange="updateStatus(this)">
-                <option value="not-applied">Not Applied</option>
-                <option value="applied">Applied</option>
-                <option value="interviewed">Interviewed</option>
-                <option value="selected">Selected</option>
-                <option value="rejected" selected>Rejected</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Wipro -->
-          <div class="company-card" data-status="not-applied" data-name="wipro">
-            <div class="company-card-header">
-              <div class="company-logo" style="background:rgba(62,31,105,0.1); color:#3e1f69;">W</div>
-              <div class="company-info">
-                <h3>Wipro</h3>
-                <p>Project Engineer</p>
-              </div>
-            </div>
-            <div class="company-card-body">
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
-                <span>Eligibility: 6.0+ CGPA, All branches</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
-                <span>Rounds: Online Test → Technical → HR</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
-                <span>CTC: ₹5–7.5 LPA</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-calendar"></i></span>
-                <span>Visit Date: April 10, 2026</span>
-              </div>
-              <div class="company-detail">
-                <span class="detail-icon"><i class="fa-solid fa-clipboard-question"></i></span>
-                <span>Past Questions: Aptitude, Coding (basic), Essay</span>
-              </div>
-            </div>
-            <div class="company-card-footer">
-              <span class="status-badge not-applied">Not Applied</span>
-              <select class="status-select" onchange="updateStatus(this)">
-                <option value="not-applied" selected>Not Applied</option>
-                <option value="applied">Applied</option>
-                <option value="interviewed">Interviewed</option>
-                <option value="selected">Selected</option>
-                <option value="rejected">Rejected</option>
-              </select>
-            </div>
-          </div>
-
+          <p style="color:var(--text-muted);font-size:0.9rem;padding:24px;">Loading companies...</p>
         </div><!-- /company-grid -->
       </div><!-- /page-content -->
     </main>
   </div>
 
   <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
   <script>
-    /* ---- Companies Page Logic ---- */
+    /* ---- Companies Page Logic (API-connected) ---- */
+    if (!requireAuth()) { /* redirected */ }
+    else { updateSidebarUser(); loadCompanies(); }
 
-    function updateStatus(select) {
+    let allCompanies = [];
+
+    async function loadCompanies() {
+      try {
+        const res = await apiGetCompanies();
+        if (!res || !res.success) return;
+        allCompanies = res.data;
+        renderCompanies(allCompanies);
+      } catch (err) {
+        showToast('Failed to load companies', 'error');
+      }
+    }
+
+    function renderCompanies(companies) {
+      const grid = document.getElementById('companyGrid');
+      if (!grid) return;
+
+      if (companies.length === 0) {
+        grid.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem;padding:24px;">No companies found.</p>';
+        return;
+      }
+
+      grid.innerHTML = companies.map(c => {
+        const date = new Date(c.visitDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        const statusLabel = { 'not-applied': 'Not Applied', 'applied': 'Applied', 'interviewed': 'Interviewed', 'selected': 'Selected', 'rejected': 'Rejected' };
+        const statusOpts = ['not-applied', 'applied', 'interviewed', 'selected', 'rejected'];
+
+        return `<div class="company-card" data-status="${c.status}" data-name="${c.name.toLowerCase()}" data-id="${c._id}">
+          <div class="company-card-header">
+            <div class="company-logo" style="background:${c.logoColor}15;color:${c.logoColor};"><i class="${c.logo}"></i></div>
+            <div class="company-info">
+              <h3>${c.name}</h3>
+              <p>${c.role}</p>
+            </div>
+          </div>
+          <div class="company-card-body">
+            <div class="company-detail">
+              <span class="detail-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+              <span>Eligibility: ${c.eligibility}</span>
+            </div>
+            <div class="company-detail">
+              <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
+              <span>Rounds: ${c.rounds.join(' → ')}</span>
+            </div>
+            <div class="company-detail">
+              <span class="detail-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+              <span>CTC: ${c.salary}</span>
+            </div>
+            <div class="company-detail">
+              <span class="detail-icon"><i class="fa-solid fa-calendar"></i></span>
+              <span>Visit Date: ${date}</span>
+            </div>
+            ${c.pastQuestions && c.pastQuestions.length ? `<div class="company-detail">
+              <span class="detail-icon"><i class="fa-solid fa-clipboard-question"></i></span>
+              <span>Past Questions: ${c.pastQuestions.join(', ')}</span>
+            </div>` : ''}
+          </div>
+          <div class="company-card-footer">
+            <span class="status-badge ${c.status}">${statusLabel[c.status] || 'Not Applied'}</span>
+            <select class="status-select" onchange="updateStatus(this, '${c._id}')">
+              ${statusOpts.map(s => `<option value="${s}"${c.status === s ? ' selected' : ''}>${statusLabel[s]}</option>`).join('')}
+            </select>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    async function updateStatus(select, companyId) {
       const card = select.closest('.company-card');
       const badge = card.querySelector('.status-badge');
       const val = select.value;
-      card.dataset.status = val;
 
-      // Update badge
-      badge.className = 'status-badge ' + val;
-      const labels = {
-        'not-applied': 'Not Applied',
-        'applied': 'Applied',
-        'interviewed': 'Interviewed',
-        'selected': 'Selected',
-        'rejected': 'Rejected'
-      };
-      badge.textContent = labels[val];
+      try {
+        await apiUpdateCompanyStatus(companyId, val);
+        card.dataset.status = val;
+        badge.className = 'status-badge ' + val;
+        const labels = { 'not-applied': 'Not Applied', 'applied': 'Applied', 'interviewed': 'Interviewed', 'selected': 'Selected', 'rejected': 'Rejected' };
+        badge.textContent = labels[val];
+        showToast('Status updated!', 'success');
+      } catch (err) {
+        showToast('Failed to update status', 'error');
+      }
     }
 
     function filterCompanyStatus(chip, status) {

@@ -96,15 +96,52 @@
   </div>
 
   <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
   <script>
-    function handleLogin(e) {
+    // If already logged in, go to dashboard
+    if (isLoggedIn()) window.location.href = 'dashboard.html';
+
+    async function handleLogin(e) {
       e.preventDefault();
-      // Placeholder — will connect to backend later
-      window.location.href = 'dashboard.html';
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signing in...';
+
+      try {
+        const data = await apiLogin(email, password);
+        if (data && data.success) {
+          showToast('Login successful!', 'success');
+          setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+        }
+      } catch (err) {
+        showToast(err.message || 'Login failed', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
+      }
     }
 
-    function demoLogin() {
-      window.location.href = 'dashboard.html';
+    async function demoLogin() {
+      try {
+        // Try to login with demo account, or register it first
+        try {
+          const data = await apiLogin('demo@placement.com', 'demo1234');
+          if (data && data.success) {
+            window.location.href = 'dashboard.html';
+            return;
+          }
+        } catch (e) {
+          // Demo account may not exist, create it
+          const data = await apiRegister('Demo User', 'demo@placement.com', 'demo1234');
+          if (data && data.success) {
+            window.location.href = 'dashboard.html';
+            return;
+          }
+        }
+      } catch (err) {
+        showToast('Demo login failed: ' + err.message, 'error');
+      }
     }
   </script>
 </body>

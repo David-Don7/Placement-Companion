@@ -2261,6 +2261,12 @@ button {
   color: var(--text);
 }
 
+/* Chart canvas wrapper */
+.chart-canvas-wrapper {
+  position: relative;
+  height: 260px;
+}
+
 /* Result actions row */
 .result-actions {
   display: flex;

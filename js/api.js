@@ -205,6 +205,10 @@ async function apiGetActivity() {
   return apiFetch('/progress/activity');
 }
 
+async function apiGetChartData(period) {
+  return apiFetch(`/progress/chart?period=${encodeURIComponent(period)}`);
+}
+
 // ---- Update sidebar user info across pages ----
 function updateSidebarUser() {
   const user = getUser();

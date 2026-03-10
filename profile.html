@@ -46,7 +46,7 @@
     <main class="main-content">
       <header class="topbar">
         <div class="topbar-left">
-          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+          <button class="menu-toggle" onclick="toggleSidebar()" title="Toggle menu" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
           <div>
             <h1>Profile</h1>
             <span class="breadcrumb">Dashboard / Profile</span>
@@ -88,7 +88,7 @@
 
         <!-- Personal Information -->
         <div class="profile-section animate-fade-up delay-1">
-          <h3><i class="fa-solid fa-user-pen" style="margin-right:8px; color:var(--primary);"></i> Personal Information</h3>
+          <h3><i class="fa-solid fa-user-pen section-heading-icon"></i> Personal Information</h3>
           <form onsubmit="return saveProfile(event)">
             <div class="profile-form-group">
               <div class="form-group">
@@ -146,7 +146,7 @@
 
         <!-- Change Password -->
         <div class="profile-section animate-fade-up delay-2">
-          <h3><i class="fa-solid fa-shield-halved" style="margin-right:8px; color:var(--primary);"></i> Change Password</h3>
+          <h3><i class="fa-solid fa-shield-halved section-heading-icon"></i> Change Password</h3>
           <form onsubmit="return changePassword(event)">
             <div class="profile-form-group">
               <div class="form-group">
@@ -172,31 +172,31 @@
 
         <!-- Preparation Overview -->
         <div class="profile-section animate-fade-up delay-3">
-          <h3><i class="fa-solid fa-chart-pie" style="margin-right:8px; color:var(--primary);"></i> Preparation Overview</h3>
+          <h3><i class="fa-solid fa-chart-pie section-heading-icon"></i> Preparation Overview</h3>
 
-          <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:24px;">
+          <div class="prep-overview-grid">
             <!-- Aptitude -->
             <div>
-              <h4 style="font-size:0.9rem; margin-bottom:16px; color:var(--text-light);">Aptitude Scores by Topic</h4>
+              <h4 class="prep-sub-heading">Aptitude Scores by Topic</h4>
               <div id="aptitudeBars">
-                <p style="color:var(--text-muted);font-size:0.85rem;">Loading...</p>
+                <p class="loading-text">Loading...</p>
               </div>
             </div>
 
             <!-- DSA -->
             <div>
-              <h4 style="font-size:0.9rem; margin-bottom:16px; color:var(--text-light);">DSA Progress by Category</h4>
+              <h4 class="prep-sub-heading">DSA Progress by Category</h4>
               <div id="dsaBars">
-                <p style="color:var(--text-muted);font-size:0.85rem;">Loading...</p>
+                <p class="loading-text">Loading...</p>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Danger Zone -->
-        <div class="profile-section animate-fade-up delay-4" style="border-color:rgba(239,68,68,0.3);">
-          <h3 style="color:var(--danger);"><i class="fa-solid fa-triangle-exclamation" style="margin-right:8px;"></i> Danger Zone</h3>
-          <p style="font-size:0.9rem; color:var(--text-light); margin-bottom:16px; line-height:1.6;">
+        <div class="profile-section danger-zone animate-fade-up delay-4">
+          <h3 class="danger-zone-title"><i class="fa-solid fa-triangle-exclamation section-heading-icon"></i> Danger Zone</h3>
+          <p class="danger-zone-desc">
             Deleting your account will permanently remove all your data including quiz history, DSA progress, HR responses, and application statuses. This action cannot be undone.
           </p>
           <button class="btn btn-danger" onclick="confirmDelete()">

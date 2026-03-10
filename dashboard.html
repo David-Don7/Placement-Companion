@@ -70,7 +70,7 @@
       <!-- Top Bar -->
       <header class="topbar">
         <div class="topbar-left">
-          <button class="menu-toggle" onclick="toggleSidebar()">
+          <button class="menu-toggle" onclick="toggleSidebar()" title="Toggle menu" aria-label="Toggle menu">
             <i class="fa-solid fa-bars"></i>
           </button>
           <div>
@@ -157,7 +157,7 @@
           <div class="chart-card">
             <div class="chart-header">
               <h3>Preparation Progress</h3>
-              <div class="tabs" style="margin-bottom:0;">
+              <div class="tabs tabs-flush">
                 <span class="tab active">Week</span>
                 <span class="tab">Month</span>
                 <span class="tab">All</span>
@@ -166,7 +166,7 @@
             <div class="chart-placeholder">
               <div class="chart-icon">📊</div>
               <span>Chart.js will render here</span>
-              <span style="font-size:0.75rem; margin-top:4px; color:var(--text-muted);">Connected in Phase 7</span>
+              <span class="chart-hint">Connected in Phase 7</span>
             </div>
           </div>
 
@@ -175,13 +175,13 @@
             <div class="chart-header">
               <h3>Topic Breakdown</h3>
             </div>
-            <div style="padding: 0 4px;" id="topicBreakdownBars">
+            <div class="topic-breakdown-bars" id="topicBreakdownBars">
               <div class="progress-bar-container">
                 <div class="progress-label">
                   <span>Quantitative</span><span>82%</span>
                 </div>
                 <div class="progress-bar">
-                  <div class="progress-fill purple" style="width:82%"></div>
+                  <div class="progress-fill purple" data-width="82%"></div>
                 </div>
               </div>
               <div class="progress-bar-container">
@@ -189,7 +189,7 @@
                   <span>Logical Reasoning</span><span>65%</span>
                 </div>
                 <div class="progress-bar">
-                  <div class="progress-fill blue" style="width:65%"></div>
+                  <div class="progress-fill blue" data-width="65%"></div>
                 </div>
               </div>
               <div class="progress-bar-container">
@@ -197,7 +197,7 @@
                   <span>Verbal Ability</span><span>70%</span>
                 </div>
                 <div class="progress-bar">
-                  <div class="progress-fill green" style="width:70%"></div>
+                  <div class="progress-fill green" data-width="70%"></div>
                 </div>
               </div>
               <div class="progress-bar-container">
@@ -205,7 +205,7 @@
                   <span>Arrays &amp; Strings</span><span>90%</span>
                 </div>
                 <div class="progress-bar">
-                  <div class="progress-fill orange" style="width:90%"></div>
+                  <div class="progress-fill orange" data-width="90%"></div>
                 </div>
               </div>
               <div class="progress-bar-container">
@@ -213,7 +213,7 @@
                   <span>Trees &amp; Graphs</span><span>40%</span>
                 </div>
                 <div class="progress-bar">
-                  <div class="progress-fill red" style="width:40%"></div>
+                  <div class="progress-fill red" data-width="40%"></div>
                 </div>
               </div>
             </div>
@@ -228,31 +228,31 @@
               <h3>🏢 Upcoming Companies</h3>
               <a href="companies.html">View all →</a>
             </div>
-            <div style="display:flex; flex-direction:column; gap:12px;" id="upcomingCompanies">
+            <div class="upcoming-company-list" id="upcomingCompanies">
               <!-- Company Row 1 -->
-              <div style="display:flex; align-items:center; gap:14px; padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border); transition:all var(--transition);" onmouseover="this.style.boxShadow='var(--shadow)'" onmouseout="this.style.boxShadow='none'">
-                <div class="company-logo" style="background:rgba(66,133,244,0.1); color:#4285F4; font-size:1.2rem; width:44px; height:44px;">G</div>
-                <div style="flex:1;">
-                  <div style="font-weight:600; font-size:0.95rem;">Google</div>
-                  <div style="font-size:0.8rem; color:var(--text-light);">Mar 15, 2026 · On-campus</div>
+              <div class="upcoming-company-row">
+                <div class="company-logo upcoming-company-logo logo-google">G</div>
+                <div class="upcoming-company-info">
+                  <div class="upcoming-company-name">Google</div>
+                  <div class="upcoming-company-date">Mar 15, 2026 · On-campus</div>
                 </div>
                 <span class="status-badge applied">Applied</span>
               </div>
               <!-- Company Row 2 -->
-              <div style="display:flex; align-items:center; gap:14px; padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border); transition:all var(--transition);" onmouseover="this.style.boxShadow='var(--shadow)'" onmouseout="this.style.boxShadow='none'">
-                <div class="company-logo" style="background:rgba(0,120,212,0.1); color:#0078D4; font-size:1.2rem; width:44px; height:44px;">M</div>
-                <div style="flex:1;">
-                  <div style="font-weight:600; font-size:0.95rem;">Microsoft</div>
-                  <div style="font-size:0.8rem; color:var(--text-light);">Mar 22, 2026 · On-campus</div>
+              <div class="upcoming-company-row">
+                <div class="company-logo upcoming-company-logo logo-microsoft">M</div>
+                <div class="upcoming-company-info">
+                  <div class="upcoming-company-name">Microsoft</div>
+                  <div class="upcoming-company-date">Mar 22, 2026 · On-campus</div>
                 </div>
                 <span class="status-badge not-applied">Not Applied</span>
               </div>
               <!-- Company Row 3 -->
-              <div style="display:flex; align-items:center; gap:14px; padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border); transition:all var(--transition);" onmouseover="this.style.boxShadow='var(--shadow)'" onmouseout="this.style.boxShadow='none'">
-                <div class="company-logo" style="background:rgba(255,153,0,0.1); color:#FF9900; font-size:1.2rem; width:44px; height:44px;">A</div>
-                <div style="flex:1;">
-                  <div style="font-weight:600; font-size:0.95rem;">Amazon</div>
-                  <div style="font-size:0.8rem; color:var(--text-light);">Apr 02, 2026 · Virtual</div>
+              <div class="upcoming-company-row">
+                <div class="company-logo upcoming-company-logo logo-amazon">A</div>
+                <div class="upcoming-company-info">
+                  <div class="upcoming-company-name">Amazon</div>
+                  <div class="upcoming-company-date">Apr 02, 2026 · Virtual</div>
                 </div>
                 <span class="status-badge interviewed">Interviewed</span>
               </div>
@@ -265,7 +265,7 @@
               <h3>📋 Recent Activity</h3>
             </div>
             <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(16,185,129,0.1); color:var(--success);">
+              <div class="activity-icon activity-success">
                 <i class="fa-solid fa-check"></i>
               </div>
               <div>
@@ -274,7 +274,7 @@
               </div>
             </div>
             <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(79,70,229,0.1); color:var(--primary);">
+              <div class="activity-icon activity-primary">
                 <i class="fa-solid fa-star"></i>
               </div>
               <div>
@@ -283,7 +283,7 @@
               </div>
             </div>
             <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(245,158,11,0.1); color:var(--accent);">
+              <div class="activity-icon activity-accent">
                 <i class="fa-solid fa-comment"></i>
               </div>
               <div>
@@ -292,7 +292,7 @@
               </div>
             </div>
             <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(59,130,246,0.1); color:var(--info);">
+              <div class="activity-icon activity-info">
                 <i class="fa-solid fa-building"></i>
               </div>
               <div>
@@ -301,7 +301,7 @@
               </div>
             </div>
             <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(239,68,68,0.1); color:var(--danger);">
+              <div class="activity-icon activity-danger">
                 <i class="fa-solid fa-fire"></i>
               </div>
               <div>
@@ -319,6 +319,9 @@
   <script src="js/app.js"></script>
   <script src="js/api.js"></script>
   <script>
+    // Initialize data-width progress bars
+    document.querySelectorAll('[data-width]').forEach(el => { el.style.width = el.dataset.width; });
+
     if (!requireAuth()) { /* redirected */ }
     else {
       updateSidebarUser();
@@ -385,22 +388,22 @@
               ci++;
             }
           }
-          topicBreakdown.innerHTML = html || '<p style="color:var(--text-muted);font-size:0.9rem;">No data yet. Start practicing!</p>';
+          topicBreakdown.innerHTML = html || '<p class="loading-text">No data yet. Start practicing!</p>';
         }
 
         // Update upcoming companies
         const upcomingEl = document.getElementById('upcomingCompanies');
         if (upcomingEl && d.upcomingCompanies) {
           if (d.upcomingCompanies.length === 0) {
-            upcomingEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem;">No upcoming companies.</p>';
+            upcomingEl.innerHTML = '<p class="loading-text">No upcoming companies.</p>';
           } else {
             upcomingEl.innerHTML = d.upcomingCompanies.map(c => {
               const date = new Date(c.visitDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-              return `<div style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);transition:all var(--transition);" onmouseover="this.style.boxShadow='var(--shadow)'" onmouseout="this.style.boxShadow='none'">
-                <div class="company-logo" style="background:rgba(79,70,229,0.1);color:var(--primary);font-size:1.2rem;width:44px;height:44px;">${c.name[0]}</div>
-                <div style="flex:1;">
-                  <div style="font-weight:600;font-size:0.95rem;">${c.name}</div>
-                  <div style="font-size:0.8rem;color:var(--text-light);">${date} · ${c.role}</div>
+              return `<div class="upcoming-company-row">
+                <div class="company-logo upcoming-company-logo" style="background:rgba(79,70,229,0.1);color:var(--primary);">${c.name[0]}</div>
+                <div class="upcoming-company-info">
+                  <div class="upcoming-company-name">${c.name}</div>
+                  <div class="upcoming-company-date">${date} · ${c.role}</div>
                 </div>
                 <span class="status-badge ${c.status}">${c.status.replace('-', ' ')}</span>
               </div>`;
@@ -423,7 +426,7 @@
         if (!activityEl) return;
 
         if (res.data.length === 0) {
-          activityEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem;">No recent activity. Start practicing!</p>';
+          activityEl.innerHTML = '<p class="loading-text">No recent activity. Start practicing!</p>';
           return;
         }
 
@@ -437,7 +440,7 @@
           const ic = icons[a.type] || icons.quiz;
           const ago = timeAgo(new Date(a.date));
           return `<div class="activity-item">
-            <div class="activity-icon" style="background:${ic.bg};color:${ic.color};"><i class="fa-solid ${ic.icon}"></i></div>
+            <div class="activity-icon activity-${a.type === 'dsa' ? 'success' : a.type === 'hr' ? 'accent' : 'primary'}"><i class="fa-solid ${ic.icon}"></i></div>
             <div>
               <div class="activity-text"><strong>${a.title}</strong></div>
               <div class="activity-time">${ago}</div>

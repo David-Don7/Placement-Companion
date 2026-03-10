@@ -46,7 +46,7 @@
     <main class="main-content">
       <header class="topbar">
         <div class="topbar-left">
-          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+          <button class="menu-toggle" onclick="toggleSidebar()" title="Toggle menu" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
           <div>
             <h1>DSA Practice</h1>
             <span class="breadcrumb">Dashboard / DSA Practice</span>
@@ -63,7 +63,7 @@
 
       <div class="page-content">
         <!-- Stats Summary -->
-        <div class="dashboard-grid animate-fade-up" style="grid-template-columns: repeat(4,1fr); margin-bottom:28px;">
+        <div class="dashboard-grid dsa-stat-grid animate-fade-up">
           <div class="stat-card stat-green">
             <div class="stat-icon"><i class="fa-solid fa-check-double"></i></div>
             <div class="stat-info">
@@ -100,54 +100,54 @@
           <p>Track your progress across all major DSA categories.</p>
         </div>
 
-        <div class="topic-grid animate-fade-up delay-1" style="grid-template-columns: repeat(4,1fr); margin-bottom:32px;">
+        <div class="topic-grid dsa-topic-grid animate-fade-up delay-1">
           <div class="topic-card">
-            <div class="topic-icon" style="background:rgba(79,70,229,0.1); color:var(--primary);">📦</div>
+            <div class="topic-icon topic-primary">📦</div>
             <h3>Arrays</h3>
-            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill purple" style="width:75%"></div></div>
-            <div class="topic-stats" style="margin-top:8px;">15/20 solved</div>
+            <div class="progress-bar topic-progress"><div class="progress-fill purple" data-width="75%"></div></div>
+            <div class="topic-stats topic-stats-spaced">15/20 solved</div>
           </div>
           <div class="topic-card">
-            <div class="topic-icon" style="background:rgba(14,165,233,0.1); color:var(--secondary);">🔤</div>
+            <div class="topic-icon topic-secondary">🔤</div>
             <h3>Strings</h3>
-            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill blue" style="width:60%"></div></div>
-            <div class="topic-stats" style="margin-top:8px;">9/15 solved</div>
+            <div class="progress-bar topic-progress"><div class="progress-fill blue" data-width="60%"></div></div>
+            <div class="topic-stats topic-stats-spaced">9/15 solved</div>
           </div>
           <div class="topic-card">
-            <div class="topic-icon" style="background:rgba(16,185,129,0.1); color:var(--success);">🔗</div>
+            <div class="topic-icon topic-success">🔗</div>
             <h3>Linked List</h3>
-            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill green" style="width:40%"></div></div>
-            <div class="topic-stats" style="margin-top:8px;">6/15 solved</div>
+            <div class="progress-bar topic-progress"><div class="progress-fill green" data-width="40%"></div></div>
+            <div class="topic-stats topic-stats-spaced">6/15 solved</div>
           </div>
           <div class="topic-card">
-            <div class="topic-icon" style="background:rgba(245,158,11,0.1); color:var(--accent);">📚</div>
+            <div class="topic-icon topic-accent">📚</div>
             <h3>Stack</h3>
-            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill orange" style="width:50%"></div></div>
-            <div class="topic-stats" style="margin-top:8px;">5/10 solved</div>
+            <div class="progress-bar topic-progress"><div class="progress-fill orange" data-width="50%"></div></div>
+            <div class="topic-stats topic-stats-spaced">5/10 solved</div>
           </div>
           <div class="topic-card">
-            <div class="topic-icon" style="background:rgba(239,68,68,0.1); color:var(--danger);">📋</div>
+            <div class="topic-icon topic-danger">📋</div>
             <h3>Queue</h3>
-            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill red" style="width:30%"></div></div>
-            <div class="topic-stats" style="margin-top:8px;">3/10 solved</div>
+            <div class="progress-bar topic-progress"><div class="progress-fill red" data-width="30%"></div></div>
+            <div class="topic-stats topic-stats-spaced">3/10 solved</div>
           </div>
           <div class="topic-card">
-            <div class="topic-icon" style="background:rgba(59,130,246,0.1); color:var(--info);">🌳</div>
+            <div class="topic-icon topic-info">🌳</div>
             <h3>Trees</h3>
-            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill blue" style="width:35%"></div></div>
-            <div class="topic-stats" style="margin-top:8px;">7/20 solved</div>
+            <div class="progress-bar topic-progress"><div class="progress-fill blue" data-width="35%"></div></div>
+            <div class="topic-stats topic-stats-spaced">7/20 solved</div>
           </div>
           <div class="topic-card">
-            <div class="topic-icon" style="background:rgba(168,85,247,0.1); color:#a855f7;">🕸️</div>
+            <div class="topic-icon topic-purple">🕸️</div>
             <h3>Graphs</h3>
-            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill purple" style="width:15%"></div></div>
-            <div class="topic-stats" style="margin-top:8px;">2/15 solved</div>
+            <div class="progress-bar topic-progress"><div class="progress-fill purple" data-width="15%"></div></div>
+            <div class="topic-stats topic-stats-spaced">2/15 solved</div>
           </div>
           <div class="topic-card">
-            <div class="topic-icon" style="background:rgba(245,158,11,0.1); color:var(--accent);">🧮</div>
+            <div class="topic-icon topic-accent">🧮</div>
             <h3>Dynamic Programming</h3>
-            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill orange" style="width:10%"></div></div>
-            <div class="topic-stats" style="margin-top:8px;">2/20 solved</div>
+            <div class="progress-bar topic-progress"><div class="progress-fill orange" data-width="10%"></div></div>
+            <div class="topic-stats topic-stats-spaced">2/20 solved</div>
           </div>
         </div>
 
@@ -166,7 +166,7 @@
           <span class="filter-chip" onclick="filterByTopic(this, 'graphs')">Graphs</span>
           <span class="filter-chip" onclick="filterByTopic(this, 'dynamic-programming')">DP</span>
           <!-- Difficulty filters -->
-          <span style="color:var(--text-muted); margin:0 4px;">|</span>
+          <span class="filter-separator">|</span>
           <span class="filter-chip" onclick="filterByDifficulty(this, 'easy')">🟢 Easy</span>
           <span class="filter-chip" onclick="filterByDifficulty(this, 'medium')">🟡 Medium</span>
           <span class="filter-chip" onclick="filterByDifficulty(this, 'hard')">🔴 Hard</span>
@@ -177,7 +177,7 @@
           <table class="dsa-table" id="dsaTable">
             <thead>
               <tr>
-                <th style="width:50px;">Status</th>
+                <th class="col-status">Status</th>
                 <th>Problem</th>
                 <th>Topic</th>
                 <th>Difficulty</th>
@@ -185,7 +185,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px;">Loading problems...</td></tr>
+              <tr><td colspan="5" class="table-loading">Loading problems...</td></tr>
             </tbody>
           </table>
         </div>
@@ -202,19 +202,19 @@
         <button class="modal-close" onclick="closeProblemModal()">✕</button>
       </div>
       <div>
-        <span class="difficulty-badge difficulty-easy" style="margin-bottom:16px; display:inline-block;">Easy</span>
-        <span class="topic-tag" style="background:rgba(79,70,229,0.1); color:var(--primary); margin-left:8px;">Arrays</span>
+        <span class="difficulty-badge difficulty-easy modal-badge">Easy</span>
+        <span class="topic-tag tag-primary modal-topic-tag">Arrays</span>
       </div>
-      <h4 style="margin-top:20px; margin-bottom:8px; font-size:0.95rem;">Problem Statement</h4>
-      <p style="font-size:0.9rem; color:var(--text-light); line-height:1.7; margin-bottom:20px;">
+      <h4 class="modal-section-heading">Problem Statement</h4>
+      <p class="modal-text">
         Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers such that they add up to <code>target</code>. You may assume that each input would have exactly one solution, and you may not use the same element twice.
       </p>
-      <h4 style="margin-bottom:8px; font-size:0.95rem;">💡 Solution Approach</h4>
-      <div style="background:var(--bg); border-radius:var(--radius-sm); padding:16px; font-size:0.85rem; color:var(--text-light); line-height:1.7;">
+      <h4 class="modal-section-heading no-top">💡 Solution Approach</h4>
+      <div class="solution-block">
         <p><strong>Brute Force:</strong> Use two nested loops to check every pair — O(n²).</p>
-        <p style="margin-top:8px;"><strong>Optimal (Hash Map):</strong> Iterate through the array, for each element check if (target − element) exists in a hash map. If yes, return the indices. Otherwise, store the element. Time: O(n), Space: O(n).</p>
+        <p><strong>Optimal (Hash Map):</strong> Iterate through the array, for each element check if (target − element) exists in a hash map. If yes, return the indices. Otherwise, store the element. Time: O(n), Space: O(n).</p>
       </div>
-      <div style="margin-top:24px; display:flex; gap:12px;">
+      <div class="modal-actions">
         <button class="btn btn-success btn-sm" onclick="closeProblemModal()"><i class="fa-solid fa-check"></i> Mark as Solved</button>
         <button class="btn btn-outline btn-sm" onclick="closeProblemModal()">Close</button>
       </div>
@@ -225,6 +225,8 @@
   <script src="js/api.js"></script>
   <script>
     /* ---- DSA Page Logic (API-connected) ---- */
+    document.querySelectorAll('[data-width]').forEach(el => { el.style.width = el.dataset.width; });
+
     if (!requireAuth()) { /* redirected */ }
     else { updateSidebarUser(); loadDSAPage(); }
 

@@ -46,7 +46,7 @@
     <main class="main-content">
       <header class="topbar">
         <div class="topbar-left">
-          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+          <button class="menu-toggle" onclick="toggleSidebar()" title="Toggle menu" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
           <div>
             <h1>HR Interview Simulator</h1>
             <span class="breadcrumb">Dashboard / HR Interview</span>
@@ -59,7 +59,7 @@
 
       <div class="page-content">
         <!-- Stats -->
-        <div class="dashboard-grid animate-fade-up" style="grid-template-columns: repeat(3,1fr); margin-bottom:32px;">
+        <div class="dashboard-grid hr-stat-grid animate-fade-up">
           <div class="stat-card stat-orange">
             <div class="stat-icon"><i class="fa-solid fa-microphone"></i></div>
             <div class="stat-info">
@@ -114,7 +114,7 @@
             </div>
 
             <!-- Actions -->
-            <div style="display:flex; gap:12px; margin-top:24px; flex-wrap:wrap;">
+            <div class="hr-actions">
               <button class="btn btn-primary" onclick="submitHRAnswer()">
                 <i class="fa-solid fa-paper-plane"></i> Submit Answer
               </button>
@@ -128,23 +128,23 @@
           </div>
 
           <!-- Feedback Card (shown after submit) -->
-          <div class="card-flat" id="feedbackCard" style="display:none; margin-bottom:24px; animation: fadeInUp 0.4s ease-out;">
-            <h3 style="font-size:1rem; font-weight:600; margin-bottom:16px;"><i class="fa-solid fa-chart-bar"></i> Feedback</h3>
-            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:16px;">
+          <div class="card-flat hr-feedback-card" id="feedbackCard">
+            <h3 class="hr-feedback-heading"><i class="fa-solid fa-chart-bar"></i> Feedback</h3>
+            <div class="hr-feedback-grid">
               <div class="result-stat">
-                <div class="stat-value" style="color:var(--success);" id="matchScore">75%</div>
+                <div class="stat-value text-success" id="matchScore">75%</div>
                 <div class="stat-label">Keyword Match</div>
               </div>
               <div class="result-stat">
-                <div class="stat-value" style="color:var(--info);" id="wordCount">0</div>
+                <div class="stat-value text-info" id="wordCount">0</div>
                 <div class="stat-label">Word Count</div>
               </div>
               <div class="result-stat">
-                <div class="stat-value" style="color:var(--accent);" id="feedbackRating">Good</div>
+                <div class="stat-value text-accent" id="feedbackRating">Good</div>
                 <div class="stat-label">Rating</div>
               </div>
             </div>
-            <div id="feedbackText" style="font-size:0.875rem; color:var(--text-light); line-height:1.6;"></div>
+            <div id="feedbackText" class="hr-feedback-text"></div>
           </div>
 
           <!-- Previous Responses -->

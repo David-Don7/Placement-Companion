@@ -756,6 +756,7 @@ button {
   position: sticky;
   top: 0;
   z-index: 50;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   background: rgba(255, 255, 255, 0.9);
 }
@@ -1647,6 +1648,7 @@ button {
   opacity: 0;
   visibility: hidden;
   transition: all var(--transition);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 
@@ -2089,6 +2091,345 @@ button {
   margin-bottom: 0;
 }
 
+/* ---- Utility classes (replacing inline styles) ---- */
+
+/* Section heading icon */
+.section-heading-icon {
+  margin-right: 8px;
+  color: var(--primary);
+}
+
+/* Profile preparation overview grid */
+.prep-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+/* Profile sub-heading */
+.prep-sub-heading {
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  color: var(--text-light);
+}
+
+/* Loading placeholder text */
+.loading-text {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+.loading-text.loading-padded {
+  padding: 24px;
+}
+
+/* Danger zone section */
+.profile-section.danger-zone {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.danger-zone-title {
+  color: var(--danger);
+}
+
+.danger-zone-desc {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+/* Dashboard tabs no margin */
+.tabs.tabs-flush {
+  margin-bottom: 0;
+}
+
+/* Chart placeholder hint */
+.chart-hint {
+  font-size: 0.75rem;
+  margin-top: 4px;
+  color: var(--text-muted);
+}
+
+/* Topic breakdown padding */
+.topic-breakdown-bars {
+  padding: 0 4px;
+}
+
+/* Upcoming companies list */
+.upcoming-company-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Upcoming company row */
+.upcoming-company-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+.upcoming-company-row:hover {
+  box-shadow: var(--shadow);
+}
+
+/* Upcoming company logo */
+.upcoming-company-logo {
+  font-size: 1.2rem;
+  width: 44px;
+  height: 44px;
+}
+
+/* Upcoming company info */
+.upcoming-company-info {
+  flex: 1;
+}
+.upcoming-company-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.upcoming-company-date {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+/* Activity icon variants */
+.activity-icon.activity-success { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+.activity-icon.activity-primary { background: rgba(79, 70, 229, 0.1); color: var(--primary); }
+.activity-icon.activity-accent  { background: rgba(245, 158, 11, 0.1); color: var(--accent); }
+.activity-icon.activity-info    { background: rgba(59, 130, 246, 0.1); color: var(--info); }
+.activity-icon.activity-danger  { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+/* Topic icon variants */
+.topic-icon.topic-primary   { background: rgba(79, 70, 229, 0.1); color: var(--primary); }
+.topic-icon.topic-secondary { background: rgba(14, 165, 233, 0.1); color: var(--secondary); }
+.topic-icon.topic-success   { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+
+/* Aptitude history card spacing */
+.card-flat.history-card {
+  margin-top: 8px;
+}
+
+/* Table container borderless */
+.dsa-table-container.borderless {
+  border: none;
+}
+
+/* Register form options alignment */
+.form-options.form-options-start {
+  justify-content: flex-start;
+}
+
+/* Terms link spacing */
+.terms-link {
+  margin-left: 4px;
+}
+
+@media (max-width: 768px) {
+  .prep-overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Topic tag color variants */
+.topic-tag.tag-primary   { background: rgba(79, 70, 229, 0.1); color: var(--primary); }
+.topic-tag.tag-secondary { background: rgba(14, 165, 233, 0.1); color: var(--secondary); }
+.topic-tag.tag-success   { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+
+/* Hidden view */
+.view-hidden { display: none; }
+
+/* Quiz progress bar fixed width */
+.progress-bar.quiz-progress-bar { width: 200px; }
+
+/* Result stat value colors */
+.stat-value.text-success { color: var(--success); }
+.stat-value.text-danger  { color: var(--danger); }
+.stat-value.text-info    { color: var(--info); }
+
+/* Weak areas section */
+.weak-areas {
+  text-align: left;
+  margin-bottom: 24px;
+}
+.weak-areas-heading {
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+/* Result actions row */
+.result-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* DSA 4-col stat grid */
+.dashboard-grid.dsa-stat-grid {
+  grid-template-columns: repeat(4, 1fr);
+  margin-bottom: 28px;
+}
+
+/* DSA 4-col topic grid */
+.topic-grid.dsa-topic-grid {
+  grid-template-columns: repeat(4, 1fr);
+  margin-bottom: 32px;
+}
+
+/* Topic card progress bar top margin */
+.progress-bar.topic-progress {
+  margin-top: 10px;
+}
+
+/* Topic stats spacing inside topic card */
+.topic-stats.topic-stats-spaced {
+  margin-top: 8px;
+}
+
+/* Topic icon additional color variants for DSA */
+.topic-icon.topic-accent  { background: rgba(245, 158, 11, 0.1); color: var(--accent); }
+.topic-icon.topic-danger  { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+.topic-icon.topic-info    { background: rgba(59, 130, 246, 0.1); color: var(--info); }
+.topic-icon.topic-purple  { background: rgba(168, 85, 247, 0.1); color: #a855f7; }
+
+/* Company logo per-company color (dashboard placeholders) */
+.upcoming-company-logo.logo-google    { background: rgba(66, 133, 244, 0.1); color: #4285F4; }
+.upcoming-company-logo.logo-microsoft { background: rgba(0, 120, 212, 0.1); color: #0078D4; }
+.upcoming-company-logo.logo-amazon    { background: rgba(255, 153, 0, 0.1); color: #FF9900; }
+
+@media (max-width: 768px) {
+  .dashboard-grid.dsa-stat-grid,
+  .topic-grid.dsa-topic-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Filter separator */
+.filter-separator {
+  color: var(--text-muted);
+  margin: 0 4px;
+}
+
+/* DSA table status column */
+.dsa-table th.col-status { width: 50px; }
+
+/* Table loading cell */
+.table-loading {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 24px;
+}
+
+/* Modal badge inline */
+.modal-badge {
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+/* Modal topic tag with spacing */
+.modal-topic-tag {
+  margin-left: 8px;
+}
+
+/* Modal section heading */
+.modal-section-heading {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+.modal-section-heading.no-top {
+  margin-top: 0;
+}
+
+/* Modal paragraph */
+.modal-text {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+/* Solution code block */
+.solution-block {
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  line-height: 1.7;
+}
+.solution-block p + p {
+  margin-top: 8px;
+}
+
+/* Modal actions row */
+.modal-actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+}
+
+/* HR stat grid (3 cols) */
+.dashboard-grid.hr-stat-grid {
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 32px;
+}
+
+/* HR actions row */
+.hr-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+/* HR feedback card */
+.hr-feedback-card {
+  display: none;
+  margin-bottom: 24px;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* HR feedback heading */
+.hr-feedback-heading {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* HR feedback grid */
+.hr-feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Stat value color variants (reusable) */
+.stat-value.text-accent { color: var(--accent); }
+
+/* HR feedback text */
+.hr-feedback-text {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* Company filters spacing */
+.dsa-filters.filters-spaced {
+  margin-bottom: 28px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid.hr-stat-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ============================================
    TABS
    ============================================ */
@@ -2258,7 +2599,7 @@ button {
 
   .auth-left {
     padding: 32px 24px;
-    min-height: auto;
+    min-height: 0;
   }
 
   .auth-right {

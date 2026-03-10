@@ -46,7 +46,7 @@
     <main class="main-content">
       <header class="topbar">
         <div class="topbar-left">
-          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+          <button class="menu-toggle" onclick="toggleSidebar()" title="Toggle menu" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
           <div>
             <h1>Recruitment Tracker</h1>
             <span class="breadcrumb">Dashboard / Companies</span>
@@ -68,7 +68,7 @@
         </div>
 
         <!-- Filters -->
-        <div class="dsa-filters animate-fade-up delay-1" style="margin-bottom:28px;">
+        <div class="dsa-filters filters-spaced animate-fade-up delay-1">
           <span class="filter-chip active" onclick="filterCompanyStatus(this, 'all')">All</span>
           <span class="filter-chip" onclick="filterCompanyStatus(this, 'not-applied')">Not Applied</span>
           <span class="filter-chip" onclick="filterCompanyStatus(this, 'applied')">Applied</span>
@@ -79,7 +79,7 @@
 
         <!-- Company Cards Grid -->
         <div class="company-grid animate-fade-up delay-2" id="companyGrid">
-          <p style="color:var(--text-muted);font-size:0.9rem;padding:24px;">Loading companies...</p>
+          <p class="loading-text loading-padded">Loading companies...</p>
         </div><!-- /company-grid -->
       </div><!-- /page-content -->
     </main>

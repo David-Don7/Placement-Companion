@@ -207,6 +207,7 @@ exports.runCode = async (req, res) => {
         runtime: results.reduce((sum, r) => sum + (r.runtime || 0), 0) / results.length,
         memory: Math.max(...results.map(r => r.memory || 0))
       },
+      judgeService: 'piston',
       executedAt: new Date()
     });
     
@@ -305,6 +306,7 @@ exports.submitCode = async (req, res) => {
         runtime: Math.round(results.reduce((sum, r) => sum + (r.runtime || 0), 0) / results.length),
         memory: Math.max(...results.map(r => r.memory || 0))
       },
+      judgeService: 'piston',
       executedAt: new Date()
     });
     

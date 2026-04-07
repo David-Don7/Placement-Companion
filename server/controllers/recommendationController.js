@@ -3,6 +3,7 @@
  * Generates and manages personalized recommendations based on user profile and activity
  */
 
+const mongoose = require('mongoose');
 const Recommendation = require('../models/Recommendation');
 const UserActivity = require('../models/UserActivity');
 const KnowledgeProfile = require('../models/KnowledgeProfile');
@@ -92,7 +93,8 @@ exports.getDashboardRecommendations = async (req, res) => {
       .limit(20);
     
     // Get DSA progress
-    const dsaProgress = await DSAProgress.find({ userId, solved: true });
+    const dsaProgress = await DSAProgress.find({ userId, solved: true })
+      .populate('questionId', 'difficulty');
     
     // Generate quick recommendations
     const quickRecs = [];
@@ -137,8 +139,8 @@ exports.getDashboardRecommendations = async (req, res) => {
     }
     
     // 3. Next difficulty challenge
-    const solvedEasy = dsaProgress.filter(p => p.difficulty === 'easy').length;
-    const solvedMedium = dsaProgress.filter(p => p.difficulty === 'medium').length;
+    const solvedEasy = dsaProgress.filter(p => p.questionId && p.questionId.difficulty === 'easy').length;
+    const solvedMedium = dsaProgress.filter(p => p.questionId && p.questionId.difficulty === 'medium').length;
     
     if (solvedEasy >= 5 && solvedMedium < 3) {
       quickRecs.push({
@@ -405,7 +407,8 @@ exports.getLearningPath = async (req, res) => {
     }
     
     // Get DSA progress
-    const dsaProgress = await DSAProgress.find({ userId });
+    const dsaProgress = await DSAProgress.find({ userId })
+      .populate('questionId', 'topic');
     
     // Build learning path
     const topics = ['Arrays', 'Strings', 'Linked List', 'Stack', 'Queue', 'Trees', 'Graphs', 'Dynamic Programming'];
@@ -413,7 +416,7 @@ exports.getLearningPath = async (req, res) => {
     
     for (const topic of topics) {
       const topicLevel = profile.topicLevels?.get(topic);
-      const solvedInTopic = dsaProgress.filter(p => p.topic === topic && p.solved).length;
+      const solvedInTopic = dsaProgress.filter(p => p.questionId && p.questionId.topic === topic && p.solved).length;
       
       // Get total questions in topic
       const totalInTopic = await Question.countDocuments({ type: 'dsa', topic });
@@ -606,7 +609,7 @@ async function generateRecommendations(userId) {
     // Get user data
     const [profile, dsaProgress, quizResults, recentActivity] = await Promise.all([
       KnowledgeProfile.findOne({ userId }),
-      DSAProgress.find({ userId }),
+      DSAProgress.find({ userId }).populate('questionId', 'difficulty topic'),
       QuizResult.find({ userId }).sort({ createdAt: -1 }).limit(10),
       UserActivity.find({ userId }).sort({ timestamp: -1 }).limit(50)
     ]);
@@ -622,7 +625,7 @@ async function generateRecommendations(userId) {
           type: 'dsa',
           topic,
           difficulty,
-          _id: { $nin: solvedIds.map(id => require('mongoose').Types.ObjectId(id)) }
+          _id: { $nin: solvedIds.map(id => new mongoose.Types.ObjectId(id)) }
         });
         
         if (problem) {
@@ -653,12 +656,12 @@ async function generateRecommendations(userId) {
     }
     
     // 2. Next level problems
-    const easyCount = dsaProgress.filter(p => p.solved && p.difficulty === 'easy').length;
+    const easyCount = dsaProgress.filter(p => p.solved && p.questionId && p.questionId.difficulty === 'easy').length;
     if (easyCount >= 5) {
       const mediumProblem = await Question.findOne({
         type: 'dsa',
         difficulty: 'medium',
-        _id: { $nin: solvedIds.map(id => require('mongoose').Types.ObjectId(id)) }
+        _id: { $nin: solvedIds.map(id => new mongoose.Types.ObjectId(id)) }
       });
       
       if (mediumProblem) {

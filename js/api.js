@@ -354,7 +354,7 @@ function getPostAuthRedirect() {
   const user = getUser();
   // Check for new assessment first, fallback to old aptitude test
   if (user && !user.assessment_completed && !user.aptitude_test_completed) {
-    return 'assessment.html';
+    return 'survey.html';
   }
   return 'dashboard.html';
 }

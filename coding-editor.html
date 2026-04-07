@@ -611,13 +611,37 @@
 
     /* Panel Resizer */
     .panel-resizer {
-      width: 4px;
+      width: 6px;
       cursor: col-resize;
-      background: transparent;
+      background: var(--border);
       transition: background var(--transition);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .panel-resizer::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 4px;
+      height: 40px;
+      background: var(--text-muted);
+      border-radius: 2px;
+      opacity: 0.5;
+      transition: opacity var(--transition);
     }
 
     .panel-resizer:hover {
+      background: var(--primary);
+    }
+
+    .panel-resizer:hover::before {
+      opacity: 0;
+    }
+
+    .panel-resizer:active {
       background: var(--primary);
     }
 
@@ -1314,24 +1338,40 @@ int main() {
     // Panel Resizer
     const resizer = document.getElementById('panelResizer');
     const problemPanel = document.getElementById('problemPanel');
+    const editorLayout = document.querySelector('.editor-layout');
     let isResizing = false;
 
     resizer.addEventListener('mousedown', (e) => {
       isResizing = true;
       document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+      editorLayout.style.pointerEvents = 'none';
     });
 
     document.addEventListener('mousemove', (e) => {
       if (!isResizing) return;
+      e.preventDefault();
       const newWidth = e.clientX;
       if (newWidth > 300 && newWidth < window.innerWidth - 400) {
         problemPanel.style.width = newWidth + 'px';
+        // Trigger Monaco editor resize
+        if (editor) {
+          editor.layout();
+        }
       }
     });
 
     document.addEventListener('mouseup', () => {
-      isResizing = false;
-      document.body.style.cursor = '';
+      if (isResizing) {
+        isResizing = false;
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        editorLayout.style.pointerEvents = '';
+        // Final layout update for Monaco
+        if (editor) {
+          editor.layout();
+        }
+      }
     });
 
     // Keyboard Shortcuts

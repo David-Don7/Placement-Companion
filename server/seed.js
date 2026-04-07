@@ -754,7 +754,7 @@ const surveyQuestions = [
     topic: 'Trees', tier: 'intermediate', questionType: 'code-output',
     question: 'What is the inorder traversal of this BST?',
     codeSnippet: '      4\n     / \\\n    2   6\n   / \\ / \\\n  1  3 5  7',
-    codeLanguage: 'text',
+    codeLanguage: '',
     options: ['4,2,1,3,6,5,7', '1,2,3,4,5,6,7', '1,3,2,5,7,6,4', '4,2,6,1,3,5,7'],
     answer: 1,
     explanation: 'Inorder (left, root, right) visits: 1, 2, 3, 4, 5, 6, 7 - sorted order for BST.',
@@ -1117,7 +1117,7 @@ const dsaTestCasesData = {
       { input: 'abcabcbb', expectedOutput: '3', isSample: true, order: 1, description: 'Standard case (abc)' },
       { input: 'bbbbb', expectedOutput: '1', isSample: true, order: 2, description: 'All same characters' },
       { input: 'pwwkew', expectedOutput: '3', isSample: true, order: 3, description: 'wke is longest' },
-      { input: '', expectedOutput: '0', isHidden: true, order: 4, description: 'Empty string', isEdgeCase: true, edgeCaseType: 'empty-input' },
+      { input: '(empty)', expectedOutput: '0', isHidden: true, order: 4, description: 'Empty string - use empty input', isEdgeCase: true, edgeCaseType: 'empty-input' },
       { input: 'abcdefghijklmnop', expectedOutput: '16', isHidden: true, order: 5, description: 'All unique characters' }
     ],
     template: {
@@ -1137,7 +1137,7 @@ const dsaTestCasesData = {
       { input: '(]', expectedOutput: 'false', isSample: true, order: 3, description: 'Mismatched types' },
       { input: '([)]', expectedOutput: 'false', isHidden: true, order: 4, description: 'Interleaved invalid' },
       { input: '{[]}', expectedOutput: 'true', isHidden: true, order: 5, description: 'Nested valid' },
-      { input: '', expectedOutput: 'true', isHidden: true, order: 6, description: 'Empty string', isEdgeCase: true, edgeCaseType: 'empty-input' }
+      { input: '(empty)', expectedOutput: 'true', isHidden: true, order: 6, description: 'Empty string - use empty input', isEdgeCase: true, edgeCaseType: 'empty-input' }
     ],
     template: {
       inputFormat: 'A string containing only ()[]{}',

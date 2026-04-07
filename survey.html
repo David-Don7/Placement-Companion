@@ -457,20 +457,27 @@
           return;
         }
 
+        // Validate that we have questions to display
+        if (!res.data.questions || res.data.questions.length === 0) {
+          showToast('No questions available. Please contact support or try again later.', 'error');
+          return;
+        }
+
         surveyState = {
           attemptId: res.data.attemptId,
           currentTier: res.data.currentTier,
           tierIndex: res.data.tierIndex,
           questions: res.data.questions,
           currentQuestion: 0,
-          answers: new Array(res.data.questions.length).fill(null),
+          answers: new Array(res.data.questions.length).length ? new Array(res.data.questions.length).fill(null) : [],
           timerInterval: null,
           questionStartTime: Date.now()
         };
 
         showView('surveyView');
         renderSurveyQuestion();
-        startQuestionTimer(res.data.questions[0].timeLimit || 120);
+        const firstQuestion = surveyState.questions[0];
+        startQuestionTimer(firstQuestion?.timeLimit || 120);
       } catch (err) {
         console.error('Start survey error:', err);
         showToast('Error starting survey: ' + err.message, 'error');
@@ -498,7 +505,20 @@
 
     // ---- Render Survey Question ----
     function renderSurveyQuestion() {
+      // Safety check for questions array
+      if (!surveyState.questions || surveyState.questions.length === 0) {
+        showToast('No questions available', 'error');
+        showView('profileView');
+        return;
+      }
+
       const q = surveyState.questions[surveyState.currentQuestion];
+      if (!q) {
+        showToast('Question not found', 'error');
+        showView('profileView');
+        return;
+      }
+
       const total = surveyState.questions.length;
 
       // Update header

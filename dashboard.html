@@ -340,10 +340,9 @@
 
     if (!requireAuth()) { /* redirected */ }
     else {
-      // Redirect to aptitude assessment if not completed
-      const _u = getUser();
-      if (_u && !_u.aptitude_test_completed) {
-        window.location.href = 'aptitude-test.html';
+      // Redirect to assessment if not completed
+      if (!hasCompletedAssessment()) {
+        window.location.href = 'assessment.html';
       }
 
       updateSidebarUser();

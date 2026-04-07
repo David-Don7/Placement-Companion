@@ -349,13 +349,20 @@ async function apiSubmitAptitude(answers) {
   });
 }
 
-// ---- Post-auth redirect (handles first-login aptitude check) ----
+// ---- Post-auth redirect (handles first-login assessment check) ----
 function getPostAuthRedirect() {
   const user = getUser();
-  if (user && !user.aptitude_test_completed) {
-    return 'aptitude-test.html';
+  // Check for new assessment first, fallback to old aptitude test
+  if (user && !user.assessment_completed && !user.aptitude_test_completed) {
+    return 'assessment.html';
   }
   return 'dashboard.html';
+}
+
+// ---- Check if user has completed initial assessment ----
+function hasCompletedAssessment() {
+  const user = getUser();
+  return user && (user.assessment_completed || user.aptitude_test_completed);
 }
 
 // ---- Logout helper ----

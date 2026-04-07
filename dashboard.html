@@ -33,6 +33,9 @@
         <a href="aptitude.html" class="nav-link">
           <span class="nav-icon"><i class="fa-solid fa-brain"></i></span> Aptitude
         </a>
+        <a href="coding-practice.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-laptop-code"></i></span> Coding Practice
+        </a>
         <a href="dsa.html" class="nav-link">
           <span class="nav-icon"><i class="fa-solid fa-code"></i></span> DSA Practice
         </a>
@@ -337,6 +340,12 @@
 
     if (!requireAuth()) { /* redirected */ }
     else {
+      // Redirect to aptitude assessment if not completed
+      const _u = getUser();
+      if (_u && !_u.aptitude_test_completed) {
+        window.location.href = 'aptitude-test.html';
+      }
+
       updateSidebarUser();
       const user = getUser();
       // Update welcome message

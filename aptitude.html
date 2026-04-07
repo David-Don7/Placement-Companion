@@ -30,6 +30,9 @@
         <a href="aptitude.html" class="nav-link active">
           <span class="nav-icon"><i class="fa-solid fa-brain"></i></span> Aptitude
         </a>
+        <a href="coding-practice.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-laptop-code"></i></span> Coding Practice
+        </a>
         <a href="dsa.html" class="nav-link">
           <span class="nav-icon"><i class="fa-solid fa-code"></i></span> DSA Practice
         </a>
@@ -45,7 +48,7 @@
         <a href="profile.html" class="nav-link">
           <span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile
         </a>
-        <a href="#" class="nav-link" onclick="logout()">
+        <a href="login.html" class="nav-link">
           <span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout
         </a>
       </div>
@@ -66,7 +69,7 @@
     <main class="main-content">
       <header class="topbar">
         <div class="topbar-left">
-          <button class="menu-toggle" onclick="toggleSidebar()" title="Toggle menu" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
           <div>
             <h1>Aptitude Practice</h1>
             <span class="breadcrumb">Dashboard / Aptitude</span>
@@ -93,21 +96,21 @@
           <div class="topic-grid animate-fade-up delay-1">
             <!-- Quantitative -->
             <div class="topic-card" onclick="startQuiz('quantitative')">
-              <div class="topic-icon topic-primary">🔢</div>
+              <div class="topic-icon" style="background:rgba(79,70,229,0.1); color:var(--primary);">🔢</div>
               <h3>Quantitative Aptitude</h3>
               <p>Number systems, percentages, profit/loss, time & work, probability</p>
               <div class="topic-stats">32 questions · Avg score: 82%</div>
             </div>
             <!-- Logical -->
             <div class="topic-card" onclick="startQuiz('logical')">
-              <div class="topic-icon topic-secondary">🧩</div>
+              <div class="topic-icon" style="background:rgba(14,165,233,0.1); color:var(--secondary);">🧩</div>
               <h3>Logical Reasoning</h3>
               <p>Puzzles, coding-decoding, blood relations, seating arrangements</p>
               <div class="topic-stats">28 questions · Avg score: 65%</div>
             </div>
             <!-- Verbal -->
             <div class="topic-card" onclick="startQuiz('verbal')">
-              <div class="topic-icon topic-success">📝</div>
+              <div class="topic-icon" style="background:rgba(16,185,129,0.1); color:var(--success);">📝</div>
               <h3>Verbal Ability</h3>
               <p>Reading comprehension, synonyms, antonyms, sentence correction</p>
               <div class="topic-stats">25 questions · Avg score: 70%</div>
@@ -115,12 +118,12 @@
           </div>
 
           <!-- Quiz History -->
-          <div class="card-flat history-card animate-fade-up delay-2">
+          <div class="card-flat animate-fade-up delay-2" style="margin-top:8px;">
             <div class="section-header">
               <h3>📜 Quiz History</h3>
               <a href="#">View all →</a>
             </div>
-            <div class="dsa-table-container borderless">
+            <div class="dsa-table-container" style="border:none;">
               <table class="history-table">
                 <thead>
                   <tr>
@@ -133,28 +136,28 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td><span class="topic-tag tag-primary">Quantitative</span></td>
+                    <td><span class="topic-tag" style="background:rgba(79,70,229,0.1); color:var(--primary);">Quantitative</span></td>
                     <td><span class="score-circle score-high">85%</span></td>
                     <td>15/20</td>
                     <td>Feb 23, 2026</td>
                     <td>18 min</td>
                   </tr>
                   <tr>
-                    <td><span class="topic-tag tag-secondary">Logical</span></td>
+                    <td><span class="topic-tag" style="background:rgba(14,165,233,0.1); color:var(--secondary);">Logical</span></td>
                     <td><span class="score-circle score-mid">60%</span></td>
                     <td>9/15</td>
                     <td>Feb 22, 2026</td>
                     <td>14 min</td>
                   </tr>
                   <tr>
-                    <td><span class="topic-tag tag-success">Verbal</span></td>
+                    <td><span class="topic-tag" style="background:rgba(16,185,129,0.1); color:var(--success);">Verbal</span></td>
                     <td><span class="score-circle score-high">90%</span></td>
                     <td>9/10</td>
                     <td>Feb 21, 2026</td>
                     <td>8 min</td>
                   </tr>
                   <tr>
-                    <td><span class="topic-tag tag-primary">Quantitative</span></td>
+                    <td><span class="topic-tag" style="background:rgba(79,70,229,0.1); color:var(--primary);">Quantitative</span></td>
                     <td><span class="score-circle score-low">45%</span></td>
                     <td>9/20</td>
                     <td>Feb 20, 2026</td>
@@ -167,14 +170,14 @@
         </div>
 
         <!-- Quiz View (hidden by default) -->
-        <div id="quizView" class="view-hidden">
+        <div id="quizView" style="display:none;">
           <div class="quiz-container">
             <!-- Quiz Header -->
             <div class="quiz-header">
               <div class="quiz-progress">
                 <span class="question-count" id="questionCounter">Question 1 / 10</span>
-                <div class="progress-bar quiz-progress-bar">
-                  <div class="progress-fill purple" id="quizProgressBar" data-width="10%"></div>
+                <div class="progress-bar" style="width:200px;">
+                  <div class="progress-fill purple" id="quizProgressBar" style="width:10%"></div>
                 </div>
               </div>
               <div class="quiz-timer" id="quizTimer">
@@ -222,7 +225,7 @@
         </div>
 
         <!-- Result View (hidden by default) -->
-        <div id="resultView" class="view-hidden">
+        <div id="resultView" style="display:none;">
           <div class="result-card">
             <div class="result-icon">🎉</div>
             <h2>Quiz Completed!</h2>
@@ -231,33 +234,33 @@
 
             <div class="result-stats">
               <div class="result-stat">
-                <div class="stat-value text-success">17</div>
+                <div class="stat-value" style="color:var(--success);">17</div>
                 <div class="stat-label">Correct</div>
               </div>
               <div class="result-stat">
-                <div class="stat-value text-danger">3</div>
+                <div class="stat-value" style="color:var(--danger);">3</div>
                 <div class="stat-label">Wrong</div>
               </div>
               <div class="result-stat">
-                <div class="stat-value text-info">12:30</div>
+                <div class="stat-value" style="color:var(--info);">12:30</div>
                 <div class="stat-label">Time Taken</div>
               </div>
             </div>
 
             <!-- Weak Topics -->
-            <div class="weak-areas">
-              <h4 class="weak-areas-heading">⚠️ Weak Areas Detected</h4>
+            <div style="text-align:left; margin-bottom:24px;">
+              <h4 style="font-size:0.9rem; margin-bottom:12px; color:var(--text);">⚠️ Weak Areas Detected</h4>
               <div class="progress-bar-container">
                 <div class="progress-label"><span>Time & Work</span><span>40%</span></div>
-                <div class="progress-bar"><div class="progress-fill red" data-width="40%"></div></div>
+                <div class="progress-bar"><div class="progress-fill red" style="width:40%"></div></div>
               </div>
               <div class="progress-bar-container">
                 <div class="progress-label"><span>Probability</span><span>50%</span></div>
-                <div class="progress-bar"><div class="progress-fill orange" data-width="50%"></div></div>
+                <div class="progress-bar"><div class="progress-fill orange" style="width:50%"></div></div>
               </div>
             </div>
 
-            <div class="result-actions">
+            <div style="display:flex; gap:12px; justify-content:center;">
               <button class="btn btn-primary" onclick="showView('topicView')">
                 <i class="fa-solid fa-rotate-left"></i> Try Another Quiz
               </button>
@@ -273,20 +276,11 @@
   </div>
 
   <script src="js/app.js"></script>
-  <script src="js/api.js"></script>
   <script>
-    /* ---- Aptitude Page Logic (API-connected) ---- */
-    document.querySelectorAll('[data-width]').forEach(el => { el.style.width = el.dataset.width; });
-
-    if (!requireAuth()) { /* redirected */ }
-    else { updateSidebarUser(); loadQuizHistory(); loadQuizStats(); }
-
-    let currentQuestion = 0;
-    let quizQuestions = [];
-    let userAnswers = [];
+    /* ---- Aptitude Page Logic ---- */
+    let currentQuestion = 1;
+    const totalQuestions = 10;
     let timerInterval;
-    let quizStartTime;
-    let currentTopic = '';
 
     function showView(viewId) {
       document.getElementById('topicView').style.display = viewId === 'topicView' ? 'block' : 'none';
@@ -294,146 +288,45 @@
       document.getElementById('resultView').style.display = viewId === 'resultView' ? 'block' : 'none';
     }
 
-    async function startQuiz(topic) {
-      currentTopic = topic;
-      const topicMap = { 'quantitative': 'Quantitative', 'logical': 'Logical Reasoning', 'verbal': 'Verbal Ability' };
-      const apiTopic = topicMap[topic] || topic;
-
-      try {
-        const res = await apiGetQuizQuestions(apiTopic, 10);
-        if (!res || !res.success || res.data.length === 0) {
-          showToast('No questions available for this topic.', 'error');
-          return;
-        }
-        quizQuestions = res.data;
-        userAnswers = new Array(quizQuestions.length).fill(-1);
-        currentQuestion = 0;
-        showView('quizView');
-        renderQuestion();
-        quizStartTime = Date.now();
-        startTimer(15 * 60);
-      } catch (err) {
-        showToast('Failed to load questions: ' + err.message, 'error');
-      }
+    function startQuiz(topic) {
+      showView('quizView');
+      currentQuestion = 1;
+      updateQuizUI();
+      startTimer(15 * 60); // 15 minutes
     }
 
-    function renderQuestion() {
-      const q = quizQuestions[currentQuestion];
-      const total = quizQuestions.length;
-      document.getElementById('questionCounter').textContent = `Question ${currentQuestion + 1} / ${total}`;
-      document.getElementById('questionLabel').textContent = `Question ${currentQuestion + 1}`;
-      document.getElementById('quizProgressBar').style.width = `${((currentQuestion + 1) / total) * 100}%`;
-      document.getElementById('questionText').textContent = q.question;
-
-      const optionsList = document.getElementById('optionsList');
-      const letters = ['A', 'B', 'C', 'D'];
-      optionsList.innerHTML = q.options.map((opt, i) => {
-        const selected = userAnswers[currentQuestion] === i ? ' selected' : '';
-        return `<div class="option-item${selected}" onclick="selectOption(${i})">
-          <span class="option-letter">${letters[i]}</span>
-          <span>${opt}</span>
-        </div>`;
-      }).join('');
-
-      // Animate
-      const card = document.getElementById('questionCard');
-      card.style.animation = 'none';
-      card.offsetHeight;
-      card.style.animation = 'fadeInUp 0.4s ease-out';
-    }
-
-    function selectOption(index) {
-      userAnswers[currentQuestion] = index;
-      document.querySelectorAll('.option-item').forEach((o, i) => {
-        o.classList.toggle('selected', i === index);
-      });
+    function selectOption(el) {
+      document.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
     }
 
     function nextQuestion() {
-      if (currentQuestion < quizQuestions.length - 1) {
+      if (currentQuestion < totalQuestions) {
         currentQuestion++;
-        renderQuestion();
+        updateQuizUI();
+        // Re-animate question card
+        const card = document.getElementById('questionCard');
+        card.style.animation = 'none';
+        card.offsetHeight; // trigger reflow
+        card.style.animation = 'fadeInUp 0.4s ease-out';
       } else {
-        submitQuiz();
+        clearInterval(timerInterval);
+        showView('resultView');
       }
     }
 
     function prevQuestion() {
-      if (currentQuestion > 0) {
+      if (currentQuestion > 1) {
         currentQuestion--;
-        renderQuestion();
+        updateQuizUI();
       }
     }
 
-    async function submitQuiz() {
-      clearInterval(timerInterval);
-      const timeTaken = Math.round((Date.now() - quizStartTime) / 1000);
-      const topicMap = { 'quantitative': 'Quantitative', 'logical': 'Logical Reasoning', 'verbal': 'Verbal Ability' };
-      const apiTopic = topicMap[currentTopic] || currentTopic;
-
-      const answers = quizQuestions.map((q, i) => ({
-        questionId: q._id,
-        selected: userAnswers[i]
-      }));
-
-      try {
-        const res = await apiSubmitQuiz(apiTopic, answers, timeTaken);
-        if (res && res.success) {
-          showResults(res.data, timeTaken);
-        }
-      } catch (err) {
-        showToast('Failed to submit quiz', 'error');
-        showView('topicView');
-      }
-    }
-
-    function showResults(data, timeTaken) {
-      showView('resultView');
-      const resultView = document.getElementById('resultView');
-      const minutes = Math.floor(timeTaken / 60);
-      const seconds = timeTaken % 60;
-      const timeStr = `${minutes}:${String(seconds).padStart(2, '0')}`;
-
-      resultView.innerHTML = `
-        <div class="result-card">
-          <div class="result-icon">${data.percentage >= 70 ? '🎉' : data.percentage >= 50 ? '👍' : '💪'}</div>
-          <h2>Quiz Completed!</h2>
-          <div class="score text-gradient">${data.percentage}%</div>
-          <p class="score-label">You scored ${data.score} out of ${data.total} questions correctly</p>
-          <div class="result-stats">
-            <div class="result-stat">
-              <div class="stat-value" style="color:var(--success);">${data.score}</div>
-              <div class="stat-label">Correct</div>
-            </div>
-            <div class="result-stat">
-              <div class="stat-value" style="color:var(--danger);">${data.total - data.score}</div>
-              <div class="stat-label">Wrong</div>
-            </div>
-            <div class="result-stat">
-              <div class="stat-value" style="color:var(--info);">${timeStr}</div>
-              <div class="stat-label">Time Taken</div>
-            </div>
-          </div>
-          ${data.results ? `<div style="text-align:left; margin-bottom:24px;">
-            <h4 style="font-size:0.9rem; margin-bottom:12px; color:var(--text);">📝 Review Answers</h4>
-            ${data.results.map((r, i) => `
-              <div style="padding:12px;margin-bottom:8px;border-radius:var(--radius-sm);border:1px solid ${r.correct ? 'var(--success)' : 'var(--danger)'};background:${r.correct ? 'rgba(16,185,129,0.05)' : 'rgba(239,68,68,0.05)'};">
-                <div style="font-weight:600;font-size:0.85rem;margin-bottom:4px;">${i+1}. ${r.question}</div>
-                <div style="font-size:0.8rem;color:var(--text-light);">Your answer: ${r.selected >= 0 && r.options[r.selected] ? r.options[r.selected] : 'Not answered'}</div>
-                ${!r.correct ? `<div style="font-size:0.8rem;color:var(--success);margin-top:2px;">Correct: ${r.options[r.answer] || 'N/A'}</div>` : ''}
-                ${r.solution ? `<div style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">💡 ${r.solution}</div>` : ''}
-              </div>
-            `).join('')}
-          </div>` : ''}
-          <div style="display:flex; gap:12px; justify-content:center;">
-            <button class="btn btn-primary" onclick="showView('topicView'); loadQuizHistory();">
-              <i class="fa-solid fa-rotate-left"></i> Try Another Quiz
-            </button>
-            <button class="btn btn-outline" onclick="window.location.href='dashboard.html'">
-              <i class="fa-solid fa-house"></i> Dashboard
-            </button>
-          </div>
-        </div>`;
+    function updateQuizUI() {
+      document.getElementById('questionCounter').textContent = `Question ${currentQuestion} / ${totalQuestions}`;
+      document.getElementById('questionLabel').textContent = `Question ${currentQuestion}`;
+      document.getElementById('quizProgressBar').style.width = `${(currentQuestion / totalQuestions) * 100}%`;
+      document.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
     }
 
     function startTimer(seconds) {
@@ -449,60 +342,13 @@
         if (remaining <= 60) timerEl.classList.add('warning');
         if (remaining <= 0) {
           clearInterval(timerInterval);
-          submitQuiz();
+          showView('resultView');
         }
         remaining--;
       }
+
       tick();
       timerInterval = setInterval(tick, 1000);
-    }
-
-    async function loadQuizHistory() {
-      try {
-        const res = await apiGetQuizHistory();
-        if (!res || !res.success) return;
-        const tbody = document.querySelector('.history-table tbody');
-        if (!tbody) return;
-
-        if (res.data.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px;">No quiz history yet. Take your first quiz!</td></tr>';
-          return;
-        }
-
-        tbody.innerHTML = res.data.map(r => {
-          const date = new Date(r.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-          const scoreClass = r.percentage >= 80 ? 'score-high' : r.percentage >= 50 ? 'score-mid' : 'score-low';
-          const mins = Math.floor(r.timeTaken / 60);
-          const topicColors = { 'Quantitative': 'var(--primary)', 'Logical Reasoning': 'var(--secondary)', 'Verbal Ability': 'var(--success)' };
-          const color = topicColors[r.topic] || 'var(--primary)';
-          return `<tr>
-            <td><span class="topic-tag" style="background:${color}15;color:${color};">${r.topic}</span></td>
-            <td><span class="score-circle ${scoreClass}">${r.percentage}%</span></td>
-            <td>${r.score}/${r.total}</td>
-            <td>${date}</td>
-            <td>${mins} min</td>
-          </tr>`;
-        }).join('');
-      } catch (err) { console.error('Quiz history error:', err); }
-    }
-
-    async function loadQuizStats() {
-      try {
-        const res = await apiGetQuizStats();
-        if (!res || !res.success) return;
-        const d = res.data;
-        // Update topic card stats
-        const topicCards = document.querySelectorAll('.topic-card .topic-stats');
-        const topicMap = { 0: 'Quantitative', 1: 'Logical Reasoning', 2: 'Verbal Ability' };
-        topicCards.forEach((el, i) => {
-          const topic = topicMap[i];
-          if (topic && d.topicStats[topic]) {
-            el.textContent = `${d.topicStats[topic].quizzes} quizzes · Avg score: ${d.topicStats[topic].avgScore}%`;
-          } else if (topic) {
-            el.textContent = '0 quizzes · Start practicing!';
-          }
-        });
-      } catch (err) { console.error('Quiz stats error:', err); }
     }
   </script>
 </body>

@@ -1,127 +1,56 @@
 const mongoose = require('mongoose');
 
-/**
- * CodeSubmission Model
- * Stores user code submissions for DSA problems
- * Tracks execution results, runtime, memory usage
- */
 const codeSubmissionSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
-  
   questionId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Question',
+    ref: 'CodingQuestion',
     required: true
   },
   
-  // Programming language used
-  language: {
-    type: String,
-    required: true,
-    enum: ['python', 'javascript', 'typescript', 'java', 'cpp', 'c', 'go', 'rust']
-  },
-  
-  // The submitted code
+  // Submission details
   code: {
     type: String,
     required: true
   },
-  
-  // Submission type: 'run' (test) or 'submit' (full evaluation)
-  submissionType: {
+  language: {
     type: String,
-    enum: ['run', 'submit'],
-    default: 'run'
+    enum: ['C', 'C++', 'Java'],
+    required: true
   },
   
-  // Overall verdict
-  verdict: {
+  // Execution result
+  status: {
     type: String,
-    enum: [
-      'accepted',
-      'wrong-answer',
-      'time-limit-exceeded',
-      'memory-limit-exceeded',
-      'runtime-error',
-      'compilation-error',
-      'pending',
-      'internal-error'
-    ],
-    default: 'pending'
+    enum: ['Pending', 'Accepted', 'Wrong Answer', 'Compilation Error', 'Runtime Error', 'Time Limit Exceeded', 'Memory Limit Exceeded'],
+    default: 'Pending'
   },
   
-  // Per-test-case results
+  // Test case results
   testResults: [{
-    testCaseId: String,
-    input: String,
-    expectedOutput: String,
-    actualOutput: String,
+    testCaseIndex: Number,
     passed: Boolean,
-    runtime: Number,        // milliseconds
-    memory: Number,         // bytes
-    error: String,          // error message if any
-    isHidden: Boolean       // whether this was a hidden test case
+    expected: String,
+    actual: String,
+    error: { type: String, default: '' }
   }],
   
-  // Aggregate metrics
-  metrics: {
-    totalTestCases: { type: Number, default: 0 },
-    passedTestCases: { type: Number, default: 0 },
-    runtime: { type: Number, default: 0 },           // avg runtime in ms
-    memory: { type: Number, default: 0 },            // peak memory in bytes
-    runtimePercentile: { type: Number, default: 0 }, // beats X% of submissions
-    memoryPercentile: { type: Number, default: 0 }   // beats X% of submissions
-  },
+  // Performance metrics
+  executionTime: { type: Number, default: 0 }, // ms
+  memoryUsed: { type: Number, default: 0 }, // KB
+  compilerOutput: { type: String, default: '' },
+  runtimeError: { type: String, default: '' },
   
-  // Execution output
-  stdout: {
-    type: String,
-    default: ''
-  },
-  
-  stderr: {
-    type: String,
-    default: ''
-  },
-  
-  // Compilation errors (for compiled languages)
-  compileError: {
-    type: String,
-    default: ''
-  },
-  
-  // Judge execution token (for async result retrieval)
-  judgeToken: {
-    type: String,
-    default: ''
-  },
-  
-  // Judge service used
-  judgeService: {
-    type: String,
-    enum: ['judge0', 'piston', 'custom'],
-    default: 'judge0'
-  },
-  
-  // Timestamps
-  submittedAt: { type: Date, default: Date.now },
-  executedAt: Date,
-  
-  // Execution duration (time to get results)
-  executionDuration: {
-    type: Number,
-    default: 0
-  }
+  // Meta
+  attempt: { type: Number, default: 1 },
+  createdAt: { type: Date, default: Date.now }
 });
 
-// Indexes for efficient querying
-codeSubmissionSchema.index({ userId: 1, questionId: 1, submittedAt: -1 });
-codeSubmissionSchema.index({ userId: 1, verdict: 1 });
-codeSubmissionSchema.index({ questionId: 1, verdict: 1 });
-codeSubmissionSchema.index({ judgeToken: 1 });
+codeSubmissionSchema.index({ userId: 1, questionId: 1, createdAt: -1 });
+codeSubmissionSchema.index({ userId: 1, status: 1 });
 
 module.exports = mongoose.model('CodeSubmission', codeSubmissionSchema);

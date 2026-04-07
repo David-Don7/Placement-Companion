@@ -98,8 +98,8 @@
   <script src="js/app.js"></script>
   <script src="js/api.js"></script>
   <script>
-    // If already logged in, go to dashboard
-    if (isLoggedIn()) window.location.href = 'dashboard.html';
+    // If already logged in, go to appropriate page
+    if (isLoggedIn()) window.location.href = getPostAuthRedirect();
 
     async function handleLogin(e) {
       e.preventDefault();
@@ -113,7 +113,7 @@
         const data = await apiLogin(email, password);
         if (data && data.success) {
           showToast('Login successful!', 'success');
-          setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+          setTimeout(() => { window.location.href = getPostAuthRedirect(); }, 500);
         }
       } catch (err) {
         showToast(err.message || 'Login failed', 'error');
@@ -128,14 +128,14 @@
         try {
           const data = await apiLogin('demo@placement.com', 'demo1234');
           if (data && data.success) {
-            window.location.href = 'dashboard.html';
+            window.location.href = getPostAuthRedirect();
             return;
           }
         } catch (e) {
           // Demo account may not exist, create it
           const data = await apiRegister('Demo User', 'demo@placement.com', 'demo1234');
           if (data && data.success) {
-            window.location.href = 'dashboard.html';
+            window.location.href = getPostAuthRedirect();
             return;
           }
         }

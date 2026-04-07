@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aptitude Assessment — Placement Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Assessment-specific styles (scoped to this page) */
+    .assessment-wrapper {
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .assessment-container {
+      max-width: 720px;
+      width: 100%;
+    }
+    .assessment-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .assessment-header .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .assessment-header .logo .logo-icon {
+      font-size: 1.6rem;
+    }
+    .assessment-header p {
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+    .assessment-progress {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 16px;
+    }
+    .assessment-progress .question-count {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .assessment-progress .progress-bar {
+      flex: 1;
+    }
+    .assessment-progress .category-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(79, 70, 229, 0.1);
+      color: var(--primary);
+      white-space: nowrap;
+    }
+    .assessment-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+    }
+
+    /* Intro view */
+    .intro-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 48px 40px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .intro-card .intro-icon {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+    }
+    .intro-card h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .intro-card p {
+      color: var(--text-light);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .intro-topics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 32px;
+      text-align: left;
+    }
+    .intro-topics .topic-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: var(--bg);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .intro-topics .topic-item i {
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    /* Result breakdown list */
+    .breakdown-list {
+      text-align: left;
+      margin: 24px 0;
+    }
+    .breakdown-item {
+      margin-bottom: 14px;
+    }
+    .breakdown-item .breakdown-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+    .level-badge {
+      display: inline-block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin: 8px 0 16px;
+    }
+    .level-badge.beginner { background: rgba(239,68,68,0.1); color: var(--danger); }
+    .level-badge.amateur { background: rgba(245,158,11,0.1); color: var(--accent); }
+    .level-badge.advanced { background: rgba(16,185,129,0.1); color: var(--success); }
+
+    @media (max-width: 600px) {
+      .intro-topics { grid-template-columns: 1fr; }
+      .intro-card { padding: 32px 20px; }
+      .assessment-progress { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="assessment-wrapper">
+    <div class="assessment-container">
+
+      <!-- Header -->
+      <div class="assessment-header animate-fade-up">
+        <div class="logo"><span class="logo-icon">🎓</span> Placement Companion</div>
+        <p>First-Login Aptitude Assessment</p>
+      </div>
+
+      <!-- ===== INTRO VIEW ===== -->
+      <div id="introView" class="animate-fade-up">
+        <div class="intro-card">
+          <div class="intro-icon">🧠</div>
+          <h2>Welcome! Let's assess your skills</h2>
+          <p>
+            Before you begin, we'll run a quick 15-question assessment to understand your current aptitude level.
+            This helps us personalize your preparation journey.
+          </p>
+          <div class="intro-topics">
+            <div class="topic-item"><i class="fa-solid fa-calculator"></i> Quantitative Aptitude</div>
+            <div class="topic-item"><i class="fa-solid fa-puzzle-piece"></i> Logical Reasoning</div>
+            <div class="topic-item"><i class="fa-solid fa-shapes"></i> Pattern Recognition</div>
+            <div class="topic-item"><i class="fa-solid fa-lightbulb"></i> Analytical Thinking</div>
+          </div>
+          <button class="btn btn-primary btn-lg" onclick="beginAssessment()">
+            <i class="fa-solid fa-play"></i> Start Assessment
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== QUIZ VIEW ===== -->
+      <div id="quizView" style="display:none;">
+        <!-- Progress -->
+        <div class="assessment-progress">
+          <span class="question-count" id="questionCounter">Question 1 / 15</span>
+          <div class="progress-bar">
+            <div class="progress-fill purple" id="progressBar" style="width:6.67%"></div>
+          </div>
+          <span class="category-tag" id="categoryTag">Quantitative</span>
+        </div>
+
+        <!-- Question Card -->
+        <div class="question-card" id="questionCard">
+          <div class="question-number" id="questionLabel">Question 1</div>
+          <div class="question-text" id="questionText"></div>
+          <div class="options-list" id="optionsList"></div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="assessment-actions">
+          <button class="btn btn-outline" id="prevBtn" onclick="prevQuestion()" disabled>
+            <i class="fa-solid fa-arrow-left"></i> Previous
+          </button>
+          <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+            Next <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== RESULT VIEW ===== -->
+      <div id="resultView" style="display:none;">
+        <div class="result-card animate-fade-up">
+          <div class="result-icon">🎉</div>
+          <h2>Assessment Complete!</h2>
+          <div class="score text-gradient" id="finalScore">0%</div>
+          <p class="score-label" id="scoreLabel">You scored 0 out of 15 correctly</p>
+          <div id="levelBadge"></div>
+
+          <div class="result-stats">
+            <div class="result-stat">
+              <div class="stat-value" style="color:var(--success);" id="correctCount">0</div>
+              <div class="stat-label">Correct</div>
+            </div>
+            <div class="result-stat">
+              <div class="stat-value" style="color:var(--danger);" id="wrongCount">0</div>
+              <div class="stat-label">Wrong</div>
+            </div>
+            <div class="result-stat">
+              <div class="stat-value" style="color:var(--primary);" id="resultLevel">—</div>
+              <div class="stat-label">Level</div>
+            </div>
+          </div>
+
+          <!-- Category breakdown -->
+          <div class="breakdown-list" id="breakdownList"></div>
+
+          <button class="btn btn-primary btn-lg btn-full" onclick="goToDashboard()">
+            <i class="fa-solid fa-arrow-right"></i> Continue to Dashboard
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /assessment-container -->
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // Auth guard
+    if (!isLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+
+    // If user already completed assessment, send to dashboard
+    const currentUser = getUser();
+    if (currentUser && currentUser.aptitude_test_completed) {
+      window.location.href = 'dashboard.html';
+    }
+
+    let questions = [];
+    let currentIdx = 0;
+    let userAnswers = {};  // { questionId: selectedIndex }
+
+    function showView(id) {
+      document.getElementById('introView').style.display = id === 'introView' ? '' : 'none';
+      document.getElementById('quizView').style.display = id === 'quizView' ? '' : 'none';
+      document.getElementById('resultView').style.display = id === 'resultView' ? '' : 'none';
+    }
+
+    async function beginAssessment() {
+      try {
+        const data = await apiGetAptitudeQuestions();
+        if (data && data.success) {
+          questions = data.data;
+          currentIdx = 0;
+          userAnswers = {};
+          showView('quizView');
+          renderQuestion();
+        }
+      } catch (err) {
+        showToast(err.message || 'Failed to load questions', 'error');
+      }
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIdx];
+      const total = questions.length;
+
+      document.getElementById('questionCounter').textContent = `Question ${currentIdx + 1} / ${total}`;
+      document.getElementById('questionLabel').textContent = `Question ${currentIdx + 1}`;
+      document.getElementById('progressBar').style.width = `${((currentIdx + 1) / total) * 100}%`;
+      document.getElementById('categoryTag').textContent = q.category;
+      document.getElementById('questionText').textContent = q.question;
+
+      const optionsList = document.getElementById('optionsList');
+      optionsList.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const div = document.createElement('div');
+        div.className = 'option-item';
+        if (userAnswers[q.id] === idx) div.classList.add('selected');
+        div.onclick = () => selectOption(q.id, idx);
+        div.innerHTML = `<span class="option-letter">${String.fromCharCode(65 + idx)}</span><span>${opt}</span>`;
+        optionsList.appendChild(div);
+      });
+
+      // Update navigation buttons
+      document.getElementById('prevBtn').disabled = currentIdx === 0;
+      const nextBtn = document.getElementById('nextBtn');
+      if (currentIdx === total - 1) {
+        nextBtn.innerHTML = '<i class="fa-solid fa-check"></i> Submit';
+      } else {
+        nextBtn.innerHTML = 'Next <i class="fa-solid fa-arrow-right"></i>';
+      }
+
+      // Animate card
+      const card = document.getElementById('questionCard');
+      card.style.animation = 'none';
+      card.offsetHeight;
+      card.style.animation = 'fadeInUp 0.3s ease-out';
+    }
+
+    function selectOption(questionId, optionIndex) {
+      userAnswers[questionId] = optionIndex;
+      // Refresh options UI
+      document.querySelectorAll('#optionsList .option-item').forEach((el, i) => {
+        el.classList.toggle('selected', i === optionIndex);
+      });
+    }
+
+    function nextQuestion() {
+      const q = questions[currentIdx];
+      // Prevent empty submission for current question
+      if (userAnswers[q.id] === undefined) {
+        showToast('Please select an answer before continuing', 'info');
+        return;
+      }
+
+      if (currentIdx < questions.length - 1) {
+        currentIdx++;
+        renderQuestion();
+      } else {
+        submitAssessment();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentIdx > 0) {
+        currentIdx--;
+        renderQuestion();
+      }
+    }
+
+    async function submitAssessment() {
+      // Validate all questions answered
+      const unanswered = questions.filter(q => userAnswers[q.id] === undefined);
+      if (unanswered.length > 0) {
+        showToast(`Please answer all questions. ${unanswered.length} remaining.`, 'info');
+        return;
+      }
+
+      const answers = questions.map(q => ({
+        id: q.id,
+        selected: userAnswers[q.id]
+      }));
+
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.disabled = true;
+      nextBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+
+      try {
+        const data = await apiSubmitAptitude(answers);
+        if (data && data.success) {
+          // Update local user data
+          const user = getUser();
+          user.aptitude_test_completed = true;
+          user.aptitude_score = data.data.percentage;
+          user.aptitude_level = data.data.level;
+          setUser(user);
+
+          displayResults(data.data);
+          showView('resultView');
+        }
+      } catch (err) {
+        showToast(err.message || 'Submission failed', 'error');
+        nextBtn.disabled = false;
+        nextBtn.innerHTML = '<i class="fa-solid fa-check"></i> Submit';
+      }
+    }
+
+    function displayResults(result) {
+      document.getElementById('finalScore').textContent = `${result.percentage}%`;
+      document.getElementById('scoreLabel').textContent = `You scored ${result.score} out of ${result.total} correctly`;
+      document.getElementById('correctCount').textContent = result.score;
+      document.getElementById('wrongCount').textContent = result.total - result.score;
+      document.getElementById('resultLevel').textContent = result.level;
+
+      // Level badge
+      const levelClass = result.level.toLowerCase();
+      document.getElementById('levelBadge').innerHTML =
+        `<span class="level-badge ${levelClass}">${result.level}</span>`;
+
+      // Category breakdown with progress bars
+      const breakdownEl = document.getElementById('breakdownList');
+      breakdownEl.innerHTML = '';
+      if (result.breakdown && result.breakdown.length) {
+        result.breakdown.forEach(cat => {
+          let barClass = 'green';
+          if (cat.percentage < 40) barClass = 'red';
+          else if (cat.percentage < 70) barClass = 'orange';
+
+          const item = document.createElement('div');
+          item.className = 'breakdown-item';
+          item.innerHTML = `
+            <div class="breakdown-label">
+              <span>${cat.category}</span>
+              <span>${cat.correct}/${cat.total} (${cat.percentage}%)</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill ${barClass}" style="width:${cat.percentage}%"></div>
+            </div>
+          `;
+          breakdownEl.appendChild(item);
+        });
+      }
+    }
+
+    function goToDashboard() {
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>

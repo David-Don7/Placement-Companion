@@ -337,6 +337,27 @@ function updateSidebarUser() {
   document.querySelectorAll('.user-email').forEach(el => { el.textContent = user.email || ''; });
 }
 
+// ---- Aptitude Assessment API methods ----
+async function apiGetAptitudeQuestions() {
+  return apiFetch('/aptitude/questions');
+}
+
+async function apiSubmitAptitude(answers) {
+  return apiFetch('/aptitude/submit', {
+    method: 'POST',
+    body: JSON.stringify({ answers })
+  });
+}
+
+// ---- Post-auth redirect (handles first-login aptitude check) ----
+function getPostAuthRedirect() {
+  const user = getUser();
+  if (user && !user.aptitude_test_completed) {
+    return 'aptitude-test.html';
+  }
+  return 'dashboard.html';
+}
+
 // ---- Logout helper ----
 function logout() {
   removeToken();

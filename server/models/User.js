@@ -28,7 +28,16 @@ const userSchema = new mongoose.Schema({
   cgpa: { type: String, default: '' },
   streak: { type: Number, default: 0 },
   lastActive: { type: Date, default: Date.now },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+
+  // First-login aptitude assessment fields
+  aptitude_test_completed: { type: Boolean, default: false },
+  aptitude_score: { type: Number, default: null },
+  aptitude_level: {
+    type: String,
+    enum: ['Beginner', 'Amateur', 'Advanced', null],
+    default: null
+  }
 });
 
 // Hash password before saving

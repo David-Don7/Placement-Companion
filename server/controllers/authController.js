@@ -34,7 +34,8 @@ exports.register = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        streak: user.streak
+        streak: user.streak,
+        aptitude_test_completed: user.aptitude_test_completed
       }
     });
   } catch (err) {
@@ -85,7 +86,10 @@ exports.login = async (req, res) => {
         branch: user.branch,
         year: user.year,
         cgpa: user.cgpa,
-        createdAt: user.createdAt
+        createdAt: user.createdAt,
+        aptitude_test_completed: user.aptitude_test_completed,
+        aptitude_score: user.aptitude_score,
+        aptitude_level: user.aptitude_level
       }
     });
   } catch (err) {
@@ -109,7 +113,10 @@ exports.getMe = async (req, res) => {
         branch: user.branch,
         year: user.year,
         cgpa: user.cgpa,
-        createdAt: user.createdAt
+        createdAt: user.createdAt,
+        aptitude_test_completed: user.aptitude_test_completed,
+        aptitude_score: user.aptitude_score,
+        aptitude_level: user.aptitude_level
       }
     });
   } catch (err) {

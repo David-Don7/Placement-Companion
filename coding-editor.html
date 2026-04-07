@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coding Editor — Placement Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .editor-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      height: calc(100vh - 80px);
+      background: var(--border);
+    }
+
+    .problem-panel,
+    .code-panel {
+      background: var(--card-bg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 1rem 1.5rem;
+      background: var(--bg-light);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .panel-header h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .panel-header button {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+    }
+
+    .panel-header button:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    /* Problem Description Panel */
+    .problem-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+
+    .problem-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .problem-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .meta-badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      background: var(--bg-light);
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .meta-badge.easy {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+    }
+
+    .meta-badge.medium {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+
+    .meta-badge.hard {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+
+    .section-heading {
+      font-weight: 700;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .problem-text {
+      line-height: 1.6;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .code-block {
+      background: #1e1e1e;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      overflow-x: auto;
+      margin-bottom: 1rem;
+    }
+
+    .code-block pre {
+      margin: 0;
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+    }
+
+    /* Code Editor Panel */
+    .code-editor-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .editor-top {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: var(--bg-light);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lang-select {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--card-bg);
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .editor-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+
+    .action-btn.secondary {
+      background: var(--border);
+      color: var(--text-primary);
+    }
+
+    .action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .editor-textarea {
+      flex: 1;
+      padding: 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      background: #1e1e1e;
+      color: #e0e0e0;
+      border: none;
+      resize: none;
+      line-height: 1.6;
+      tab-size: 2;
+    }
+
+    /* Output Panel */
+    .output-panel {
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      max-height: 200px;
+    }
+
+    .output-content {
+      overflow-y: auto;
+      padding: 1rem 1.5rem;
+      background: #1e1e1e;
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .output-status {
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-light);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .output-status.pending {
+      color: #f59e0b;
+    }
+
+    .output-status.accepted {
+      color: #22c55e;
+    }
+
+    .output-status.error {
+      color: #ef4444;
+    }
+
+    /* Test Cases */
+    .test-cases {
+      display: grid;
+      gap: 0.75rem;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .test-case-item {
+      padding: 0.75rem;
+      background: var(--bg-light);
+      border-left: 3px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+    }
+
+    .test-case-item.passed {
+      border-left-color: #22c55e;
+      background: rgba(34, 197, 94, 0.1);
+    }
+
+    .test-case-item.failed {
+      border-left-color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    @media (max-width: 1200px) {
+      .editor-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .problem-panel {
+        max-height: 50vh;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .loading {
+      animation: fadeIn 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">🎓</span>
+        <span>Placement&nbsp;Companion</span>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-house"></i></span> Dashboard
+        </a>
+        <a href="aptitude.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-brain"></i></span> Aptitude
+        </a>
+        <a href="coding-practice.html" class="nav-link active">
+          <span class="nav-icon"><i class="fa-solid fa-code"></i></span> Coding Practice
+        </a>
+        <a href="hr.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-comments"></i></span> HR Interview
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="profile.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile
+        </a>
+        <a href="login.html" class="nav-link" id="logoutBtn">
+          <span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content -->
+    <main class="main-content" style="padding: 0;">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+          <div>
+            <h1 id="problemTitle">Loading...</h1>
+            <span class="breadcrumb">Dashboard / Coding Practice / Editor</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="notification-btn"><i class="fa-solid fa-bell"></i><span class="badge">0</span></button>
+        </div>
+      </header>
+
+      <!-- Editor Layout -->
+      <div class="editor-layout">
+        <!-- Problem Panel -->
+        <div class="problem-panel">
+          <div class="panel-header">
+            <h3>Problem Description</h3>
+            <button onclick="window.location.href='coding-practice.html'">← Back</button>
+          </div>
+          <div class="problem-content">
+            <div class="problem-title" id="problemDescTitle">Loading...</div>
+            <div class="problem-meta">
+              <span class="meta-badge easy" id="difficultyBadge">Easy</span>
+              <span class="meta-badge" id="topicBadge">Arrays</span>
+            </div>
+
+            <div class="section-heading">Description</div>
+            <div class="problem-text" id="problemDescription">Loading...</div>
+
+            <div class="section-heading">Constraints</div>
+            <ul id="constraintsList"></ul>
+
+            <div class="section-heading">Examples</div>
+            <div id="examplesContainer"></div>
+          </div>
+        </div>
+
+        <!-- Code Editor Panel -->
+        <div class="code-panel">
+          <div class="panel-header">
+            <h3>Code Editor</h3>
+            <div class="editor-actions">
+              <button class="action-btn secondary" onclick="resetCode()">Reset</button>
+            </div>
+          </div>
+
+          <div class="editor-top">
+            <select class="lang-select" id="languageSelect" onchange="changeLanguage()">
+              <option value="C">C</option>
+              <option value="C++">C++</option>
+              <option value="Java">Java</option>
+            </select>
+            <div class="editor-actions">
+              <button class="action-btn" id="runBtn" onclick="runCode()">
+                <i class="fa-solid fa-play"></i> Run
+              </button>
+              <button class="action-btn" id="submitBtn" onclick="submitCode()" style="background: #10b981;">
+                <i class="fa-solid fa-check"></i> Submit
+              </button>
+            </div>
+          </div>
+
+          <textarea class="editor-textarea" id="codeEditor" spellcheck="false" placeholder="// Write your code here"></textarea>
+
+          <div class="output-panel">
+            <div class="output-status" id="outputStatus">Ready</div>
+            <div class="output-content">
+              <div id="outputContent" style="display: none;">Output will appear here...</div>
+              <div id="testResults"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    let currentProblem = null;
+    let currentLanguage = 'C';
+    let submitting = false;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const params = new URLSearchParams(window.location.search);
+      const problemId = params.get('id');
+
+      if (!problemId) {
+        showToast('Problem ID missing', 'error');
+        setTimeout(() => window.location.href = 'coding-practice.html', 2000);
+        return;
+      }
+
+      await loadProblem(problemId);
+
+      document.getElementById('logoutBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+      });
+    });
+
+    async function loadProblem(problemId) {
+      try {
+        const response = await fetch(`/api/coding/question/${problemId}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('pc_token')}`
+          }
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch problem');
+
+        currentProblem = (await response.json()).data;
+
+        // Update UI
+        document.getElementById('problemTitle').textContent = currentProblem.title;
+        document.getElementById('problemDescTitle').textContent = currentProblem.title;
+        document.getElementById('problemDescription').textContent = currentProblem.description;
+
+        // Difficulty badge
+        const diffBadge = document.getElementById('difficultyBadge');
+        diffBadge.textContent = currentProblem.difficulty;
+        diffBadge.className = `meta-badge ${currentProblem.difficulty.toLowerCase()}`;
+
+        // Topic badge
+        document.getElementById('topicBadge').textContent = currentProblem.topic;
+
+        // Constraints
+        const constraintsList = document.getElementById('constraintsList');
+        constraintsList.innerHTML = currentProblem.constraints.map(c => `<li>${c}</li>`).join('');
+
+        // Examples
+        const examplesHtml = currentProblem.examples.map((ex, idx) => `
+          <div style="margin-bottom: 1.5rem;">
+            <strong>Example ${idx + 1}:</strong><br/>
+            <div class="code-block">
+              <pre><strong>Input:</strong>\n${ex.input}</pre>
+            </div>
+            <div class="code-block">
+              <pre><strong>Output:</strong>\n${ex.output}</pre>
+            </div>
+            ${ex.explanation ? `<p><strong>Explanation:</strong> ${ex.explanation}</p>` : ''}
+          </div>
+        `).join('');
+        document.getElementById('examplesContainer').innerHTML = examplesHtml;
+
+        // Load boilerplate code
+        loadBoilerplate();
+      } catch (err) {
+        console.error('Error loading problem:', err);
+        showToast('Failed to load problem', 'error');
+      }
+    }
+
+    function loadBoilerplate() {
+      const boilerplate = currentProblem.boilerplate[currentLanguage.toLowerCase()];
+      if (boilerplate) {
+        document.getElementById('codeEditor').value = boilerplate;
+      } else {
+        const templates = {
+          'c': '#include <stdio.h>\n\nint main() {\n    // Your code here\n    return 0;\n}',
+          'cpp': '#include <iostream>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}',
+          'java': 'public class Solution {\n    public static void main(String[] args) {\n        // Your code here\n    }\n}'
+        };
+        document.getElementById('codeEditor').value = templates[currentLanguage.toLowerCase()];
+      }
+    }
+
+    function changeLanguage() {
+      currentLanguage = document.getElementById('languageSelect').value;
+      loadBoilerplate();
+    }
+
+    async function runCode() {
+      const code = document.getElementById('codeEditor').value;
+      if (!code.trim()) {
+        showToast('Code cannot be empty', 'error');
+        return;
+      }
+
+      document.getElementById('runBtn').disabled = true;
+      document.getElementById('outputStatus').textContent = 'Running...';
+      document.getElementById('outputStatus').className = 'output-status pending';
+
+      try {
+        const response = await fetch('/api/coding/submit', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('pc_token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            questionId: currentProblem._id,
+            code,
+            language: currentLanguage
+          })
+        });
+
+        if (!response.ok) throw new Error('Execution failed');
+
+        const result = (await response.json()).data;
+        displayTestResults(result);
+      } catch (err) {
+        console.error('Run error:', err);
+        document.getElementById('outputStatus').textContent = 'Error: ' + err.message;
+        document.getElementById('outputStatus').className = 'output-status error';
+      } finally {
+        document.getElementById('runBtn').disabled = false;
+      }
+    }
+
+    async function submitCode() {
+      if (submitting) return;
+      submitting = true;
+
+      const code = document.getElementById('codeEditor').value;
+      if (!code.trim()) {
+        showToast('Code cannot be empty', 'error');
+        submitting = false;
+        return;
+      }
+
+      document.getElementById('submitBtn').disabled = true;
+
+      try {
+        const response = await fetch('/api/coding/submit', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('pc_token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            questionId: currentProblem._id,
+            code,
+            language: currentLanguage
+          })
+        });
+
+        if (!response.ok) throw new Error('Submission failed');
+
+        const result = (await response.json()).data;
+
+        if (result.status === 'Accepted') {
+          showToast('✅ Accepted! Great job!', 'success');
+          document.getElementById('outputStatus').textContent = '✓ All tests passed!';
+          document.getElementById('outputStatus').className = 'output-status accepted';
+        } else {
+          showToast('❌ ' + result.status, 'error');
+          document.getElementById('outputStatus').textContent = result.status;
+          document.getElementById('outputStatus').className = 'output-status error';
+        }
+
+        displayTestResults(result);
+      } catch (err) {
+        console.error('Submit error:', err);
+        showToast('Submission error: ' + err.message, 'error');
+      } finally {
+        document.getElementById('submitBtn').disabled = false;
+        submitting = false;
+      }
+    }
+
+    function displayTestResults(result) {
+      const testResultsHtml = result.testResults.map((tr, idx) => `
+        <div class="test-case-item ${tr.passed ? 'passed' : 'failed'}">
+          <strong>Test ${idx + 1}:</strong> ${tr.passed ? '✓ Passed' : '✗ Failed'}<br/>
+          ${!tr.passed ? `
+            <small>Expected: ${tr.expected}</small><br/>
+            <small>Got: ${tr.actual}</small>
+          ` : ''}
+        </div>
+      `).join('');
+      document.getElementById('testResults').innerHTML = testResultsHtml;
+    }
+
+    function resetCode() {
+      if (confirm('Reset code? This cannot be undone.')) {
+        loadBoilerplate();
+      }
+    }
+  </script>
+</body>
+</html>

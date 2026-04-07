@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aptitude Report — Placement Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .report-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      gap: 2rem;
+    }
+
+    .report-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      animation: slideUp 0.6s ease;
+    }
+
+    .report-header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: center;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .score-display {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .score-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 2.5rem;
+      color: white;
+      background: var(--primary);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .score-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .score-info h3 {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .score-info p {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .skill-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* Overall Performance Grid */
+    .performance-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-light);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    .stat-card .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Category Analysis */
+    .category-analysis {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .category-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-light);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--primary);
+    }
+
+    .category-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 3px;
+      transition: width 0.6s ease;
+    }
+
+    .category-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Strengths & Weaknesses */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .insight-box {
+      padding: 1.5rem;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--border);
+    }
+
+    .insight-box.strength {
+      background: rgba(34, 197, 94, 0.1);
+      border-color: #22c55e;
+    }
+
+    .insight-box.weakness {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: #ef4444;
+    }
+
+    .insight-box h4 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .insight-box.strength h4 {
+      color: #22c55e;
+    }
+
+    .insight-box.weakness h4 {
+      color: #ef4444;
+    }
+
+    .insight-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .insight-list li {
+      padding: 0.5rem 0;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Speed & Accuracy Insight */
+    .speed-accuracy {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .sa-box {
+      padding: 1.5rem;
+      background: var(--bg-light);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .sa-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .sa-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .sa-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* Recommendations */
+    .recommendations-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .recommendation-item {
+      padding: 1.5rem;
+      background: var(--bg-light);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--secondary);
+      display: flex;
+      gap: 1rem;
+    }
+
+    .recommendation-icon {
+      font-size: 1.5rem;
+      color: var(--secondary);
+      flex-shrink: 0;
+    }
+
+    .recommendation-text {
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Skill Level Box */
+    .skill-level-box {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 2rem;
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+    }
+
+    .skill-level-box h3 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .skill-level-box p {
+      font-size: 1rem;
+      line-height: 1.6;
+      opacity: 0.95;
+    }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark, #5558d6);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--border);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-light);
+    }
+
+    @media (max-width: 768px) {
+      .report-header {
+        grid-template-columns: 1fr;
+      }
+
+      .insights-grid,
+      .speed-accuracy {
+        grid-template-columns: 1fr;
+      }
+
+      .score-circle {
+        width: 100px;
+        height: 100px;
+        font-size: 2rem;
+      }
+
+      .performance-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- ===== Sidebar ===== -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">🎓</span>
+        <span>Placement&nbsp;Companion</span>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-house"></i></span> Dashboard
+        </a>
+        <a href="aptitude.html" class="nav-link active">
+          <span class="nav-icon"><i class="fa-solid fa-brain"></i></span> Aptitude
+        </a>
+        <a href="dsa.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-code"></i></span> DSA Practice
+        </a>
+        <a href="hr.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-comments"></i></span> HR Interview
+        </a>
+        <a href="companies.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-building"></i></span> Companies
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="profile.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile
+        </a>
+        <a href="login.html" class="nav-link" id="logoutBtn">
+          <span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- ===== Main Content ===== -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+          <div>
+            <h1>Performance Report</h1>
+            <span class="breadcrumb">Dashboard / Aptitude / Report</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="notification-btn"><i class="fa-solid fa-bell"></i><span class="badge">0</span></button>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <div id="reportContent" class="report-container" style="display: none;">
+          <!-- Report Header with Score -->
+          <div class="report-section">
+            <div class="report-header">
+              <div class="score-display">
+                <div class="score-circle" id="scorePercentage">0%</div>
+                <div class="score-info">
+                  <h3>Overall Score</h3>
+                  <p><span id="scoreCorrect">0</span> / <span id="scoreTotal">0</span> Correct</p>
+                  <div id="skillBadgeContainer"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Overall Performance Metrics -->
+            <div class="performance-grid">
+              <div class="stat-card">
+                <div class="stat-value" id="attemptedStat">0</div>
+                <div class="stat-label">Attempted</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="correctStat">0</div>
+                <div class="stat-label">Correct</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="wrongStat">0</div>
+                <div class="stat-label">Wrong</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="skippedStat">0</div>
+                <div class="stat-label">Skipped</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Skill Level -->
+          <div class="report-section">
+            <div class="skill-level-box">
+              <h3 id="skillLevelTitle">Beginner</h3>
+              <p id="skillLevelExplanation">Loading explanation...</p>
+            </div>
+          </div>
+
+          <!-- Category-wise Analysis -->
+          <div class="report-section">
+            <h3 class="section-title">Category-wise Analysis</h3>
+            <div class="category-analysis" id="categoryAnalysis"></div>
+          </div>
+
+          <!-- Strengths & Weaknesses -->
+          <div class="report-section">
+            <h3 class="section-title">Performance Insight</h3>
+            <div class="insights-grid">
+              <div class="insight-box strength">
+                <h4><i class="fa-solid fa-star"></i> Strengths</h4>
+                <ul class="insight-list" id="strengthsList"></ul>
+              </div>
+              <div class="insight-box weakness">
+                <h4><i class="fa-solid fa-warning"></i> Areas for Improvement</h4>
+                <ul class="insight-list" id="weaknessList"></ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Speed vs Accuracy -->
+          <div class="report-section">
+            <h3 class="section-title">Speed & Accuracy</h3>
+            <div class="speed-accuracy">
+              <div class="sa-box">
+                <div class="sa-icon">⚡</div>
+                <div class="sa-label">Average Time/Question</div>
+                <div class="sa-value" id="avgTimePerQn">0s</div>
+              </div>
+              <div class="sa-box">
+                <div class="sa-icon">🎯</div>
+                <div class="sa-label">Performance Pattern</div>
+                <div class="sa-value" id="speedAccuracyInsight">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommendations -->
+          <div class="report-section">
+            <h3 class="section-title">🎯 Personalized Recommendations</h3>
+            <ul class="recommendations-list" id="recommendationsList"></ul>
+          </div>
+
+          <!-- Actions -->
+          <div class="report-section">
+            <div class="actions">
+              <button class="btn btn-primary" onclick="downloadReport()">
+                <i class="fa-solid fa-download"></i> Download Report
+              </button>
+              <button class="btn btn-secondary" onclick="window.location.href='dsa.html'">
+                <i class="fa-solid fa-code"></i> Start DSA Practice
+              </button>
+              <button class="btn btn-secondary" onclick="window.location.href='dashboard.html'">
+                <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" style="text-align: center; padding: 2rem;">
+          <i class="fa-solid fa-spinner" style="font-size: 2rem; animation: spin 1s linear infinite;"></i>
+          <p style="margin-top: 1rem; color: var(--text-secondary);">Loading your report...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" style="display: none; text-align: center; padding: 2rem;">
+          <i class="fa-solid fa-circle-xmark" style="font-size: 2rem; color: var(--danger);"></i>
+          <p style="margin-top: 1rem; color: var(--text-primary);" id="errorMessage">Failed to load report</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // Load report from URL params
+    async function loadReport() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const reportId = urlParams.get('reportId');
+
+      if (!reportId) {
+        // Try to get latest report
+        try {
+          const response = await fetch('/api/aptitude/report', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('pc_token')}`
+            }
+          });
+
+          if (!response.ok) throw new Error('Failed to fetch report');
+
+          const result = await response.json();
+          displayReport(result.data);
+        } catch (err) {
+          showError('Failed to load report: ' + err.message);
+        }
+      } else {
+        try {
+          const response = await fetch(`/api/aptitude/report/${reportId}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('pc_token')}`
+            }
+          });
+
+          if (!response.ok) throw new Error('Failed to fetch report');
+
+          const result = await response.json();
+          displayReport(result.data);
+        } catch (err) {
+          showError('Failed to load report');
+        }
+      }
+    }
+
+    function displayReport(report) {
+      // Update overall scores
+      document.getElementById('scorePercentage').textContent = report.percentage + '%';
+      document.getElementById('scoreCorrect').textContent = report.correctAnswers;
+      document.getElementById('scoreTotal').textContent = report.totalQuestions;
+
+      // Update stats
+      document.getElementById('attemptedStat').textContent = report.attemptedQuestions;
+      document.getElementById('correctStat').textContent = report.correctAnswers;
+      document.getElementById('wrongStat').textContent = report.wrongAnswers;
+      document.getElementById('skippedStat').textContent = report.skippedQuestions;
+
+      // Skill level
+      document.getElementById('skillLevelTitle').textContent = report.skillLevel;
+      document.getElementById('skillLevelExplanation').textContent = report.skillLevelExplanation;
+      
+      const badge = document.createElement('div');
+      badge.className = 'skill-badge';
+      badge.textContent = report.skillLevel;
+      document.getElementById('skillBadgeContainer').appendChild(badge);
+
+      // Category analysis
+      const categoryHtml = report.categoryAnalysis.map(cat => `
+        <div class="category-item">
+          <div class="category-name">${cat.category}</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${cat.accuracy}%"></div>
+          </div>
+          <div class="category-stats">
+            <span>${cat.correctAnswers}/${cat.questionsAttempted} • ${cat.accuracy}%</span>
+          </div>
+        </div>
+      `).join('');
+      document.getElementById('categoryAnalysis').innerHTML = categoryHtml;
+
+      // Strengths
+      const strengthsHtml = report.strengths.map(s => `
+        <li><strong>${s.category}</strong>: ${s.accuracy}% accuracy ✓</li>
+      `).join('');
+      document.getElementById('strengthsList').innerHTML = strengthsHtml || '<li>Keep practicing to identify strengths</li>';
+
+      // Weaknesses
+      const weaknessesHtml = report.weaknesses.map(w => `
+        <li><strong>${w.category}</strong>: ${w.accuracy}% accuracy (needs work)</li>
+      `).join('');
+      document.getElementById('weaknessList').innerHTML = weaknessesHtml || '<li>Great! No weak areas identified</li>';
+
+      // Speed & Accuracy
+      const avgTime = (report.totalTimeSeconds / report.attemptedQuestions).toFixed(1);
+      document.getElementById('avgTimePerQn').textContent = avgTime + 's';
+      document.getElementById('speedAccuracyInsight').textContent = report.speedAccuracyInsight;
+
+      // Recommendations
+      const recsHtml = report.recommendations.map(rec => `
+        <li class="recommendation-item">
+          <div class="recommendation-icon">💡</div>
+          <div class="recommendation-text">${rec}</div>
+        </li>
+      `).join('');
+      document.getElementById('recommendationsList').innerHTML = recsHtml;
+
+      // Show content, hide loading
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('reportContent').style.display = 'grid';
+    }
+
+    function showError(message) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'block';
+      document.getElementById('errorMessage').textContent = message;
+    }
+
+    function downloadReport() {
+      showToast('Report download feature coming soon!', 'info');
+    }
+
+    // Load on page load
+    document.addEventListener('DOMContentLoaded', loadReport);
+
+    // Logout handler
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    });
+
+    // Animation for spin
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

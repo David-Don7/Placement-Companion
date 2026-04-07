@@ -5,6 +5,7 @@ dotenv.config();
 
 const Question = require('./models/Question');
 const Company = require('./models/Company');
+const SurveyQuestion = require('./models/SurveyQuestion');
 
 const connectDB = async () => {
   const conn = await mongoose.connect(process.env.MONGO_URI);
@@ -406,6 +407,575 @@ const companies = [
   }
 ];
 
+// ============================================
+// SURVEY QUESTIONS - Adaptive Assessment
+// ============================================
+const surveyQuestions = [
+  // ===================== ARRAYS =====================
+  // Beginner - Arrays
+  {
+    topic: 'Arrays', tier: 'beginner', questionType: 'multiple-choice',
+    question: 'What is the time complexity of accessing an element in an array by index?',
+    options: ['O(1)', 'O(n)', 'O(log n)', 'O(n²)'],
+    answer: 0,
+    explanation: 'Arrays provide constant time O(1) access by index because elements are stored in contiguous memory locations.',
+    timeLimit: 60
+  },
+  {
+    topic: 'Arrays', tier: 'beginner', questionType: 'multiple-choice',
+    question: 'What is the index of the first element in an array (in most programming languages)?',
+    options: ['0', '1', '-1', 'Depends on array size'],
+    answer: 0,
+    explanation: 'Most programming languages use 0-based indexing, where the first element is at index 0.',
+    timeLimit: 45
+  },
+  {
+    topic: 'Arrays', tier: 'beginner', questionType: 'true-false',
+    question: 'Arrays in most languages have a fixed size once created.',
+    options: ['True', 'False'],
+    answer: 0,
+    explanation: 'Traditional arrays have fixed size. Dynamic arrays (like ArrayList, vector) can resize but involve copying.',
+    timeLimit: 30
+  },
+  {
+    topic: 'Arrays', tier: 'beginner', questionType: 'code-output',
+    question: 'What is the output of this code?',
+    codeSnippet: 'arr = [10, 20, 30, 40]\nprint(arr[2])',
+    codeLanguage: 'python',
+    options: ['10', '20', '30', '40'],
+    answer: 2,
+    explanation: 'arr[2] accesses the element at index 2, which is 30 (0-indexed).',
+    timeLimit: 45
+  },
+
+  // Intermediate - Arrays
+  {
+    topic: 'Arrays', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'What is the time complexity of inserting an element at the beginning of an array?',
+    options: ['O(1)', 'O(log n)', 'O(n)', 'O(n²)'],
+    answer: 2,
+    explanation: 'Inserting at the beginning requires shifting all existing elements, which takes O(n) time.',
+    timeLimit: 60
+  },
+  {
+    topic: 'Arrays', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'Which technique is commonly used to find a pair of elements in a sorted array that sum to a target?',
+    options: ['Binary Search', 'Two Pointers', 'BFS', 'Dynamic Programming'],
+    answer: 1,
+    explanation: 'Two pointers from both ends is efficient O(n) for sorted arrays. Move left pointer up if sum < target, right pointer down if sum > target.',
+    timeLimit: 60
+  },
+  {
+    topic: 'Arrays', tier: 'intermediate', questionType: 'code-output',
+    question: 'What does this code return?',
+    codeSnippet: 'function findMax(arr) {\n  let max = arr[0];\n  for (let i = 1; i < arr.length; i++) {\n    if (arr[i] > max) max = arr[i];\n  }\n  return max;\n}\nconsole.log(findMax([3, 1, 4, 1, 5, 9, 2, 6]));',
+    codeLanguage: 'javascript',
+    options: ['3', '6', '9', '1'],
+    answer: 2,
+    explanation: 'The function finds the maximum element in the array, which is 9.',
+    timeLimit: 90
+  },
+  {
+    topic: 'Arrays', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'What is the space complexity of an in-place array reversal algorithm?',
+    options: ['O(n)', 'O(n²)', 'O(1)', 'O(log n)'],
+    answer: 2,
+    explanation: 'In-place reversal uses only a constant amount of extra space (for swapping), regardless of array size.',
+    timeLimit: 60
+  },
+
+  // Advanced - Arrays
+  {
+    topic: 'Arrays', tier: 'advanced', questionType: 'multiple-choice',
+    question: 'In the "Trapping Rain Water" problem, what is the optimal time and space complexity?',
+    options: ['O(n) time, O(n) space', 'O(n) time, O(1) space', 'O(n²) time, O(1) space', 'O(n log n) time, O(n) space'],
+    answer: 1,
+    explanation: 'Using two pointers, we can solve it in O(n) time with O(1) space by tracking left_max and right_max as we go.',
+    timeLimit: 90
+  },
+  {
+    topic: 'Arrays', tier: 'advanced', questionType: 'multiple-choice',
+    question: 'Which algorithm would you use to find the k-th largest element in an unsorted array optimally?',
+    options: ['Sort and index - O(n log n)', 'QuickSelect - O(n) average', 'Binary Search - O(log n)', 'Linear scan k times - O(kn)'],
+    answer: 1,
+    explanation: 'QuickSelect uses partitioning similar to QuickSort to find k-th element in O(n) average time without fully sorting.',
+    timeLimit: 90
+  },
+  {
+    topic: 'Arrays', tier: 'advanced', questionType: 'multiple-choice',
+    question: 'What technique is used to solve "Maximum Subarray Sum" (Kadane\'s algorithm)?',
+    options: ['Divide and Conquer', 'Dynamic Programming', 'Greedy', 'Backtracking'],
+    answer: 1,
+    explanation: 'Kadane\'s algorithm uses DP concept: max_ending_here = max(num, max_ending_here + num) at each position.',
+    timeLimit: 60
+  },
+
+  // Expert - Arrays
+  {
+    topic: 'Arrays', tier: 'expert', questionType: 'multiple-choice',
+    question: 'In the "Median of Two Sorted Arrays" problem (LeetCode Hard), what is the optimal time complexity?',
+    options: ['O(n + m)', 'O(n log m)', 'O(log(min(n,m)))', 'O(log(n + m))'],
+    answer: 2,
+    explanation: 'Using binary search on the smaller array to find the partition point achieves O(log(min(n,m))) complexity.',
+    timeLimit: 120
+  },
+  {
+    topic: 'Arrays', tier: 'expert', questionType: 'multiple-choice',
+    question: 'Which data structure augments arrays to answer range sum queries in O(log n) with O(log n) updates?',
+    options: ['Hash Table', 'Binary Indexed Tree (Fenwick Tree)', 'Trie', 'AVL Tree'],
+    answer: 1,
+    explanation: 'Fenwick Tree (BIT) supports both point updates and prefix sum queries in O(log n) time.',
+    timeLimit: 90
+  },
+
+  // ===================== STRINGS =====================
+  // Beginner - Strings
+  {
+    topic: 'Strings', tier: 'beginner', questionType: 'multiple-choice',
+    question: 'What is the time complexity of finding the length of a string?',
+    options: ['O(1) in most languages', 'O(n) always', 'O(log n)', 'Depends on string content'],
+    answer: 0,
+    explanation: 'Most languages store string length, making it O(1). In C, strlen() is O(n) as it counts until null terminator.',
+    timeLimit: 45
+  },
+  {
+    topic: 'Strings', tier: 'beginner', questionType: 'code-output',
+    question: 'What is the output?',
+    codeSnippet: 's = "Hello"\nprint(s[1])',
+    codeLanguage: 'python',
+    options: ['H', 'e', 'l', 'Error'],
+    answer: 1,
+    explanation: 's[1] accesses the character at index 1, which is \'e\' (0-indexed).',
+    timeLimit: 30
+  },
+  {
+    topic: 'Strings', tier: 'beginner', questionType: 'multiple-choice',
+    question: 'Are strings mutable or immutable in Python and Java?',
+    options: ['Mutable in both', 'Immutable in both', 'Mutable in Python, immutable in Java', 'Immutable in Python, mutable in Java'],
+    answer: 1,
+    explanation: 'Strings are immutable in both Python and Java. Modifications create new string objects.',
+    timeLimit: 45
+  },
+
+  // Intermediate - Strings
+  {
+    topic: 'Strings', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'What is the time complexity of checking if a string is a palindrome?',
+    options: ['O(n)', 'O(n²)', 'O(log n)', 'O(1)'],
+    answer: 0,
+    explanation: 'We compare characters from both ends, meeting in the middle. Each character is checked at most once: O(n).',
+    timeLimit: 60
+  },
+  {
+    topic: 'Strings', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'Which approach is best for "Longest Substring Without Repeating Characters"?',
+    options: ['Brute Force - check all substrings', 'Sliding Window with HashSet', 'Recursion', 'Binary Search'],
+    answer: 1,
+    explanation: 'Sliding window with a set tracks unique characters. Expand right, shrink left on duplicate. O(n) time.',
+    timeLimit: 75
+  },
+  {
+    topic: 'Strings', tier: 'intermediate', questionType: 'code-output',
+    question: 'What does this function return for "racecar"?',
+    codeSnippet: 'def is_palindrome(s):\n    return s == s[::-1]\n\nprint(is_palindrome("racecar"))',
+    codeLanguage: 'python',
+    options: ['True', 'False', 'racecar', 'Error'],
+    answer: 0,
+    explanation: '"racecar" reversed is still "racecar", so it\'s a palindrome and returns True.',
+    timeLimit: 60
+  },
+
+  // Advanced - Strings
+  {
+    topic: 'Strings', tier: 'advanced', questionType: 'multiple-choice',
+    question: 'What is the time complexity of the KMP (Knuth-Morris-Pratt) string matching algorithm?',
+    options: ['O(n × m)', 'O(n + m)', 'O(n log m)', 'O(n²)'],
+    answer: 1,
+    explanation: 'KMP preprocesses the pattern in O(m) and searches in O(n), totaling O(n + m) where n is text length, m is pattern length.',
+    timeLimit: 90
+  },
+  {
+    topic: 'Strings', tier: 'advanced', questionType: 'multiple-choice',
+    question: 'Which technique is used to solve "Longest Palindromic Substring" in O(n) time?',
+    options: ['Dynamic Programming', 'Manacher\'s Algorithm', 'KMP', 'Rabin-Karp'],
+    answer: 1,
+    explanation: 'Manacher\'s Algorithm exploits palindrome symmetry to achieve O(n) time complexity.',
+    timeLimit: 90
+  },
+
+  // Expert - Strings
+  {
+    topic: 'Strings', tier: 'expert', questionType: 'multiple-choice',
+    question: 'What data structure is used in Aho-Corasick algorithm for multiple pattern matching?',
+    options: ['Hash Table', 'Trie with failure links', 'Segment Tree', 'Suffix Array'],
+    answer: 1,
+    explanation: 'Aho-Corasick builds a trie of all patterns and adds failure links (like KMP) for efficient multi-pattern matching.',
+    timeLimit: 120
+  },
+  {
+    topic: 'Strings', tier: 'expert', questionType: 'multiple-choice',
+    question: 'What is the time complexity of constructing a Suffix Array using the DC3/Skew algorithm?',
+    options: ['O(n²)', 'O(n log n)', 'O(n)', 'O(n log² n)'],
+    answer: 2,
+    explanation: 'The DC3 (Difference Cover 3) algorithm constructs suffix arrays in linear O(n) time.',
+    timeLimit: 120
+  },
+
+  // ===================== LINKED LIST =====================
+  // Beginner - Linked List
+  {
+    topic: 'Linked List', tier: 'beginner', questionType: 'multiple-choice',
+    question: 'What is the time complexity of accessing an element in a singly linked list?',
+    options: ['O(1)', 'O(log n)', 'O(n)', 'O(n²)'],
+    answer: 2,
+    explanation: 'Unlike arrays, linked lists require traversal from the head to reach any element, taking O(n) time.',
+    timeLimit: 45
+  },
+  {
+    topic: 'Linked List', tier: 'beginner', questionType: 'multiple-choice',
+    question: 'What is the time complexity of inserting at the head of a singly linked list?',
+    options: ['O(n)', 'O(1)', 'O(log n)', 'O(n²)'],
+    answer: 1,
+    explanation: 'Inserting at head only requires updating the head pointer and new node\'s next pointer: O(1).',
+    timeLimit: 45
+  },
+  {
+    topic: 'Linked List', tier: 'beginner', questionType: 'true-false',
+    question: 'A doubly linked list allows traversal in both directions.',
+    options: ['True', 'False'],
+    answer: 0,
+    explanation: 'Doubly linked lists have both next and prev pointers, enabling bidirectional traversal.',
+    timeLimit: 30
+  },
+
+  // Intermediate - Linked List
+  {
+    topic: 'Linked List', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'What algorithm is used to detect a cycle in a linked list with O(1) space?',
+    options: ['BFS', 'Floyd\'s Tortoise and Hare', 'Hash Table', 'DFS'],
+    answer: 1,
+    explanation: 'Floyd\'s algorithm uses two pointers (slow and fast). If they meet, there\'s a cycle. O(n) time, O(1) space.',
+    timeLimit: 60
+  },
+  {
+    topic: 'Linked List', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'To reverse a singly linked list iteratively, how many pointers do you need?',
+    options: ['1', '2', '3', '4'],
+    answer: 2,
+    explanation: 'You need three pointers: prev (initially null), curr (current node), and next (to save next node before reversing link).',
+    timeLimit: 60
+  },
+  {
+    topic: 'Linked List', tier: 'intermediate', questionType: 'code-output',
+    question: 'After this operation, what is the new head value?',
+    codeSnippet: '// Initial list: 1 -> 2 -> 3 -> 4 -> null\n// After reversing the entire list\n// New list: ? -> ? -> ? -> ? -> null',
+    codeLanguage: 'javascript',
+    options: ['1', '2', '3', '4'],
+    answer: 3,
+    explanation: 'After reversing, the list becomes 4 -> 3 -> 2 -> 1 -> null. The new head is 4.',
+    timeLimit: 60
+  },
+
+  // Advanced - Linked List
+  {
+    topic: 'Linked List', tier: 'advanced', questionType: 'multiple-choice',
+    question: 'What is the time complexity of merging k sorted linked lists using a min-heap?',
+    options: ['O(nk)', 'O(n log k)', 'O(nk log k)', 'O(n + k)'],
+    answer: 1,
+    explanation: 'With a min-heap of size k, each of n total elements is pushed/popped once. Each operation is O(log k), total O(n log k).',
+    timeLimit: 90
+  },
+  {
+    topic: 'Linked List', tier: 'advanced', questionType: 'multiple-choice',
+    question: 'In "LRU Cache" implementation, which data structures are typically combined?',
+    options: ['Array + Stack', 'HashMap + Doubly Linked List', 'Trie + Queue', 'Heap + Array'],
+    answer: 1,
+    explanation: 'HashMap gives O(1) lookup, doubly linked list gives O(1) insertion/deletion for maintaining access order.',
+    timeLimit: 75
+  },
+
+  // Expert - Linked List
+  {
+    topic: 'Linked List', tier: 'expert', questionType: 'multiple-choice',
+    question: 'In "Copy List with Random Pointer", what is the optimal space complexity?',
+    options: ['O(n) with hash map', 'O(1) with interleaving technique', 'O(n²)', 'O(log n)'],
+    answer: 1,
+    explanation: 'Interleaving: insert copy after each original node, set random pointers, then separate lists. O(1) extra space.',
+    timeLimit: 120
+  },
+
+  // ===================== TREES =====================
+  // Beginner - Trees
+  {
+    topic: 'Trees', tier: 'beginner', questionType: 'multiple-choice',
+    question: 'What is the maximum number of children a node can have in a binary tree?',
+    options: ['1', '2', '3', 'Unlimited'],
+    answer: 1,
+    explanation: 'By definition, a binary tree node has at most 2 children (left and right).',
+    timeLimit: 30
+  },
+  {
+    topic: 'Trees', tier: 'beginner', questionType: 'multiple-choice',
+    question: 'What is the depth of the root node in a tree?',
+    options: ['0', '1', '-1', 'Depends on tree height'],
+    answer: 0,
+    explanation: 'By convention, the root node is at depth 0. Depth increases by 1 for each level down.',
+    timeLimit: 30
+  },
+  {
+    topic: 'Trees', tier: 'beginner', questionType: 'multiple-choice',
+    question: 'In a Binary Search Tree, where are smaller values stored relative to a node?',
+    options: ['Left subtree', 'Right subtree', 'Either side', 'Only at leaves'],
+    answer: 0,
+    explanation: 'In a BST, values less than the node go to the left subtree, greater values go to the right.',
+    timeLimit: 45
+  },
+
+  // Intermediate - Trees
+  {
+    topic: 'Trees', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'What traversal of a BST gives elements in sorted order?',
+    options: ['Preorder', 'Inorder', 'Postorder', 'Level order'],
+    answer: 1,
+    explanation: 'Inorder traversal (left, root, right) of a BST visits nodes in ascending order.',
+    timeLimit: 45
+  },
+  {
+    topic: 'Trees', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'What is the time complexity of searching in a balanced BST?',
+    options: ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)'],
+    answer: 1,
+    explanation: 'In a balanced BST, height is O(log n), and search follows a root-to-leaf path: O(log n).',
+    timeLimit: 60
+  },
+  {
+    topic: 'Trees', tier: 'intermediate', questionType: 'code-output',
+    question: 'What is the inorder traversal of this BST?',
+    codeSnippet: '      4\n     / \\\n    2   6\n   / \\ / \\\n  1  3 5  7',
+    codeLanguage: 'text',
+    options: ['4,2,1,3,6,5,7', '1,2,3,4,5,6,7', '1,3,2,5,7,6,4', '4,2,6,1,3,5,7'],
+    answer: 1,
+    explanation: 'Inorder (left, root, right) visits: 1, 2, 3, 4, 5, 6, 7 - sorted order for BST.',
+    timeLimit: 90
+  },
+
+  // Advanced - Trees
+  {
+    topic: 'Trees', tier: 'advanced', questionType: 'multiple-choice',
+    question: 'Which tree balancing technique uses rotations to maintain O(log n) height?',
+    options: ['Binary Search Tree', 'AVL Tree', 'Trie', 'Heap'],
+    answer: 1,
+    explanation: 'AVL trees use rotations (single and double) to maintain balance factor ≤ 1, ensuring O(log n) operations.',
+    timeLimit: 75
+  },
+  {
+    topic: 'Trees', tier: 'advanced', questionType: 'multiple-choice',
+    question: 'What is the time complexity of finding the Lowest Common Ancestor (LCA) in a BST?',
+    options: ['O(n)', 'O(log n) for balanced BST', 'O(n²)', 'O(1)'],
+    answer: 1,
+    explanation: 'In BST, LCA is found by traversing from root: go left if both < node, right if both > node, else current is LCA. O(h).',
+    timeLimit: 90
+  },
+
+  // Expert - Trees
+  {
+    topic: 'Trees', tier: 'expert', questionType: 'multiple-choice',
+    question: 'What data structure supports O(log n) range queries and updates on trees?',
+    options: ['Binary Search Tree', 'Heavy-Light Decomposition', 'Trie', 'B-Tree'],
+    answer: 1,
+    explanation: 'Heavy-Light Decomposition breaks tree into chains, enabling segment tree queries on paths in O(log² n).',
+    timeLimit: 120
+  },
+  {
+    topic: 'Trees', tier: 'expert', questionType: 'multiple-choice',
+    question: 'In a Segment Tree with lazy propagation, what is the purpose of the lazy array?',
+    options: ['Store original values', 'Defer updates until needed', 'Track tree height', 'Store parent pointers'],
+    answer: 1,
+    explanation: 'Lazy propagation defers range updates, applying them only when that segment is accessed, achieving O(log n) range updates.',
+    timeLimit: 120
+  },
+
+  // ===================== DYNAMIC PROGRAMMING =====================
+  // Beginner - DP
+  {
+    topic: 'Dynamic Programming', tier: 'beginner', questionType: 'multiple-choice',
+    question: 'What are the two key properties required for a problem to be solvable by DP?',
+    options: ['Sorting and Searching', 'Optimal Substructure and Overlapping Subproblems', 'Recursion and Iteration', 'Divide and Conquer'],
+    answer: 1,
+    explanation: 'DP requires: 1) Optimal substructure (optimal solution uses optimal sub-solutions), 2) Overlapping subproblems (same subproblems solved multiple times).',
+    timeLimit: 60
+  },
+  {
+    topic: 'Dynamic Programming', tier: 'beginner', questionType: 'multiple-choice',
+    question: 'What is the time complexity of computing Fibonacci(n) using memoization?',
+    options: ['O(2ⁿ)', 'O(n)', 'O(n²)', 'O(log n)'],
+    answer: 1,
+    explanation: 'With memoization, each Fibonacci number is computed once and cached, giving O(n) time.',
+    timeLimit: 60
+  },
+  {
+    topic: 'Dynamic Programming', tier: 'beginner', questionType: 'code-output',
+    question: 'What does this DP code compute for n=5?',
+    codeSnippet: 'def climb(n):\n    if n <= 2: return n\n    dp = [0] * (n+1)\n    dp[1], dp[2] = 1, 2\n    for i in range(3, n+1):\n        dp[i] = dp[i-1] + dp[i-2]\n    return dp[n]\nprint(climb(5))',
+    codeLanguage: 'python',
+    options: ['5', '8', '13', '3'],
+    answer: 1,
+    explanation: 'This is the climbing stairs problem. dp = [0,1,2,3,5,8]. dp[5] = 8 ways to climb 5 stairs.',
+    timeLimit: 90
+  },
+
+  // Intermediate - DP
+  {
+    topic: 'Dynamic Programming', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'What is the time complexity of the 0/1 Knapsack problem with DP?',
+    options: ['O(n)', 'O(nW) where W is capacity', 'O(2ⁿ)', 'O(n log n)'],
+    answer: 1,
+    explanation: 'DP table is n items × W capacity. Each cell computed in O(1), total O(nW) pseudo-polynomial time.',
+    timeLimit: 75
+  },
+  {
+    topic: 'Dynamic Programming', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'In Longest Common Subsequence (LCS), what is the recurrence when characters match?',
+    options: ['dp[i][j] = max(dp[i-1][j], dp[i][j-1])', 'dp[i][j] = dp[i-1][j-1] + 1', 'dp[i][j] = dp[i-1][j-1]', 'dp[i][j] = 0'],
+    answer: 1,
+    explanation: 'When s1[i] == s2[j], we extend the LCS by 1: dp[i][j] = dp[i-1][j-1] + 1.',
+    timeLimit: 75
+  },
+  {
+    topic: 'Dynamic Programming', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'Which approach typically uses less memory: top-down or bottom-up DP?',
+    options: ['Top-down always', 'Bottom-up always', 'Bottom-up (can optimize space)', 'They use the same memory'],
+    answer: 2,
+    explanation: 'Bottom-up often allows space optimization (e.g., using only previous row) since we control iteration order.',
+    timeLimit: 60
+  },
+
+  // Advanced - DP
+  {
+    topic: 'Dynamic Programming', tier: 'advanced', questionType: 'multiple-choice',
+    question: 'What is the time complexity of Edit Distance (Levenshtein) for strings of length m and n?',
+    options: ['O(m + n)', 'O(mn)', 'O(m × n × min(m,n))', 'O(2^(m+n))'],
+    answer: 1,
+    explanation: 'DP table is m × n. Each cell requires O(1) to compute using adjacent cells. Total: O(mn).',
+    timeLimit: 90
+  },
+  {
+    topic: 'Dynamic Programming', tier: 'advanced', questionType: 'multiple-choice',
+    question: 'Which DP technique reduces 0/1 Knapsack space from O(nW) to O(W)?',
+    options: ['Memoization', 'Using 1D array with reverse iteration', 'Matrix exponentiation', 'Divide and conquer'],
+    answer: 1,
+    explanation: 'Since dp[i][w] only depends on row i-1, we use 1D array. Iterate w from W to 0 to avoid overwriting needed values.',
+    timeLimit: 90
+  },
+
+  // Expert - DP
+  {
+    topic: 'Dynamic Programming', tier: 'expert', questionType: 'multiple-choice',
+    question: 'What optimization technique reduces O(n²) DP to O(n log n) using monotonic structures?',
+    options: ['Memoization', 'Convex Hull Trick', 'Matrix Chain', 'Floyd-Warshall'],
+    answer: 1,
+    explanation: 'Convex Hull Trick optimizes DP recurrences of form dp[i] = min(dp[j] + b[j]*a[i]) using a deque of lines.',
+    timeLimit: 120
+  },
+  {
+    topic: 'Dynamic Programming', tier: 'expert', questionType: 'multiple-choice',
+    question: 'In "Bitmask DP", what does the bitmask typically represent?',
+    options: ['Array indices', 'Subset of elements visited/selected', 'Binary tree structure', 'Hash values'],
+    answer: 1,
+    explanation: 'Bitmask DP uses bits to represent which elements are in current subset. Useful for problems like TSP: O(n² × 2ⁿ).',
+    timeLimit: 120
+  },
+
+  // ===================== GRAPHS =====================
+  // Beginner - Graphs
+  {
+    topic: 'Graphs', tier: 'beginner', questionType: 'multiple-choice',
+    question: 'What is the time complexity of BFS on a graph with V vertices and E edges?',
+    options: ['O(V)', 'O(E)', 'O(V + E)', 'O(V × E)'],
+    answer: 2,
+    explanation: 'BFS visits each vertex once O(V) and explores each edge once O(E), totaling O(V + E).',
+    timeLimit: 60
+  },
+  {
+    topic: 'Graphs', tier: 'beginner', questionType: 'multiple-choice',
+    question: 'Which data structure is used for BFS traversal?',
+    options: ['Stack', 'Queue', 'Heap', 'Tree'],
+    answer: 1,
+    explanation: 'BFS uses a queue (FIFO) to explore neighbors level by level.',
+    timeLimit: 30
+  },
+  {
+    topic: 'Graphs', tier: 'beginner', questionType: 'true-false',
+    question: 'DFS can be implemented using recursion.',
+    options: ['True', 'False'],
+    answer: 0,
+    explanation: 'DFS naturally uses the call stack for recursion, or can use an explicit stack for iteration.',
+    timeLimit: 30
+  },
+
+  // Intermediate - Graphs
+  {
+    topic: 'Graphs', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'How do you detect a cycle in an undirected graph using DFS?',
+    options: ['Check if node is visited', 'Check if visited neighbor is not the parent', 'Count edges', 'Use BFS instead'],
+    answer: 1,
+    explanation: 'In undirected graphs, if DFS finds a visited neighbor that isn\'t the parent of current node, there\'s a cycle.',
+    timeLimit: 75
+  },
+  {
+    topic: 'Graphs', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'What algorithm finds shortest paths from a single source in an unweighted graph?',
+    options: ['Dijkstra', 'BFS', 'Bellman-Ford', 'Floyd-Warshall'],
+    answer: 1,
+    explanation: 'BFS finds shortest paths in unweighted graphs because it explores nodes level by level (by distance).',
+    timeLimit: 60
+  },
+  {
+    topic: 'Graphs', tier: 'intermediate', questionType: 'multiple-choice',
+    question: 'What is topological sorting used for?',
+    options: ['Finding shortest path', 'Ordering tasks with dependencies (DAG)', 'Detecting cycles', 'Finding connected components'],
+    answer: 1,
+    explanation: 'Topological sort orders vertices so that for every edge u→v, u comes before v. Used for dependency resolution.',
+    timeLimit: 60
+  },
+
+  // Advanced - Graphs
+  {
+    topic: 'Graphs', tier: 'advanced', questionType: 'multiple-choice',
+    question: 'What is the time complexity of Dijkstra\'s algorithm with a binary heap?',
+    options: ['O(V²)', 'O((V + E) log V)', 'O(VE)', 'O(V log E)'],
+    answer: 1,
+    explanation: 'With binary heap: V extract-min operations O(V log V) + E decrease-key operations O(E log V) = O((V+E) log V).',
+    timeLimit: 90
+  },
+  {
+    topic: 'Graphs', tier: 'advanced', questionType: 'multiple-choice',
+    question: 'Which algorithm can handle negative edge weights (but no negative cycles)?',
+    options: ['Dijkstra', 'BFS', 'Bellman-Ford', 'Prim\'s'],
+    answer: 2,
+    explanation: 'Bellman-Ford relaxes all edges V-1 times, correctly handling negative weights. Detects negative cycles too.',
+    timeLimit: 75
+  },
+
+  // Expert - Graphs
+  {
+    topic: 'Graphs', tier: 'expert', questionType: 'multiple-choice',
+    question: 'What is the time complexity of finding Maximum Flow using Ford-Fulkerson with BFS (Edmonds-Karp)?',
+    options: ['O(VE)', 'O(VE²)', 'O(V²E)', 'O(V³)'],
+    answer: 1,
+    explanation: 'Edmonds-Karp runs BFS O(VE) times (each finds augmenting path in O(E)), total O(VE²).',
+    timeLimit: 120
+  },
+  {
+    topic: 'Graphs', tier: 'expert', questionType: 'multiple-choice',
+    question: 'What does Tarjan\'s algorithm find in a directed graph?',
+    options: ['Shortest paths', 'Minimum spanning tree', 'Strongly Connected Components', 'Bipartite matching'],
+    answer: 2,
+    explanation: 'Tarjan\'s algorithm uses DFS with low-link values to find all SCCs in O(V + E) time.',
+    timeLimit: 90
+  }
+];
+
 const seedDB = async () => {
   try {
     await connectDB();
@@ -413,7 +983,8 @@ const seedDB = async () => {
     // Clear existing data
     await Question.deleteMany({});
     await Company.deleteMany({});
-    console.log('Cleared existing questions and companies');
+    await SurveyQuestion.deleteMany({});
+    console.log('Cleared existing questions, companies, and survey questions');
 
     // Seed aptitude questions
     await Question.insertMany(aptitudeQuestions);
@@ -431,8 +1002,13 @@ const seedDB = async () => {
     await Company.insertMany(companies);
     console.log(`Seeded ${companies.length} companies`);
 
+    // Seed survey questions
+    await SurveyQuestion.insertMany(surveyQuestions);
+    console.log(`Seeded ${surveyQuestions.length} survey questions`);
+
     console.log('\nSeed complete!');
     console.log(`Total questions: ${aptitudeQuestions.length + dsaQuestions.length + hrQuestions.length}`);
+    console.log(`Survey questions: ${surveyQuestions.length}`);
 
     process.exit(0);
   } catch (err) {

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Knowledge Assessment — Placement Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- ===== Sidebar ===== -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">🎓</span>
+        <span>Placement&nbsp;Companion</span>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Main</div>
+        <a href="dashboard.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-house"></i></span> Dashboard
+        </a>
+        <a href="survey.html" class="nav-link active">
+          <span class="nav-icon"><i class="fa-solid fa-clipboard-question"></i></span> Assessment
+        </a>
+        <a href="aptitude.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-brain"></i></span> Aptitude
+        </a>
+        <a href="dsa.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-code"></i></span> DSA Practice
+        </a>
+        <a href="hr.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-comments"></i></span> HR Interview
+        </a>
+        <a href="companies.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-building"></i></span> Companies
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="profile.html" class="nav-link">
+          <span class="nav-icon"><i class="fa-solid fa-user"></i></span> Profile
+        </a>
+        <a href="#" class="nav-link" onclick="logout()">
+          <span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span> Logout
+        </a>
+      </div>
+      <div class="sidebar-footer">
+        <div class="sidebar-user" onclick="window.location.href='profile.html'">
+          <div class="user-avatar">JD</div>
+          <div class="user-info">
+            <div class="user-name">John Doe</div>
+            <div class="user-email">john@example.com</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- ===== Main Content ===== -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" onclick="toggleSidebar()" title="Toggle menu" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+          <div>
+            <h1>Knowledge Assessment</h1>
+            <span class="breadcrumb">Dashboard / Assessment</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="notification-btn"><i class="fa-solid fa-bell"></i><span class="badge">3</span></button>
+        </div>
+      </header>
+
+      <div class="page-content">
+        
+        <!-- ===== Welcome / Profile View ===== -->
+        <div id="profileView">
+          <div class="page-header animate-fade-up">
+            <h2>Adaptive Knowledge Assessment</h2>
+            <p>Take a personalized diagnostic survey to discover your skill level across different topics. The assessment adapts to your performance — answer correctly to unlock harder questions!</p>
+          </div>
+
+          <!-- Profile Card -->
+          <div class="survey-profile-card animate-fade-up delay-1" id="profileCard">
+            <div class="survey-profile-header">
+              <div class="survey-level-badge" id="levelBadge">
+                <i class="fa-solid fa-chart-line"></i>
+                <span id="levelText">Not Assessed</span>
+              </div>
+              <div class="survey-retake-info" id="retakeInfo"></div>
+            </div>
+            
+            <!-- Topic Levels Grid -->
+            <div class="survey-topics-grid" id="topicLevelsGrid">
+              <!-- Populated by JS -->
+            </div>
+
+            <!-- Recommended Path -->
+            <div class="survey-recommended-path" id="recommendedPath" style="display:none;">
+              <h4><i class="fa-solid fa-route"></i> Your Recommended Path</h4>
+              <div class="recommended-topics" id="recommendedTopics"></div>
+              <div class="estimated-time" id="estimatedTime"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="survey-actions">
+              <button class="btn btn-primary btn-lg" id="startSurveyBtn" onclick="startSurvey()">
+                <i class="fa-solid fa-play"></i> Start Assessment
+              </button>
+              <button class="btn btn-outline" id="resetSurveyBtn" onclick="resetSurvey()" style="display:none;">
+                <i class="fa-solid fa-rotate-left"></i> Reset & Retake
+              </button>
+            </div>
+          </div>
+
+          <!-- How It Works -->
+          <div class="card-flat animate-fade-up delay-2">
+            <h3 style="margin-bottom:16px;"><i class="fa-solid fa-circle-info"></i> How It Works</h3>
+            <div class="survey-how-it-works">
+              <div class="how-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <strong>Adaptive Tiers</strong>
+                  <p>Questions are organized into 4 difficulty tiers: Beginner, Intermediate, Advanced, and Expert.</p>
+                </div>
+              </div>
+              <div class="how-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <strong>Smart Progression</strong>
+                  <p>Score 80%+ to skip ahead. Score 50-79% to continue. Below 50% stops the survey at your level.</p>
+                </div>
+              </div>
+              <div class="how-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                  <strong>Personalized Results</strong>
+                  <p>Get a detailed skill profile with topic-wise levels and a personalized learning path.</p>
+                </div>
+              </div>
+              <div class="how-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                  <strong>Retake Policy</strong>
+                  <p>You can retake the assessment after 7 days, or reset it manually from your profile.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== Survey In Progress View ===== -->
+        <div id="surveyView" class="view-hidden">
+          <div class="survey-container">
+            <!-- Survey Header -->
+            <div class="survey-header">
+              <div class="survey-tier-info">
+                <span class="tier-badge" id="currentTierBadge">Beginner</span>
+                <span class="tier-progress" id="tierProgress">Tier 1 of 4</span>
+              </div>
+              <div class="survey-question-progress">
+                <span id="questionCounter">Question 1 / 6</span>
+                <div class="progress-bar survey-progress-bar">
+                  <div class="progress-fill purple" id="surveyProgressBar" style="width:16.67%;"></div>
+                </div>
+              </div>
+              <div class="survey-timer" id="surveyTimer">
+                <i class="fa-solid fa-clock"></i> <span id="timerDisplay">02:00</span>
+              </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="question-card survey-question-card" id="questionCard">
+              <div class="question-meta">
+                <span class="topic-tag" id="questionTopic">Arrays</span>
+                <span class="question-type-tag" id="questionType">Multiple Choice</span>
+              </div>
+              <div class="question-number" id="questionLabel">Question 1</div>
+              <div class="question-text" id="questionText">
+                What is the time complexity of accessing an element in an array by index?
+              </div>
+              
+              <!-- Code Snippet (if applicable) -->
+              <div class="code-snippet-container" id="codeSnippetContainer" style="display:none;">
+                <pre class="code-snippet" id="codeSnippet"></pre>
+              </div>
+
+              <!-- Options List -->
+              <div class="options-list" id="optionsList">
+                <!-- Populated by JS -->
+              </div>
+
+              <!-- Fill in the blank (for fill-blank type) -->
+              <div class="fill-blank-container" id="fillBlankContainer" style="display:none;">
+                <input type="text" class="fill-blank-input" id="fillBlankInput" placeholder="Type your answer..." />
+              </div>
+            </div>
+
+            <!-- Survey Actions -->
+            <div class="survey-actions-bottom">
+              <button class="btn btn-outline" onclick="prevSurveyQuestion()" id="prevBtn">
+                <i class="fa-solid fa-arrow-left"></i> Previous
+              </button>
+              <button class="btn btn-outline btn-skip" onclick="skipTier()" id="skipTierBtn">
+                Skip Tier <i class="fa-solid fa-forward"></i>
+              </button>
+              <button class="btn btn-primary" onclick="nextSurveyQuestion()" id="nextBtn">
+                Next <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== Tier Result View (between tiers) ===== -->
+        <div id="tierResultView" class="view-hidden">
+          <div class="tier-result-card">
+            <div class="tier-result-icon" id="tierResultIcon">🎯</div>
+            <h2 id="tierResultTitle">Tier Complete!</h2>
+            <div class="tier-result-score" id="tierResultScore">
+              <span class="score-value">80%</span>
+              <span class="score-label">Score</span>
+            </div>
+            <p class="tier-result-message" id="tierResultMessage">
+              Great job! You're advancing to the next tier.
+            </p>
+            
+            <div class="tier-topic-scores" id="tierTopicScores">
+              <!-- Topic breakdown -->
+            </div>
+
+            <div class="tier-result-actions">
+              <button class="btn btn-primary btn-lg" id="continueToNextTierBtn" onclick="continueToNextTier()">
+                Continue to Next Tier <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== Final Result View ===== -->
+        <div id="resultView" class="view-hidden">
+          <div class="result-card survey-result-card">
+            <div class="result-icon" id="finalResultIcon">🏆</div>
+            <h2>Assessment Complete!</h2>
+            <div class="final-level-badge" id="finalLevelBadge">
+              <span class="level-label">Your Level</span>
+              <span class="level-value" id="finalLevelValue">Intermediate</span>
+            </div>
+            
+            <div class="result-stats">
+              <div class="result-stat">
+                <div class="stat-value" id="finalScore">75%</div>
+                <div class="stat-label">Overall Score</div>
+              </div>
+              <div class="result-stat">
+                <div class="stat-value" id="questionsAnswered">18</div>
+                <div class="stat-label">Questions</div>
+              </div>
+              <div class="result-stat">
+                <div class="stat-value" id="tiersCompleted">3</div>
+                <div class="stat-label">Tiers Completed</div>
+              </div>
+            </div>
+
+            <!-- Topic Levels Summary -->
+            <div class="final-topic-levels" id="finalTopicLevels">
+              <h4>Your Skill Profile</h4>
+              <div class="topic-levels-list" id="finalTopicLevelsList">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Weak Topics -->
+            <div class="weak-areas" id="weakAreasSection" style="display:none;">
+              <h4 class="weak-areas-heading">Areas to Improve</h4>
+              <div id="weakAreasList"></div>
+            </div>
+
+            <!-- Recommended Path -->
+            <div class="final-recommended-path" id="finalRecommendedPath">
+              <h4><i class="fa-solid fa-route"></i> Your Learning Path</h4>
+              <p id="finalPathDescription"></p>
+              <div class="final-path-time" id="finalPathTime"></div>
+            </div>
+
+            <div class="result-actions">
+              <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">
+                <i class="fa-solid fa-house"></i> Go to Dashboard
+              </button>
+              <button class="btn btn-outline" onclick="showView('profileView'); loadProfile();">
+                <i class="fa-solid fa-chart-bar"></i> View Profile
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /page-content -->
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    /* ============================================
+       SURVEY PAGE LOGIC
+       ============================================ */
+    
+    // Auth check
+    if (!requireAuth()) { /* redirected */ }
+    else { updateSidebarUser(); loadProfile(); }
+
+    // State
+    let surveyState = {
+      attemptId: null,
+      currentTier: 'beginner',
+      tierIndex: 0,
+      questions: [],
+      currentQuestion: 0,
+      answers: [],
+      timerInterval: null,
+      questionStartTime: null,
+      nextTierQuestions: null,
+      nextTierData: null
+    };
+
+    const TIER_NAMES = {
+      'beginner': 'Beginner',
+      'intermediate': 'Intermediate',
+      'advanced': 'Advanced',
+      'expert': 'Expert'
+    };
+
+    const TIER_COLORS = {
+      'beginner': 'var(--success)',
+      'intermediate': 'var(--info)',
+      'advanced': 'var(--warning)',
+      'expert': 'var(--danger)'
+    };
+
+    // ---- View Management ----
+    function showView(viewId) {
+      ['profileView', 'surveyView', 'tierResultView', 'resultView'].forEach(id => {
+        document.getElementById(id).style.display = id === viewId ? 'block' : 'none';
+      });
+    }
+
+    // ---- Load Profile ----
+    async function loadProfile() {
+      try {
+        const res = await apiGetSurveyProfile();
+        if (!res || !res.success) {
+          showToast('Failed to load profile', 'error');
+          return;
+        }
+        
+        const profile = res.data;
+        renderProfile(profile);
+      } catch (err) {
+        console.error('Load profile error:', err);
+        showToast('Error loading profile', 'error');
+      }
+    }
+
+    function renderProfile(profile) {
+      const levelText = document.getElementById('levelText');
+      const levelBadge = document.getElementById('levelBadge');
+      const retakeInfo = document.getElementById('retakeInfo');
+      const startBtn = document.getElementById('startSurveyBtn');
+      const resetBtn = document.getElementById('resetSurveyBtn');
+      const topicGrid = document.getElementById('topicLevelsGrid');
+      const recommendedPath = document.getElementById('recommendedPath');
+
+      // Level badge
+      const levelDisplay = profile.overallLevel === 'not-assessed' 
+        ? 'Not Assessed' 
+        : TIER_NAMES[profile.overallLevel] || profile.overallLevel;
+      levelText.textContent = levelDisplay;
+      
+      if (profile.overallLevel !== 'not-assessed') {
+        levelBadge.style.background = TIER_COLORS[profile.overallLevel] || 'var(--primary)';
+      }
+
+      // Retake info
+      if (profile.lastSurveyDate) {
+        const lastDate = new Date(profile.lastSurveyDate).toLocaleDateString('en-US', {
+          month: 'short', day: 'numeric', year: 'numeric'
+        });
+        
+        if (profile.canRetake) {
+          retakeInfo.innerHTML = `<i class="fa-solid fa-check-circle" style="color:var(--success);"></i> Last taken: ${lastDate}. You can retake now!`;
+          startBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Retake Assessment';
+          startBtn.disabled = false;
+        } else {
+          const nextDate = new Date(profile.nextEligibleRetake).toLocaleDateString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric'
+          });
+          retakeInfo.innerHTML = `<i class="fa-solid fa-clock" style="color:var(--warning);"></i> Last taken: ${lastDate}. Retake available: ${nextDate}`;
+          startBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Retake Not Available';
+          startBtn.disabled = true;
+          resetBtn.style.display = 'inline-flex';
+        }
+      } else {
+        retakeInfo.innerHTML = '<i class="fa-solid fa-info-circle" style="color:var(--info);"></i> You haven\'t taken the assessment yet.';
+        startBtn.innerHTML = '<i class="fa-solid fa-play"></i> Start Assessment';
+        startBtn.disabled = false;
+      }
+
+      // Topic levels grid
+      if (profile.topicLevels && Object.keys(profile.topicLevels).length > 0) {
+        topicGrid.innerHTML = Object.entries(profile.topicLevels).map(([topic, data]) => `
+          <div class="survey-topic-card">
+            <div class="topic-name">${topic}</div>
+            <div class="topic-level" style="color:${TIER_COLORS[data.level] || 'var(--text)'};">
+              ${TIER_NAMES[data.level] || data.level}
+            </div>
+            <div class="topic-score-bar">
+              <div class="score-fill" style="width:${data.score}%;background:${TIER_COLORS[data.level] || 'var(--primary)'};"></div>
+            </div>
+            <div class="topic-score-text">${data.score}%</div>
+          </div>
+        `).join('');
+        topicGrid.style.display = 'grid';
+      } else {
+        topicGrid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;">Complete the assessment to see your skill profile.</p>';
+        topicGrid.style.display = 'grid';
+      }
+
+      // Recommended path
+      if (profile.recommendedPath && profile.recommendedPath.topicPriority && profile.recommendedPath.topicPriority.length > 0) {
+        recommendedPath.style.display = 'block';
+        document.getElementById('recommendedTopics').innerHTML = profile.recommendedPath.topicPriority.slice(0, 5).map(topic => 
+          `<span class="recommended-topic-tag">${topic}</span>`
+        ).join('');
+        document.getElementById('estimatedTime').innerHTML = 
+          `<i class="fa-solid fa-clock"></i> Estimated completion: ${profile.recommendedPath.estimatedCompletionHours || 'N/A'} hours`;
+      } else {
+        recommendedPath.style.display = 'none';
+      }
+
+      // Show reset button if already assessed
+      if (profile.overallLevel !== 'not-assessed') {
+        resetBtn.style.display = 'inline-flex';
+      }
+    }
+
+    // ---- Start Survey ----
+    async function startSurvey() {
+      try {
+        const res = await apiStartSurvey();
+        if (!res || !res.success) {
+          showToast(res?.message || 'Failed to start survey', 'error');
+          return;
+        }
+
+        surveyState = {
+          attemptId: res.data.attemptId,
+          currentTier: res.data.currentTier,
+          tierIndex: res.data.tierIndex,
+          questions: res.data.questions,
+          currentQuestion: 0,
+          answers: new Array(res.data.questions.length).fill(null),
+          timerInterval: null,
+          questionStartTime: Date.now()
+        };
+
+        showView('surveyView');
+        renderSurveyQuestion();
+        startQuestionTimer(res.data.questions[0].timeLimit || 120);
+      } catch (err) {
+        console.error('Start survey error:', err);
+        showToast('Error starting survey: ' + err.message, 'error');
+      }
+    }
+
+    // ---- Reset Survey ----
+    async function resetSurvey() {
+      if (!confirm('Are you sure you want to reset your assessment? This will clear your current skill profile.')) {
+        return;
+      }
+
+      try {
+        const res = await apiResetSurvey();
+        if (res && res.success) {
+          showToast('Assessment reset successfully!', 'success');
+          loadProfile();
+        } else {
+          showToast(res?.message || 'Failed to reset', 'error');
+        }
+      } catch (err) {
+        showToast('Error resetting: ' + err.message, 'error');
+      }
+    }
+
+    // ---- Render Survey Question ----
+    function renderSurveyQuestion() {
+      const q = surveyState.questions[surveyState.currentQuestion];
+      const total = surveyState.questions.length;
+
+      // Update header
+      document.getElementById('currentTierBadge').textContent = TIER_NAMES[surveyState.currentTier];
+      document.getElementById('currentTierBadge').style.background = TIER_COLORS[surveyState.currentTier];
+      document.getElementById('tierProgress').textContent = `Tier ${surveyState.tierIndex + 1} of 4`;
+      document.getElementById('questionCounter').textContent = `Question ${surveyState.currentQuestion + 1} / ${total}`;
+      document.getElementById('surveyProgressBar').style.width = `${((surveyState.currentQuestion + 1) / total) * 100}%`;
+
+      // Question meta
+      document.getElementById('questionTopic').textContent = q.topic || 'General';
+      const typeDisplay = {
+        'multiple-choice': 'Multiple Choice',
+        'true-false': 'True/False',
+        'fill-blank': 'Fill in the Blank',
+        'code-output': 'Code Output'
+      };
+      document.getElementById('questionType').textContent = typeDisplay[q.questionType] || q.questionType;
+
+      // Question content
+      document.getElementById('questionLabel').textContent = `Question ${surveyState.currentQuestion + 1}`;
+      document.getElementById('questionText').textContent = q.question;
+
+      // Code snippet
+      const codeContainer = document.getElementById('codeSnippetContainer');
+      if (q.codeSnippet) {
+        document.getElementById('codeSnippet').textContent = q.codeSnippet;
+        codeContainer.style.display = 'block';
+      } else {
+        codeContainer.style.display = 'none';
+      }
+
+      // Options or fill-blank
+      const optionsList = document.getElementById('optionsList');
+      const fillBlankContainer = document.getElementById('fillBlankContainer');
+
+      if (q.questionType === 'fill-blank' || q.questionType === 'code-output') {
+        optionsList.style.display = 'none';
+        fillBlankContainer.style.display = 'block';
+        const input = document.getElementById('fillBlankInput');
+        input.value = surveyState.answers[surveyState.currentQuestion] || '';
+        input.focus();
+      } else {
+        fillBlankContainer.style.display = 'none';
+        optionsList.style.display = 'flex';
+        
+        const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+        optionsList.innerHTML = q.options.map((opt, i) => {
+          const selected = surveyState.answers[surveyState.currentQuestion] === i ? ' selected' : '';
+          return `<div class="option-item${selected}" onclick="selectSurveyOption(${i})">
+            <span class="option-letter">${letters[i]}</span>
+            <span>${opt}</span>
+          </div>`;
+        }).join('');
+      }
+
+      // Button states
+      document.getElementById('prevBtn').disabled = surveyState.currentQuestion === 0;
+      document.getElementById('nextBtn').textContent = surveyState.currentQuestion === total - 1 ? 'Submit Tier' : 'Next';
+      document.getElementById('nextBtn').innerHTML = surveyState.currentQuestion === total - 1 
+        ? 'Submit Tier <i class="fa-solid fa-check"></i>' 
+        : 'Next <i class="fa-solid fa-arrow-right"></i>';
+
+      // Animate
+      const card = document.getElementById('questionCard');
+      card.style.animation = 'none';
+      card.offsetHeight;
+      card.style.animation = 'fadeInUp 0.4s ease-out';
+
+      // Reset timer for new question
+      surveyState.questionStartTime = Date.now();
+    }
+
+    function selectSurveyOption(index) {
+      surveyState.answers[surveyState.currentQuestion] = index;
+      document.querySelectorAll('#optionsList .option-item').forEach((o, i) => {
+        o.classList.toggle('selected', i === index);
+      });
+    }
+
+    function saveFillBlankAnswer() {
+      const input = document.getElementById('fillBlankInput');
+      surveyState.answers[surveyState.currentQuestion] = input.value.trim();
+    }
+
+    // ---- Navigation ----
+    function prevSurveyQuestion() {
+      if (surveyState.currentQuestion > 0) {
+        saveFillBlankAnswer();
+        surveyState.currentQuestion--;
+        renderSurveyQuestion();
+      }
+    }
+
+    function nextSurveyQuestion() {
+      saveFillBlankAnswer();
+      
+      if (surveyState.currentQuestion < surveyState.questions.length - 1) {
+        surveyState.currentQuestion++;
+        renderSurveyQuestion();
+      } else {
+        submitTier();
+      }
+    }
+
+    function skipTier() {
+      if (confirm('Are you sure you want to skip this tier? You will advance to the next difficulty level.')) {
+        submitTier(true);
+      }
+    }
+
+    // ---- Timer ----
+    function startQuestionTimer(seconds) {
+      clearInterval(surveyState.timerInterval);
+      let remaining = seconds;
+      const display = document.getElementById('timerDisplay');
+      const timerEl = document.getElementById('surveyTimer');
+
+      function tick() {
+        const m = Math.floor(remaining / 60);
+        const s = remaining % 60;
+        display.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        
+        timerEl.classList.toggle('warning', remaining <= 30);
+        
+        if (remaining <= 0) {
+          clearInterval(surveyState.timerInterval);
+          // Auto-advance to next question
+          nextSurveyQuestion();
+        }
+        remaining--;
+      }
+      tick();
+      surveyState.timerInterval = setInterval(tick, 1000);
+    }
+
+    // ---- Submit Tier ----
+    async function submitTier(skipped = false) {
+      clearInterval(surveyState.timerInterval);
+      saveFillBlankAnswer();
+
+      // Build answers array
+      const answers = surveyState.questions.map((q, i) => ({
+        questionId: q._id,
+        answer: surveyState.answers[i],
+        timeTaken: Math.round((Date.now() - surveyState.questionStartTime) / 1000)
+      }));
+
+      try {
+        const res = await apiSubmitSurveyTier(surveyState.currentTier, answers, skipped);
+        if (!res || !res.success) {
+          showToast(res?.message || 'Failed to submit tier', 'error');
+          return;
+        }
+
+        if (res.data.completed) {
+          // Survey is complete
+          showFinalResults(res.data.profile, res.data.lastTierResult);
+        } else {
+          // Show tier results and prepare for next tier
+          showTierResults(res.data);
+        }
+      } catch (err) {
+        console.error('Submit tier error:', err);
+        showToast('Error submitting: ' + err.message, 'error');
+      }
+    }
+
+    // ---- Show Tier Results ----
+    function showTierResults(data) {
+      showView('tierResultView');
+
+      const tierResult = data.tierResult;
+      const percentage = tierResult.percentage;
+
+      // Icon and message based on performance
+      let icon = '🎯';
+      let title = 'Tier Complete!';
+      let message = '';
+
+      if (tierResult.skipped) {
+        icon = '⏭️';
+        title = 'Tier Skipped';
+        message = 'You chose to skip this tier. Moving to the next level!';
+      } else if (percentage >= 80) {
+        icon = '🌟';
+        title = 'Excellent!';
+        message = `You scored ${percentage}%! Skipping ahead to a harder tier.`;
+      } else if (percentage >= 50) {
+        icon = '👍';
+        title = 'Good Job!';
+        message = `You scored ${percentage}%. Advancing to the next tier.`;
+      } else {
+        icon = '📊';
+        title = 'Tier Complete';
+        message = `You scored ${percentage}%. This helps us understand your level.`;
+      }
+
+      document.getElementById('tierResultIcon').textContent = icon;
+      document.getElementById('tierResultTitle').textContent = title;
+      document.getElementById('tierResultScore').innerHTML = tierResult.skipped 
+        ? '<span class="score-value">-</span><span class="score-label">Skipped</span>'
+        : `<span class="score-value">${percentage}%</span><span class="score-label">${tierResult.score}/${tierResult.total} correct</span>`;
+      document.getElementById('tierResultMessage').textContent = message;
+
+      // Topic scores breakdown
+      const topicScoresEl = document.getElementById('tierTopicScores');
+      if (tierResult.topicScores && Object.keys(tierResult.topicScores).length > 0) {
+        topicScoresEl.innerHTML = '<h4>Topic Breakdown</h4>' + 
+          Object.entries(tierResult.topicScores).map(([topic, scores]) => {
+            const pct = Math.round((scores.correct / scores.total) * 100);
+            return `<div class="topic-score-row">
+              <span class="topic-name">${topic}</span>
+              <span class="topic-score">${pct}% (${scores.correct}/${scores.total})</span>
+            </div>`;
+          }).join('');
+        topicScoresEl.style.display = 'block';
+      } else {
+        topicScoresEl.style.display = 'none';
+      }
+
+      // Store next tier data
+      surveyState.nextTierData = data;
+    }
+
+    function continueToNextTier() {
+      const data = surveyState.nextTierData;
+      
+      surveyState.currentTier = data.nextTier;
+      surveyState.tierIndex = data.tierIndex;
+      surveyState.questions = data.questions;
+      surveyState.currentQuestion = 0;
+      surveyState.answers = new Array(data.questions.length).fill(null);
+      surveyState.questionStartTime = Date.now();
+
+      showView('surveyView');
+      renderSurveyQuestion();
+      startQuestionTimer(data.questions[0].timeLimit || 120);
+    }
+
+    // ---- Show Final Results ----
+    function showFinalResults(profile, lastTierResult) {
+      showView('resultView');
+
+      // Icon based on level
+      const icons = {
+        'beginner': '📚',
+        'intermediate': '🎯',
+        'advanced': '🚀',
+        'expert': '🏆'
+      };
+      document.getElementById('finalResultIcon').textContent = icons[profile.overallLevel] || '🎓';
+
+      // Level badge
+      document.getElementById('finalLevelValue').textContent = TIER_NAMES[profile.overallLevel] || profile.overallLevel;
+      document.getElementById('finalLevelBadge').style.borderColor = TIER_COLORS[profile.overallLevel];
+
+      // Stats
+      document.getElementById('finalScore').textContent = `${profile.percentage}%`;
+      document.getElementById('questionsAnswered').textContent = profile.totalQuestions;
+      document.getElementById('tiersCompleted').textContent = profile.tiersSkipped 
+        ? `${4 - profile.tiersSkipped} (+${profile.tiersSkipped} skipped)`
+        : '4';
+
+      // Topic levels
+      const topicsList = document.getElementById('finalTopicLevelsList');
+      if (profile.topicLevels && Object.keys(profile.topicLevels).length > 0) {
+        topicsList.innerHTML = Object.entries(profile.topicLevels).map(([topic, data]) => `
+          <div class="final-topic-row">
+            <span class="topic-name">${topic}</span>
+            <span class="topic-level-badge" style="background:${TIER_COLORS[data.level] || 'var(--primary)'}15;color:${TIER_COLORS[data.level] || 'var(--primary)'};">
+              ${TIER_NAMES[data.level] || data.level}
+            </span>
+            <span class="topic-score">${data.score}%</span>
+          </div>
+        `).join('');
+      }
+
+      // Weak areas
+      if (profile.weakTopics && profile.weakTopics.length > 0) {
+        document.getElementById('weakAreasSection').style.display = 'block';
+        document.getElementById('weakAreasList').innerHTML = profile.weakTopics.map(topic => `
+          <div class="weak-topic-tag"><i class="fa-solid fa-exclamation-triangle"></i> ${topic}</div>
+        `).join('');
+      } else {
+        document.getElementById('weakAreasSection').style.display = 'none';
+      }
+
+      // Recommended path
+      const pathDesc = document.getElementById('finalPathDescription');
+      const pathTime = document.getElementById('finalPathTime');
+      
+      if (profile.weakTopics && profile.weakTopics.length > 0) {
+        pathDesc.textContent = `Focus on: ${profile.weakTopics.slice(0, 3).join(', ')}${profile.weakTopics.length > 3 ? '...' : ''}`;
+      } else {
+        pathDesc.textContent = 'Great job! Keep practicing to maintain your skills.';
+      }
+      
+      pathTime.innerHTML = `<i class="fa-solid fa-clock"></i> Estimated completion: ${profile.estimatedCompletionHours || 'N/A'} hours`;
+    }
+  </script>
+</body>
+</html>

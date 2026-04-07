@@ -209,6 +209,65 @@ async function apiGetChartData(period) {
   return apiFetch(`/progress/chart?period=${encodeURIComponent(period)}`);
 }
 
+// ---- Survey API methods ----
+async function apiGetSurveyProfile() {
+  return apiFetch('/survey/profile');
+}
+
+async function apiStartSurvey() {
+  return apiFetch('/survey/start', { method: 'POST' });
+}
+
+async function apiSubmitSurveyTier(tier, answers, skippedManually = false) {
+  return apiFetch('/survey/submit-tier', {
+    method: 'POST',
+    body: JSON.stringify({ tier, answers, skippedManually })
+  });
+}
+
+async function apiResetSurvey() {
+  return apiFetch('/survey/reset', { method: 'POST' });
+}
+
+async function apiGetSurveyTopics() {
+  return apiFetch('/survey/topics');
+}
+
+// ---- Code Editor API methods ----
+async function apiGetCodeProblem(questionId) {
+  return apiFetch(`/code/problem/${questionId}`);
+}
+
+async function apiRunCode(questionId, language, code, customInput = null) {
+  return apiFetch('/code/run', {
+    method: 'POST',
+    body: JSON.stringify({ questionId, language, code, customInput })
+  });
+}
+
+async function apiSubmitCode(questionId, language, code) {
+  return apiFetch('/code/submit', {
+    method: 'POST',
+    body: JSON.stringify({ questionId, language, code })
+  });
+}
+
+async function apiGetCodeSubmissions(questionId, limit = 20, offset = 0) {
+  return apiFetch(`/code/submissions/${questionId}?limit=${limit}&offset=${offset}`);
+}
+
+async function apiGetSubmissionDetail(submissionId) {
+  return apiFetch(`/code/submission/${submissionId}`);
+}
+
+async function apiGetCodeLanguages() {
+  return apiFetch('/code/languages');
+}
+
+async function apiGetCodeStats() {
+  return apiFetch('/code/stats');
+}
+
 // ---- Update sidebar user info across pages ----
 function updateSidebarUser() {
   const user = getUser();

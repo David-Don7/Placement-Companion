@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Editor — Placement Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Code Editor specific overrides */
+    .editor-layout {
+      display: flex;
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+    
+    .problem-panel {
+      width: 40%;
+      min-width: 350px;
+      max-width: 600px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+    }
+    
+    .editor-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 400px;
+    }
+    
+    .panel-tabs {
+      display: flex;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 12px;
+    }
+    
+    .panel-tab {
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-light);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all var(--transition);
+    }
+    
+    .panel-tab:hover {
+      color: var(--text);
+    }
+    
+    .panel-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    
+    .panel-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    
+    .problem-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .problem-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    
+    .problem-meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .difficulty-tag {
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .difficulty-easy { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+    .difficulty-medium { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+    .difficulty-hard { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    
+    .problem-description {
+      line-height: 1.7;
+      color: var(--text);
+    }
+    
+    .problem-description h4 {
+      margin: 20px 0 10px;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    
+    .problem-description pre {
+      background: var(--bg);
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+    
+    .example-box {
+      background: var(--bg);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin: 12px 0;
+      border-left: 3px solid var(--primary);
+    }
+    
+    .example-label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    
+    .example-content {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+    }
+    
+    .example-content p {
+      margin: 4px 0;
+    }
+    
+    .example-content strong {
+      color: var(--text-light);
+    }
+    
+    /* Editor Area */
+    .editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 16px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .language-select {
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    
+    .editor-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .editor-container {
+      flex: 1;
+      position: relative;
+    }
+    
+    #monacoEditor {
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Output Panel */
+    .output-panel {
+      height: 200px;
+      min-height: 150px;
+      max-height: 400px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+    }
+    
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 16px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .output-tabs {
+      display: flex;
+      gap: 4px;
+    }
+    
+    .output-tab {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--text-light);
+    }
+    
+    .output-tab.active {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .output-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 16px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+    }
+    
+    .test-result {
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      border: 1px solid var(--border);
+    }
+    
+    .test-result.passed {
+      background: rgba(16, 185, 129, 0.05);
+      border-color: var(--success);
+    }
+    
+    .test-result.failed {
+      background: rgba(239, 68, 68, 0.05);
+      border-color: var(--danger);
+    }
+    
+    .test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .test-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    
+    .test-status.passed { color: var(--success); }
+    .test-status.failed { color: var(--danger); }
+    
+    .test-runtime {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    
+    .test-detail {
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+    
+    .test-detail-label {
+      color: var(--text-light);
+      margin-bottom: 2px;
+    }
+    
+    .test-detail-value {
+      background: var(--bg);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    
+    /* Action Bar */
+    .action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+    
+    .action-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .action-bar-right {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .btn-run {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    
+    .btn-run:hover {
+      background: var(--bg);
+    }
+    
+    .btn-submit {
+      background: var(--success);
+      color: white;
+    }
+    
+    .btn-submit:hover {
+      background: #059669;
+    }
+    
+    /* Verdict Badge */
+    .verdict-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    
+    .verdict-accepted { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+    .verdict-wrong-answer { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    .verdict-time-limit-exceeded { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+    .verdict-runtime-error { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    .verdict-compilation-error { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    .verdict-pending { background: rgba(59, 130, 246, 0.1); color: var(--info); }
+    
+    /* Submissions List */
+    .submissions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .submission-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    
+    .submission-item:hover {
+      background: var(--border);
+    }
+    
+    .submission-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .submission-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    
+    /* Custom Input */
+    .custom-input-container {
+      margin-top: 12px;
+    }
+    
+    .custom-input-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+    
+    .custom-input-textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 10px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      color: var(--text);
+      resize: vertical;
+    }
+    
+    /* Loading Overlay */
+    .editor-loading {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    
+    .editor-loading.hidden { display: none; }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Resizer */
+    .panel-resizer {
+      width: 4px;
+      cursor: col-resize;
+      background: transparent;
+      transition: background var(--transition);
+    }
+    
+    .panel-resizer:hover {
+      background: var(--primary);
+    }
+    
+    /* Mobile adjustments */
+    @media (max-width: 900px) {
+      .editor-layout {
+        flex-direction: column;
+      }
+      
+      .problem-panel {
+        width: 100%;
+        max-width: none;
+        height: 40%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      
+      .editor-panel {
+        min-width: 0;
+      }
+      
+      .panel-resizer {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- ===== Minimal Topbar for Editor ===== -->
+    <header class="topbar" style="position:sticky;top:0;z-index:50;">
+      <div class="topbar-left">
+        <a href="dsa.html" class="btn btn-outline btn-sm" style="margin-right:12px;">
+          <i class="fa-solid fa-arrow-left"></i> Back
+        </a>
+        <div>
+          <h1 id="problemTitle" style="font-size:1rem;">Loading...</h1>
+          <span class="breadcrumb">DSA Practice / Code Editor</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span id="solvedBadge" class="verdict-badge verdict-accepted" style="display:none;">
+          <i class="fa-solid fa-check"></i> Solved
+        </span>
+      </div>
+    </header>
+
+    <!-- ===== Editor Layout ===== -->
+    <div class="editor-layout">
+      <!-- Problem Panel -->
+      <div class="problem-panel" id="problemPanel">
+        <div class="panel-tabs">
+          <div class="panel-tab active" data-tab="description">Description</div>
+          <div class="panel-tab" data-tab="submissions">Submissions</div>
+        </div>
+        
+        <!-- Description Tab -->
+        <div class="panel-content" id="descriptionTab">
+          <div class="problem-description" id="problemDescription">
+            Loading problem description...
+          </div>
+          
+          <h4>Examples</h4>
+          <div id="examplesContainer"></div>
+          
+          <div id="constraintsSection" style="display:none;">
+            <h4>Constraints</h4>
+            <ul id="constraintsList"></ul>
+          </div>
+        </div>
+        
+        <!-- Submissions Tab -->
+        <div class="panel-content" id="submissionsTab" style="display:none;">
+          <div class="submissions-list" id="submissionsList">
+            <p style="color:var(--text-muted);text-align:center;padding:20px;">No submissions yet</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-resizer" id="panelResizer"></div>
+
+      <!-- Editor Panel -->
+      <div class="editor-panel">
+        <div class="editor-header">
+          <select class="language-select" id="languageSelect">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="typescript">TypeScript</option>
+            <option value="java">Java</option>
+            <option value="cpp">C++</option>
+            <option value="c">C</option>
+            <option value="go">Go</option>
+            <option value="rust">Rust</option>
+          </select>
+          <div class="editor-actions">
+            <button class="btn btn-outline btn-sm" onclick="resetCode()" title="Reset to template">
+              <i class="fa-solid fa-rotate-left"></i>
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="formatCode()" title="Format code">
+              <i class="fa-solid fa-align-left"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="editor-container">
+          <div id="monacoEditor"></div>
+          <div class="editor-loading hidden" id="editorLoading">
+            <div class="loading-spinner"></div>
+          </div>
+        </div>
+        
+        <!-- Output Panel -->
+        <div class="output-panel" id="outputPanel">
+          <div class="output-header">
+            <div class="output-tabs">
+              <button class="output-tab active" data-output="testcases">Test Cases</button>
+              <button class="output-tab" data-output="output">Output</button>
+              <button class="output-tab" data-output="custom">Custom Input</button>
+            </div>
+            <span id="outputStatus" style="font-size:0.8rem;color:var(--text-muted);"></span>
+          </div>
+          
+          <div class="output-content" id="testcasesOutput">
+            <p style="color:var(--text-muted);">Run your code to see results here</p>
+          </div>
+          
+          <div class="output-content" id="rawOutput" style="display:none;">
+            <pre id="rawOutputContent" style="margin:0;white-space:pre-wrap;"></pre>
+          </div>
+          
+          <div class="output-content" id="customInputTab" style="display:none;">
+            <div class="custom-input-container">
+              <label class="custom-input-label">
+                <input type="checkbox" id="useCustomInput" /> Use custom input
+              </label>
+              <textarea class="custom-input-textarea" id="customInputText" placeholder="Enter your custom input here..."></textarea>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Action Bar -->
+        <div class="action-bar">
+          <div class="action-bar-left">
+            <span id="lastRunStatus"></span>
+          </div>
+          <div class="action-bar-right">
+            <button class="btn btn-run" onclick="runCode()" id="runBtn">
+              <i class="fa-solid fa-play"></i> Run
+            </button>
+            <button class="btn btn-submit" onclick="submitCode()" id="submitBtn">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Monaco Editor Loader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    /* ============================================
+       CODE EDITOR PAGE LOGIC
+       ============================================ */
+    
+    // Auth check
+    if (!requireAuth()) { /* redirected */ }
+    
+    // State
+    let editor = null;
+    let currentProblem = null;
+    let currentLanguage = 'python';
+    let templates = {};
+    let questionId = null;
+    
+    // Get question ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    questionId = urlParams.get('id');
+    
+    if (!questionId) {
+      showToast('No problem selected', 'error');
+      setTimeout(() => window.location.href = 'dsa.html', 1500);
+    }
+    
+    // Initialize Monaco Editor
+    require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
+    
+    require(['vs/editor/editor.main'], function() {
+      // Define custom theme
+      monaco.editor.defineTheme('placementTheme', {
+        base: 'vs-dark',
+        inherit: true,
+        rules: [],
+        colors: {
+          'editor.background': '#1a1a2e',
+          'editor.foreground': '#e2e8f0',
+          'editor.lineHighlightBackground': '#2d2d44',
+          'editorLineNumber.foreground': '#4a5568',
+          'editorCursor.foreground': '#8b5cf6',
+          'editor.selectionBackground': '#8b5cf644'
+        }
+      });
+      
+      // Create editor
+      editor = monaco.editor.create(document.getElementById('monacoEditor'), {
+        value: '# Loading...',
+        language: 'python',
+        theme: 'placementTheme',
+        fontSize: 14,
+        fontFamily: "'Fira Code', Consolas, monospace",
+        minimap: { enabled: false },
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 4,
+        insertSpaces: true,
+        wordWrap: 'on',
+        lineNumbers: 'on',
+        renderWhitespace: 'selection',
+        bracketPairColorization: { enabled: true }
+      });
+      
+      // Load problem
+      loadProblem();
+    });
+    
+    // ---- Load Problem ----
+    async function loadProblem() {
+      try {
+        const res = await apiGetCodeProblem(questionId);
+        if (!res || !res.success) {
+          showToast('Failed to load problem', 'error');
+          return;
+        }
+        
+        currentProblem = res.data;
+        templates = res.data.templates || {};
+        
+        // Update UI
+        document.getElementById('problemTitle').textContent = currentProblem.question.title;
+        document.title = `${currentProblem.question.title} — Placement Companion`;
+        
+        // Difficulty badge
+        const diffClass = `difficulty-${currentProblem.question.difficulty}`;
+        
+        // Build description
+        let descHtml = `
+          <div class="problem-meta" style="margin-bottom:16px;">
+            <span class="difficulty-tag ${diffClass}">${capitalize(currentProblem.question.difficulty)}</span>
+            <span class="topic-tag">${currentProblem.question.topic}</span>
+          </div>
+          <p>${currentProblem.question.description || 'Solve this problem using the code editor.'}</p>
+        `;
+        
+        document.getElementById('problemDescription').innerHTML = descHtml;
+        
+        // Examples
+        const examplesContainer = document.getElementById('examplesContainer');
+        if (currentProblem.sampleTestCases && currentProblem.sampleTestCases.length > 0) {
+          examplesContainer.innerHTML = currentProblem.sampleTestCases.map((tc, i) => `
+            <div class="example-box">
+              <div class="example-label">Example ${i + 1}</div>
+              <div class="example-content">
+                <p><strong>Input:</strong> ${escapeHtml(tc.input)}</p>
+                <p><strong>Output:</strong> ${escapeHtml(tc.expectedOutput)}</p>
+                ${tc.description ? `<p><strong>Explanation:</strong> ${tc.description}</p>` : ''}
+              </div>
+            </div>
+          `).join('');
+        } else {
+          examplesContainer.innerHTML = '<p style="color:var(--text-muted);">No examples available</p>';
+        }
+        
+        // Constraints
+        if (currentProblem.constraints && currentProblem.constraints.length > 0) {
+          document.getElementById('constraintsSection').style.display = 'block';
+          document.getElementById('constraintsList').innerHTML = currentProblem.constraints
+            .map(c => `<li>${c.description}: ${c.value}</li>`).join('');
+        }
+        
+        // Solved badge
+        if (currentProblem.isSolved) {
+          document.getElementById('solvedBadge').style.display = 'inline-flex';
+        }
+        
+        // Set initial code template
+        setCodeTemplate(currentLanguage);
+        
+        // Load submissions
+        loadSubmissions();
+        
+      } catch (err) {
+        console.error('Load problem error:', err);
+        showToast('Error loading problem: ' + err.message, 'error');
+      }
+    }
+    
+    // ---- Set Code Template ----
+    function setCodeTemplate(language) {
+      currentLanguage = language;
+      
+      // Update Monaco language
+      const monacoLang = {
+        python: 'python',
+        javascript: 'javascript',
+        typescript: 'typescript',
+        java: 'java',
+        cpp: 'cpp',
+        c: 'c',
+        go: 'go',
+        rust: 'rust'
+      };
+      
+      monaco.editor.setModelLanguage(editor.getModel(), monacoLang[language] || 'plaintext');
+      
+      // Get template
+      let code = '';
+      if (templates && templates[language] && templates[language].code) {
+        code = templates[language].code;
+      } else {
+        // Default templates
+        code = getDefaultTemplate(language);
+      }
+      
+      editor.setValue(code);
+    }
+    
+    function getDefaultTemplate(language) {
+      const defaults = {
+        python: `def solution(nums, target):
+    """
+    Write your solution here.
+    """
+    pass
+
+# Example usage:
+# print(solution([2, 7, 11, 15], 9))`,
+        
+        javascript: `/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+function solution(nums, target) {
+    // Write your solution here
+    
+}
+
+// Example usage:
+// console.log(solution([2, 7, 11, 15], 9));`,
+        
+        typescript: `function solution(nums: number[], target: number): number[] {
+    // Write your solution here
+    
+}
+
+// Example usage:
+// console.log(solution([2, 7, 11, 15], 9));`,
+        
+        java: `class Solution {
+    public int[] solution(int[] nums, int target) {
+        // Write your solution here
+        return new int[]{};
+    }
+    
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        // Test your solution
+    }
+}`,
+        
+        cpp: `#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> solution(vector<int>& nums, int target) {
+        // Write your solution here
+        return {};
+    }
+};
+
+int main() {
+    Solution sol;
+    // Test your solution
+    return 0;
+}`,
+        
+        c: `#include <stdio.h>
+#include <stdlib.h>
+
+int* solution(int* nums, int numsSize, int target, int* returnSize) {
+    // Write your solution here
+    *returnSize = 0;
+    return NULL;
+}
+
+int main() {
+    // Test your solution
+    return 0;
+}`,
+        
+        go: `package main
+
+import "fmt"
+
+func solution(nums []int, target int) []int {
+    // Write your solution here
+    return []int{}
+}
+
+func main() {
+    // Test your solution
+    fmt.Println(solution([]int{2, 7, 11, 15}, 9))
+}`,
+        
+        rust: `fn solution(nums: Vec<i32>, target: i32) -> Vec<i32> {
+    // Write your solution here
+    vec![]
+}
+
+fn main() {
+    // Test your solution
+    println!("{:?}", solution(vec![2, 7, 11, 15], 9));
+}`
+      };
+      
+      return defaults[language] || '// Write your code here';
+    }
+    
+    // ---- Run Code ----
+    async function runCode() {
+      const code = editor.getValue();
+      const customInput = document.getElementById('useCustomInput').checked 
+        ? document.getElementById('customInputText').value 
+        : null;
+      
+      showLoading(true);
+      document.getElementById('runBtn').disabled = true;
+      document.getElementById('outputStatus').textContent = 'Running...';
+      
+      try {
+        const res = await apiRunCode(questionId, currentLanguage, code, customInput);
+        
+        if (res && res.success) {
+          displayResults(res.data.results, 'run');
+          document.getElementById('outputStatus').textContent = 
+            `${res.data.metrics.passedTestCases}/${res.data.metrics.totalTestCases} test cases passed`;
+        } else {
+          showToast(res?.message || 'Run failed', 'error');
+          document.getElementById('outputStatus').textContent = 'Run failed';
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+        document.getElementById('outputStatus').textContent = 'Error';
+      } finally {
+        showLoading(false);
+        document.getElementById('runBtn').disabled = false;
+      }
+    }
+    
+    // ---- Submit Code ----
+    async function submitCode() {
+      const code = editor.getValue();
+      
+      showLoading(true);
+      document.getElementById('submitBtn').disabled = true;
+      document.getElementById('outputStatus').textContent = 'Submitting...';
+      
+      try {
+        const res = await apiSubmitCode(questionId, currentLanguage, code);
+        
+        if (res && res.success) {
+          displayResults(res.data.results, 'submit', res.data.verdict);
+          
+          // Update status
+          const verdictDisplay = {
+            'accepted': 'Accepted',
+            'wrong-answer': 'Wrong Answer',
+            'time-limit-exceeded': 'Time Limit Exceeded',
+            'runtime-error': 'Runtime Error',
+            'compilation-error': 'Compilation Error'
+          };
+          
+          document.getElementById('outputStatus').innerHTML = `
+            <span class="verdict-badge verdict-${res.data.verdict}">
+              ${res.data.verdict === 'accepted' ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-times"></i>'}
+              ${verdictDisplay[res.data.verdict] || res.data.verdict}
+            </span>
+          `;
+          
+          if (res.data.verdict === 'accepted') {
+            document.getElementById('solvedBadge').style.display = 'inline-flex';
+            showToast('Congratulations! All test cases passed!', 'success');
+          }
+          
+          // Reload submissions
+          loadSubmissions();
+        } else {
+          showToast(res?.message || 'Submit failed', 'error');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      } finally {
+        showLoading(false);
+        document.getElementById('submitBtn').disabled = false;
+      }
+    }
+    
+    // ---- Display Results ----
+    function displayResults(results, type, verdict = null) {
+      const container = document.getElementById('testcasesOutput');
+      
+      if (!results || results.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted);">No results</p>';
+        return;
+      }
+      
+      container.innerHTML = results.map((r, i) => {
+        const statusClass = r.passed ? 'passed' : 'failed';
+        const icon = r.passed ? 'fa-check' : 'fa-times';
+        
+        return `
+          <div class="test-result ${statusClass}">
+            <div class="test-header">
+              <span class="test-status ${statusClass}">
+                <i class="fa-solid ${icon}"></i>
+                ${r.isCustom ? 'Custom Input' : (r.isHidden ? `Hidden Test ${i + 1}` : `Test Case ${i + 1}`)}
+              </span>
+              <span class="test-runtime">${r.runtime || 0} ms</span>
+            </div>
+            ${!r.isHidden || r.passed ? `
+              <div class="test-detail">
+                <div class="test-detail-label">Input:</div>
+                <div class="test-detail-value">${escapeHtml(r.input || '(empty)')}</div>
+                ${r.expectedOutput ? `
+                  <div class="test-detail-label">Expected:</div>
+                  <div class="test-detail-value">${escapeHtml(r.expectedOutput)}</div>
+                ` : ''}
+                <div class="test-detail-label">Your Output:</div>
+                <div class="test-detail-value">${escapeHtml(r.actualOutput || '(empty)')}</div>
+                ${r.error ? `
+                  <div class="test-detail-label" style="color:var(--danger);">Error:</div>
+                  <div class="test-detail-value" style="color:var(--danger);">${escapeHtml(r.error)}</div>
+                ` : ''}
+              </div>
+            ` : `
+              <div class="test-detail">
+                <p style="color:var(--text-muted);font-style:italic;">Hidden test case details are not shown for incorrect answers.</p>
+              </div>
+            `}
+          </div>
+        `;
+      }).join('');
+      
+      // Switch to test cases tab
+      switchOutputTab('testcases');
+    }
+    
+    // ---- Load Submissions ----
+    async function loadSubmissions() {
+      try {
+        const res = await apiGetCodeSubmissions(questionId, 20, 0);
+        
+        if (res && res.success && res.data.submissions.length > 0) {
+          const list = document.getElementById('submissionsList');
+          list.innerHTML = res.data.submissions.map(s => {
+            const date = new Date(s.submittedAt).toLocaleString();
+            const verdictClass = `verdict-${s.verdict}`;
+            const verdictDisplay = {
+              'accepted': 'Accepted',
+              'wrong-answer': 'Wrong Answer',
+              'time-limit-exceeded': 'TLE',
+              'runtime-error': 'Runtime Error',
+              'compilation-error': 'Compilation Error',
+              'pending': 'Pending'
+            };
+            
+            return `
+              <div class="submission-item" onclick="viewSubmission('${s._id}')">
+                <div class="submission-info">
+                  <span class="verdict-badge ${verdictClass}">
+                    ${verdictDisplay[s.verdict] || s.verdict}
+                  </span>
+                  <span class="submission-meta">${s.language} • ${date}</span>
+                </div>
+                <span style="font-size:0.8rem;color:var(--text-muted);">
+                  ${s.metrics?.runtime || 0} ms
+                </span>
+              </div>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        console.error('Load submissions error:', err);
+      }
+    }
+    
+    // ---- View Submission ----
+    async function viewSubmission(submissionId) {
+      try {
+        const res = await apiGetSubmissionDetail(submissionId);
+        if (res && res.success) {
+          // Load the submission code into editor
+          editor.setValue(res.data.code);
+          document.getElementById('languageSelect').value = res.data.language;
+          setCodeTemplate(res.data.language);
+          editor.setValue(res.data.code); // Set again after template
+          
+          // Show results
+          if (res.data.testResults) {
+            displayResults(res.data.testResults, 'submit', res.data.verdict);
+          }
+          
+          // Switch to description tab
+          switchPanelTab('description');
+          showToast('Loaded submission', 'success');
+        }
+      } catch (err) {
+        showToast('Error loading submission', 'error');
+      }
+    }
+    
+    // ---- Reset Code ----
+    function resetCode() {
+      if (confirm('Reset code to template? Your changes will be lost.')) {
+        setCodeTemplate(currentLanguage);
+        showToast('Code reset to template', 'info');
+      }
+    }
+    
+    // ---- Format Code ----
+    function formatCode() {
+      editor.getAction('editor.action.formatDocument').run();
+    }
+    
+    // ---- Tab Switching ----
+    document.querySelectorAll('.panel-tab').forEach(tab => {
+      tab.addEventListener('click', () => switchPanelTab(tab.dataset.tab));
+    });
+    
+    function switchPanelTab(tabName) {
+      document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.panel-tab[data-tab="${tabName}"]`).classList.add('active');
+      
+      document.getElementById('descriptionTab').style.display = tabName === 'description' ? 'block' : 'none';
+      document.getElementById('submissionsTab').style.display = tabName === 'submissions' ? 'block' : 'none';
+    }
+    
+    document.querySelectorAll('.output-tab').forEach(tab => {
+      tab.addEventListener('click', () => switchOutputTab(tab.dataset.output));
+    });
+    
+    function switchOutputTab(tabName) {
+      document.querySelectorAll('.output-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.output-tab[data-output="${tabName}"]`).classList.add('active');
+      
+      document.getElementById('testcasesOutput').style.display = tabName === 'testcases' ? 'block' : 'none';
+      document.getElementById('rawOutput').style.display = tabName === 'output' ? 'block' : 'none';
+      document.getElementById('customInputTab').style.display = tabName === 'custom' ? 'block' : 'none';
+    }
+    
+    // ---- Language Select ----
+    document.getElementById('languageSelect').addEventListener('change', (e) => {
+      const newLang = e.target.value;
+      if (confirm(`Switch to ${newLang}? Your current code will be replaced with the template.`)) {
+        setCodeTemplate(newLang);
+      } else {
+        e.target.value = currentLanguage;
+      }
+    });
+    
+    // ---- Helpers ----
+    function showLoading(show) {
+      document.getElementById('editorLoading').classList.toggle('hidden', !show);
+    }
+    
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // ---- Panel Resizer ----
+    const resizer = document.getElementById('panelResizer');
+    const problemPanel = document.getElementById('problemPanel');
+    let isResizing = false;
+    
+    resizer.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      document.body.style.cursor = 'col-resize';
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+      if (!isResizing) return;
+      const newWidth = e.clientX;
+      if (newWidth > 300 && newWidth < window.innerWidth - 400) {
+        problemPanel.style.width = newWidth + 'px';
+      }
+    });
+    
+    document.addEventListener('mouseup', () => {
+      isResizing = false;
+      document.body.style.cursor = '';
+    });
+    
+    // ---- Keyboard Shortcuts ----
+    document.addEventListener('keydown', (e) => {
+      // Ctrl/Cmd + Enter = Run
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        runCode();
+      }
+      // Ctrl/Cmd + Shift + Enter = Submit
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'Enter') {
+        e.preventDefault();
+        submitCode();
+      }
+    });
+  </script>
+</body>
+</html>

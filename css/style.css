@@ -2784,3 +2784,593 @@ button {
   background: rgba(239, 68, 68, 0.1);
   color: var(--danger);
 }
+
+/* ============================================
+   SURVEY / KNOWLEDGE ASSESSMENT STYLES
+   ============================================ */
+
+/* Survey Profile Card */
+.survey-profile-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  border: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.survey-profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.survey-level-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: var(--primary);
+  color: white;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.survey-level-badge i {
+  font-size: 1.25rem;
+}
+
+.survey-retake-info {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Survey Topics Grid */
+.survey-topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.survey-topic-card {
+  background: var(--bg);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.survey-topic-card .topic-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.survey-topic-card .topic-level {
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.survey-topic-card .topic-score-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.survey-topic-card .score-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.survey-topic-card .topic-score-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Recommended Path */
+.survey-recommended-path {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(59, 130, 246, 0.05));
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.survey-recommended-path h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--primary);
+}
+
+.recommended-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.recommended-topic-tag {
+  background: var(--primary);
+  color: white;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.estimated-time {
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+/* Survey Actions */
+.survey-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-lg {
+  padding: 14px 28px;
+  font-size: 1rem;
+}
+
+/* How It Works Section */
+.survey-how-it-works {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.how-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.step-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.step-content strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.step-content p {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+/* Survey Container */
+.survey-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Survey Header */
+.survey-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+.survey-tier-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tier-badge {
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: white;
+  background: var(--success);
+}
+
+.tier-progress {
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+.survey-question-progress {
+  flex: 1;
+  max-width: 300px;
+  min-width: 150px;
+}
+
+.survey-question-progress span {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.survey-progress-bar {
+  height: 6px;
+}
+
+.survey-timer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text);
+  padding: 8px 16px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+.survey-timer.warning {
+  color: var(--danger);
+  background: rgba(239, 68, 68, 0.1);
+  animation: pulse 1s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Survey Question Card */
+.survey-question-card {
+  padding: 32px;
+}
+
+.question-meta {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.question-type-tag {
+  padding: 4px 10px;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--info);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Code Snippet */
+.code-snippet-container {
+  margin: 20px 0;
+  background: #1e293b;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.code-snippet {
+  padding: 20px;
+  margin: 0;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+/* Fill in the Blank */
+.fill-blank-container {
+  margin-top: 20px;
+}
+
+.fill-blank-input {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 1rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  color: var(--text);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.fill-blank-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+/* Survey Actions Bottom */
+.survey-actions-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.btn-skip {
+  color: var(--warning);
+  border-color: var(--warning);
+}
+
+.btn-skip:hover {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+/* Tier Result Card */
+.tier-result-card {
+  max-width: 500px;
+  margin: 0 auto;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.tier-result-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+}
+
+.tier-result-card h2 {
+  font-size: 1.75rem;
+  margin-bottom: 20px;
+}
+
+.tier-result-score {
+  margin-bottom: 16px;
+}
+
+.tier-result-score .score-value {
+  display: block;
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tier-result-score .score-label {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.tier-result-message {
+  font-size: 1rem;
+  color: var(--text-light);
+  margin-bottom: 24px;
+}
+
+.tier-topic-scores {
+  text-align: left;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--bg);
+  border-radius: var(--radius-md);
+}
+
+.tier-topic-scores h4 {
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.topic-score-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.topic-score-row:last-child {
+  border-bottom: none;
+}
+
+.topic-score-row .topic-name {
+  color: var(--text);
+}
+
+.topic-score-row .topic-score {
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.tier-result-actions {
+  margin-top: 20px;
+}
+
+/* Survey Final Result Card */
+.survey-result-card {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.final-level-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 40px;
+  border: 3px solid var(--primary);
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+}
+
+.final-level-badge .level-label {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.final-level-badge .level-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+/* Final Topic Levels */
+.final-topic-levels {
+  text-align: left;
+  margin: 24px 0;
+  padding: 20px;
+  background: var(--bg);
+  border-radius: var(--radius-md);
+}
+
+.final-topic-levels h4 {
+  font-size: 1rem;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.topic-levels-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.final-topic-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.final-topic-row .topic-name {
+  font-weight: 500;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.final-topic-row .topic-level-badge {
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin: 0 12px;
+}
+
+.final-topic-row .topic-score {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  min-width: 40px;
+  text-align: right;
+}
+
+/* Weak Topic Tags */
+.weak-topic-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin: 4px;
+}
+
+/* Final Recommended Path */
+.final-recommended-path {
+  text-align: left;
+  margin: 24px 0;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(59, 130, 246, 0.05));
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.final-recommended-path h4 {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: var(--primary);
+}
+
+.final-recommended-path p {
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.final-path-time {
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+/* Survey Responsive */
+@media (max-width: 768px) {
+  .survey-profile-card {
+    padding: 20px;
+  }
+  
+  .survey-level-badge {
+    padding: 10px 18px;
+    font-size: 1rem;
+  }
+  
+  .survey-header {
+    padding: 12px 16px;
+  }
+  
+  .survey-question-card {
+    padding: 20px;
+  }
+  
+  .tier-result-card {
+    padding: 24px;
+  }
+  
+  .tier-result-score .score-value {
+    font-size: 2.5rem;
+  }
+  
+  .final-level-badge {
+    padding: 16px 30px;
+  }
+  
+  .final-level-badge .level-value {
+    font-size: 1.5rem;
+  }
+}

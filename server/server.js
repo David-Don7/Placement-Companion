@@ -21,6 +21,8 @@ app.use('/api/dsa', require('./routes/dsa'));
 app.use('/api/hr', require('./routes/hr'));
 app.use('/api/company', require('./routes/company'));
 app.use('/api/progress', require('./routes/progress'));
+app.use('/api/survey', require('./routes/survey'));
+app.use('/api/code', require('./routes/code'));
 
 // Fallback — serve index.html for unknown routes
 app.get('*', (req, res) => {

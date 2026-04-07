@@ -23,6 +23,8 @@ app.use('/api/company', require('./routes/company'));
 app.use('/api/progress', require('./routes/progress'));
 app.use('/api/survey', require('./routes/survey'));
 app.use('/api/code', require('./routes/code'));
+app.use('/api/solutions', require('./routes/solution'));
+app.use('/api/recommendations', require('./routes/recommendation'));
 
 // Fallback — serve index.html for unknown routes
 app.get('*', (req, res) => {

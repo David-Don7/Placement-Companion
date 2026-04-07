@@ -6,6 +6,8 @@ dotenv.config();
 const Question = require('./models/Question');
 const Company = require('./models/Company');
 const SurveyQuestion = require('./models/SurveyQuestion');
+const TestCase = require('./models/TestCase');
+const CodeTemplate = require('./models/CodeTemplate');
 
 const connectDB = async () => {
   const conn = await mongoose.connect(process.env.MONGO_URI);
@@ -976,6 +978,251 @@ const surveyQuestions = [
   }
 ];
 
+// ============================================
+// TEST CASES AND CODE TEMPLATES FOR DSA PROBLEMS
+// ============================================
+
+// Test cases data - will be linked to questions by matching question text
+const dsaTestCasesData = {
+  'Two Sum - Find two numbers that add up to a target': {
+    testCases: [
+      { input: '[2,7,11,15]\n9', expectedOutput: '[0,1]', isSample: true, order: 1, description: 'Basic case with two numbers summing to target' },
+      { input: '[3,2,4]\n6', expectedOutput: '[1,2]', isSample: true, order: 2, description: 'Numbers not at beginning' },
+      { input: '[3,3]\n6', expectedOutput: '[0,1]', isSample: false, order: 3, description: 'Duplicate numbers' },
+      { input: '[1,2,3,4,5,6,7,8,9,10]\n19', expectedOutput: '[8,9]', isHidden: true, order: 4, description: 'Larger array' },
+      { input: '[-1,-2,-3,-4,-5]\n-8', expectedOutput: '[2,4]', isHidden: true, order: 5, description: 'Negative numbers', isEdgeCase: true, edgeCaseType: 'negative' }
+    ],
+    template: {
+      inputFormat: 'Line 1: Array of integers\\nLine 2: Target sum',
+      outputFormat: 'Array of two indices',
+      constraints: [{ description: 'Array length', value: '2 <= nums.length <= 10^4' }, { description: 'Number range', value: '-10^9 <= nums[i] <= 10^9' }],
+      templates: {
+        python: { code: 'def twoSum(nums, target):\n    # Your code here\n    pass\n\n# Read input\nnums = eval(input())\ntarget = int(input())\nprint(twoSum(nums, target))', functionName: 'twoSum' },
+        javascript: { code: 'function twoSum(nums, target) {\n    // Your code here\n}\n\n// Read input\nconst readline = require("readline");\nconst rl = readline.createInterface({ input: process.stdin });\nconst lines = [];\nrl.on("line", (line) => lines.push(line));\nrl.on("close", () => {\n    const nums = JSON.parse(lines[0]);\n    const target = parseInt(lines[1]);\n    console.log(JSON.stringify(twoSum(nums, target)));\n});', functionName: 'twoSum' },
+        java: { code: 'import java.util.*;\n\nclass Solution {\n    public int[] twoSum(int[] nums, int target) {\n        // Your code here\n        return new int[]{};\n    }\n    \n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String line = sc.nextLine();\n        int target = sc.nextInt();\n        // Parse and call solution\n    }\n}', functionName: 'twoSum', className: 'Solution' },
+        cpp: { code: '#include <bits/stdc++.h>\nusing namespace std;\n\nvector<int> twoSum(vector<int>& nums, int target) {\n    // Your code here\n    return {};\n}\n\nint main() {\n    // Read input and call function\n    return 0;\n}', functionName: 'twoSum', includes: '#include <bits/stdc++.h>' }
+      }
+    }
+  },
+  'Find the maximum element in an array': {
+    testCases: [
+      { input: '[3,1,4,1,5,9,2,6]', expectedOutput: '9', isSample: true, order: 1, description: 'Array with multiple elements' },
+      { input: '[1]', expectedOutput: '1', isSample: true, order: 2, description: 'Single element', isEdgeCase: true, edgeCaseType: 'single-element' },
+      { input: '[-5,-2,-10,-1]', expectedOutput: '-1', isSample: false, order: 3, description: 'All negative numbers', isEdgeCase: true, edgeCaseType: 'negative' },
+      { input: '[100,100,100]', expectedOutput: '100', isHidden: true, order: 4, description: 'All same elements' },
+      { input: '[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]', expectedOutput: '20', isHidden: true, order: 5, description: 'Larger array' }
+    ],
+    template: {
+      inputFormat: 'Array of integers',
+      outputFormat: 'Single integer (maximum value)',
+      constraints: [{ description: 'Array length', value: '1 <= nums.length <= 10^5' }],
+      templates: {
+        python: { code: 'def findMax(nums):\n    # Your code here\n    pass\n\nnums = eval(input())\nprint(findMax(nums))', functionName: 'findMax' },
+        javascript: { code: 'function findMax(nums) {\n    // Your code here\n}\n\nconst readline = require("readline");\nconst rl = readline.createInterface({ input: process.stdin });\nrl.on("line", (line) => {\n    const nums = JSON.parse(line);\n    console.log(findMax(nums));\n    rl.close();\n});', functionName: 'findMax' }
+      }
+    }
+  },
+  'Container With Most Water': {
+    testCases: [
+      { input: '[1,8,6,2,5,4,8,3,7]', expectedOutput: '49', isSample: true, order: 1, description: 'Standard case' },
+      { input: '[1,1]', expectedOutput: '1', isSample: true, order: 2, description: 'Minimum array size', isEdgeCase: true, edgeCaseType: 'boundary' },
+      { input: '[4,3,2,1,4]', expectedOutput: '16', isSample: false, order: 3, description: 'Symmetric heights' },
+      { input: '[1,2,1]', expectedOutput: '2', isHidden: true, order: 4, description: 'Small array' },
+      { input: '[1,8,6,2,5,4,8,25,7]', expectedOutput: '49', isHidden: true, order: 5, description: 'With taller bar' }
+    ],
+    template: {
+      inputFormat: 'Array of heights',
+      outputFormat: 'Maximum water area (integer)',
+      constraints: [{ description: 'Array length', value: '2 <= height.length <= 10^5' }, { description: 'Height range', value: '0 <= height[i] <= 10^4' }],
+      templates: {
+        python: { code: 'def maxArea(height):\n    # Your code here\n    pass\n\nheight = eval(input())\nprint(maxArea(height))', functionName: 'maxArea' },
+        javascript: { code: 'function maxArea(height) {\n    // Your code here\n}\n\nconst readline = require("readline");\nconst rl = readline.createInterface({ input: process.stdin });\nrl.on("line", (line) => {\n    const height = JSON.parse(line);\n    console.log(maxArea(height));\n    rl.close();\n});', functionName: 'maxArea' }
+      }
+    }
+  },
+  'Rotate Array by K positions': {
+    testCases: [
+      { input: '[1,2,3,4,5,6,7]\n3', expectedOutput: '[5,6,7,1,2,3,4]', isSample: true, order: 1, description: 'Standard rotation' },
+      { input: '[-1,-100,3,99]\n2', expectedOutput: '[3,99,-1,-100]', isSample: true, order: 2, description: 'With negative numbers' },
+      { input: '[1,2,3]\n4', expectedOutput: '[3,1,2]', isSample: false, order: 3, description: 'K larger than array length' },
+      { input: '[1]\n0', expectedOutput: '[1]', isHidden: true, order: 4, description: 'Single element, no rotation', isEdgeCase: true, edgeCaseType: 'single-element' },
+      { input: '[1,2]\n3', expectedOutput: '[2,1]', isHidden: true, order: 5, description: 'K larger than length' }
+    ],
+    template: {
+      inputFormat: 'Line 1: Array of integers\\nLine 2: K (rotation count)',
+      outputFormat: 'Rotated array',
+      constraints: [{ description: 'Array length', value: '1 <= nums.length <= 10^5' }, { description: 'K range', value: '0 <= k <= 10^5' }],
+      templates: {
+        python: { code: 'def rotate(nums, k):\n    # Your code here (modify in-place)\n    pass\n\nnums = eval(input())\nk = int(input())\nrotate(nums, k)\nprint(nums)', functionName: 'rotate' },
+        javascript: { code: 'function rotate(nums, k) {\n    // Your code here (modify in-place)\n}\n\nconst readline = require("readline");\nconst rl = readline.createInterface({ input: process.stdin });\nconst lines = [];\nrl.on("line", (line) => lines.push(line));\nrl.on("close", () => {\n    const nums = JSON.parse(lines[0]);\n    const k = parseInt(lines[1]);\n    rotate(nums, k);\n    console.log(JSON.stringify(nums));\n});', functionName: 'rotate' }
+      }
+    }
+  },
+  'Trapping Rain Water': {
+    testCases: [
+      { input: '[0,1,0,2,1,0,1,3,2,1,2,1]', expectedOutput: '6', isSample: true, order: 1, description: 'Standard case' },
+      { input: '[4,2,0,3,2,5]', expectedOutput: '9', isSample: true, order: 2, description: 'Valley in middle' },
+      { input: '[1,2,3,4,5]', expectedOutput: '0', isSample: false, order: 3, description: 'Increasing heights (no water)' },
+      { input: '[5,4,3,2,1]', expectedOutput: '0', isHidden: true, order: 4, description: 'Decreasing heights (no water)' },
+      { input: '[0,0,0,0]', expectedOutput: '0', isHidden: true, order: 5, description: 'All zeros', isEdgeCase: true, edgeCaseType: 'empty-input' }
+    ],
+    template: {
+      inputFormat: 'Array of heights (non-negative integers)',
+      outputFormat: 'Total water trapped (integer)',
+      constraints: [{ description: 'Array length', value: 'n == height.length' }, { description: 'Range', value: '1 <= n <= 2 * 10^4' }],
+      templates: {
+        python: { code: 'def trap(height):\n    # Your code here\n    pass\n\nheight = eval(input())\nprint(trap(height))', functionName: 'trap' },
+        javascript: { code: 'function trap(height) {\n    // Your code here\n}\n\nconst readline = require("readline");\nconst rl = readline.createInterface({ input: process.stdin });\nrl.on("line", (line) => {\n    const height = JSON.parse(line);\n    console.log(trap(height));\n    rl.close();\n});', functionName: 'trap' }
+      }
+    }
+  },
+  'Reverse a String': {
+    testCases: [
+      { input: 'hello', expectedOutput: 'olleh', isSample: true, order: 1, description: 'Simple word' },
+      { input: 'Hannah', expectedOutput: 'hannaH', isSample: true, order: 2, description: 'Mixed case' },
+      { input: 'a', expectedOutput: 'a', isSample: false, order: 3, description: 'Single character', isEdgeCase: true, edgeCaseType: 'single-element' },
+      { input: 'ab', expectedOutput: 'ba', isHidden: true, order: 4, description: 'Two characters' },
+      { input: '12345', expectedOutput: '54321', isHidden: true, order: 5, description: 'Numeric string' }
+    ],
+    template: {
+      inputFormat: 'A string',
+      outputFormat: 'Reversed string',
+      constraints: [{ description: 'String length', value: '1 <= s.length <= 10^5' }],
+      templates: {
+        python: { code: 'def reverseString(s):\n    # Your code here\n    pass\n\ns = input()\nprint(reverseString(s))', functionName: 'reverseString' },
+        javascript: { code: 'function reverseString(s) {\n    // Your code here\n}\n\nconst readline = require("readline");\nconst rl = readline.createInterface({ input: process.stdin });\nrl.on("line", (line) => {\n    console.log(reverseString(line));\n    rl.close();\n});', functionName: 'reverseString' }
+      }
+    }
+  },
+  'Check if a string is a palindrome': {
+    testCases: [
+      { input: 'racecar', expectedOutput: 'true', isSample: true, order: 1, description: 'Palindrome' },
+      { input: 'hello', expectedOutput: 'false', isSample: true, order: 2, description: 'Not a palindrome' },
+      { input: 'a', expectedOutput: 'true', isSample: false, order: 3, description: 'Single character', isEdgeCase: true, edgeCaseType: 'single-element' },
+      { input: 'abba', expectedOutput: 'true', isHidden: true, order: 4, description: 'Even length palindrome' },
+      { input: 'ab', expectedOutput: 'false', isHidden: true, order: 5, description: 'Two different characters' }
+    ],
+    template: {
+      inputFormat: 'A string',
+      outputFormat: 'true or false',
+      constraints: [{ description: 'String length', value: '1 <= s.length <= 10^5' }],
+      templates: {
+        python: { code: 'def isPalindrome(s):\n    # Your code here\n    pass\n\ns = input()\nprint("true" if isPalindrome(s) else "false")', functionName: 'isPalindrome' },
+        javascript: { code: 'function isPalindrome(s) {\n    // Your code here\n}\n\nconst readline = require("readline");\nconst rl = readline.createInterface({ input: process.stdin });\nrl.on("line", (line) => {\n    console.log(isPalindrome(line) ? "true" : "false");\n    rl.close();\n});', functionName: 'isPalindrome' }
+      }
+    }
+  },
+  'Longest Substring Without Repeating Characters': {
+    testCases: [
+      { input: 'abcabcbb', expectedOutput: '3', isSample: true, order: 1, description: 'Standard case (abc)' },
+      { input: 'bbbbb', expectedOutput: '1', isSample: true, order: 2, description: 'All same characters' },
+      { input: 'pwwkew', expectedOutput: '3', isSample: true, order: 3, description: 'wke is longest' },
+      { input: '', expectedOutput: '0', isHidden: true, order: 4, description: 'Empty string', isEdgeCase: true, edgeCaseType: 'empty-input' },
+      { input: 'abcdefghijklmnop', expectedOutput: '16', isHidden: true, order: 5, description: 'All unique characters' }
+    ],
+    template: {
+      inputFormat: 'A string',
+      outputFormat: 'Length of longest substring without repeating characters',
+      constraints: [{ description: 'String length', value: '0 <= s.length <= 5 * 10^4' }],
+      templates: {
+        python: { code: 'def lengthOfLongestSubstring(s):\n    # Your code here\n    pass\n\ns = input()\nprint(lengthOfLongestSubstring(s))', functionName: 'lengthOfLongestSubstring' },
+        javascript: { code: 'function lengthOfLongestSubstring(s) {\n    // Your code here\n}\n\nconst readline = require("readline");\nconst rl = readline.createInterface({ input: process.stdin });\nrl.on("line", (line) => {\n    console.log(lengthOfLongestSubstring(line));\n    rl.close();\n});', functionName: 'lengthOfLongestSubstring' }
+      }
+    }
+  },
+  'Valid Parentheses - Check balanced brackets': {
+    testCases: [
+      { input: '()', expectedOutput: 'true', isSample: true, order: 1, description: 'Simple valid' },
+      { input: '()[]{}', expectedOutput: 'true', isSample: true, order: 2, description: 'Multiple types' },
+      { input: '(]', expectedOutput: 'false', isSample: true, order: 3, description: 'Mismatched types' },
+      { input: '([)]', expectedOutput: 'false', isHidden: true, order: 4, description: 'Interleaved invalid' },
+      { input: '{[]}', expectedOutput: 'true', isHidden: true, order: 5, description: 'Nested valid' },
+      { input: '', expectedOutput: 'true', isHidden: true, order: 6, description: 'Empty string', isEdgeCase: true, edgeCaseType: 'empty-input' }
+    ],
+    template: {
+      inputFormat: 'A string containing only ()[]{}',
+      outputFormat: 'true or false',
+      constraints: [{ description: 'String length', value: '0 <= s.length <= 10^4' }],
+      templates: {
+        python: { code: 'def isValid(s):\n    # Your code here\n    pass\n\ns = input()\nprint("true" if isValid(s) else "false")', functionName: 'isValid' },
+        javascript: { code: 'function isValid(s) {\n    // Your code here\n}\n\nconst readline = require("readline");\nconst rl = readline.createInterface({ input: process.stdin });\nrl.on("line", (line) => {\n    console.log(isValid(line) ? "true" : "false");\n    rl.close();\n});', functionName: 'isValid' }
+      }
+    }
+  },
+  'Climbing Stairs - Count ways to reach nth step': {
+    testCases: [
+      { input: '2', expectedOutput: '2', isSample: true, order: 1, description: 'Two steps: 1+1 or 2' },
+      { input: '3', expectedOutput: '3', isSample: true, order: 2, description: 'Three steps: 1+1+1, 1+2, 2+1' },
+      { input: '1', expectedOutput: '1', isSample: false, order: 3, description: 'Single step', isEdgeCase: true, edgeCaseType: 'single-element' },
+      { input: '5', expectedOutput: '8', isHidden: true, order: 4, description: 'Five steps' },
+      { input: '10', expectedOutput: '89', isHidden: true, order: 5, description: 'Ten steps' }
+    ],
+    template: {
+      inputFormat: 'An integer n (number of steps)',
+      outputFormat: 'Number of distinct ways to climb',
+      constraints: [{ description: 'Step count', value: '1 <= n <= 45' }],
+      templates: {
+        python: { code: 'def climbStairs(n):\n    # Your code here\n    pass\n\nn = int(input())\nprint(climbStairs(n))', functionName: 'climbStairs' },
+        javascript: { code: 'function climbStairs(n) {\n    // Your code here\n}\n\nconst readline = require("readline");\nconst rl = readline.createInterface({ input: process.stdin });\nrl.on("line", (line) => {\n    console.log(climbStairs(parseInt(line)));\n    rl.close();\n});', functionName: 'climbStairs' }
+      }
+    }
+  },
+  'Maximum Subarray Sum (Kadane\'s Algorithm)': {
+    testCases: [
+      { input: '[-2,1,-3,4,-1,2,1,-5,4]', expectedOutput: '6', isSample: true, order: 1, description: 'Standard case [4,-1,2,1]' },
+      { input: '[1]', expectedOutput: '1', isSample: true, order: 2, description: 'Single element', isEdgeCase: true, edgeCaseType: 'single-element' },
+      { input: '[5,4,-1,7,8]', expectedOutput: '23', isSample: false, order: 3, description: 'Entire array is max' },
+      { input: '[-1]', expectedOutput: '-1', isHidden: true, order: 4, description: 'Single negative', isEdgeCase: true, edgeCaseType: 'negative' },
+      { input: '[-2,-1,-3,-4]', expectedOutput: '-1', isHidden: true, order: 5, description: 'All negatives', isEdgeCase: true, edgeCaseType: 'negative' }
+    ],
+    template: {
+      inputFormat: 'Array of integers',
+      outputFormat: 'Maximum subarray sum',
+      constraints: [{ description: 'Array length', value: '1 <= nums.length <= 10^5' }],
+      templates: {
+        python: { code: 'def maxSubArray(nums):\n    # Your code here\n    pass\n\nnums = eval(input())\nprint(maxSubArray(nums))', functionName: 'maxSubArray' },
+        javascript: { code: 'function maxSubArray(nums) {\n    // Your code here\n}\n\nconst readline = require("readline");\nconst rl = readline.createInterface({ input: process.stdin });\nrl.on("line", (line) => {\n    console.log(maxSubArray(JSON.parse(line)));\n    rl.close();\n});', functionName: 'maxSubArray' }
+      }
+    }
+  },
+  'Maximum Depth of Binary Tree': {
+    testCases: [
+      { input: '[3,9,20,null,null,15,7]', expectedOutput: '3', isSample: true, order: 1, description: 'Standard tree depth 3' },
+      { input: '[1,null,2]', expectedOutput: '2', isSample: true, order: 2, description: 'Skewed tree' },
+      { input: '[]', expectedOutput: '0', isSample: false, order: 3, description: 'Empty tree', isEdgeCase: true, edgeCaseType: 'empty-input' },
+      { input: '[1]', expectedOutput: '1', isHidden: true, order: 4, description: 'Single node', isEdgeCase: true, edgeCaseType: 'single-element' },
+      { input: '[1,2,3,4,5,6,7]', expectedOutput: '3', isHidden: true, order: 5, description: 'Complete binary tree' }
+    ],
+    template: {
+      inputFormat: 'Level-order array representation of binary tree (null for missing nodes)',
+      outputFormat: 'Maximum depth (integer)',
+      constraints: [{ description: 'Node count', value: '0 <= number of nodes <= 10^4' }],
+      templates: {
+        python: { code: '# Definition for a binary tree node\nclass TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\ndef maxDepth(root):\n    # Your code here\n    pass\n\n# Input parsing handled by judge', functionName: 'maxDepth' },
+        javascript: { code: '// Definition for a binary tree node\nfunction TreeNode(val, left, right) {\n    this.val = (val===undefined ? 0 : val);\n    this.left = (left===undefined ? null : left);\n    this.right = (right===undefined ? null : right);\n}\n\nfunction maxDepth(root) {\n    // Your code here\n}\n\n// Input parsing handled by judge', functionName: 'maxDepth' }
+      }
+    }
+  },
+  'Number of Islands': {
+    testCases: [
+      { input: '[["1","1","1","1","0"],["1","1","0","1","0"],["1","1","0","0","0"],["0","0","0","0","0"]]', expectedOutput: '1', isSample: true, order: 1, description: 'Single island' },
+      { input: '[["1","1","0","0","0"],["1","1","0","0","0"],["0","0","1","0","0"],["0","0","0","1","1"]]', expectedOutput: '3', isSample: true, order: 2, description: 'Multiple islands' },
+      { input: '[["0"]]', expectedOutput: '0', isSample: false, order: 3, description: 'No islands', isEdgeCase: true, edgeCaseType: 'empty-input' },
+      { input: '[["1"]]', expectedOutput: '1', isHidden: true, order: 4, description: 'Single cell island', isEdgeCase: true, edgeCaseType: 'single-element' },
+      { input: '[["1","0","1","0","1"],["0","1","0","1","0"],["1","0","1","0","1"]]', expectedOutput: '8', isHidden: true, order: 5, description: 'Checkerboard pattern' }
+    ],
+    template: {
+      inputFormat: '2D grid of "1"s (land) and "0"s (water)',
+      outputFormat: 'Number of islands (integer)',
+      constraints: [{ description: 'Grid size', value: 'm == grid.length, n == grid[i].length' }, { description: 'Dimensions', value: '1 <= m, n <= 300' }],
+      templates: {
+        python: { code: 'def numIslands(grid):\n    # Your code here\n    pass\n\ngrid = eval(input())\nprint(numIslands(grid))', functionName: 'numIslands' },
+        javascript: { code: 'function numIslands(grid) {\n    // Your code here\n}\n\nconst readline = require("readline");\nconst rl = readline.createInterface({ input: process.stdin });\nrl.on("line", (line) => {\n    console.log(numIslands(JSON.parse(line)));\n    rl.close();\n});', functionName: 'numIslands' }
+      }
+    }
+  }
+};
+
 const seedDB = async () => {
   try {
     await connectDB();
@@ -984,14 +1231,16 @@ const seedDB = async () => {
     await Question.deleteMany({});
     await Company.deleteMany({});
     await SurveyQuestion.deleteMany({});
-    console.log('Cleared existing questions, companies, and survey questions');
+    await TestCase.deleteMany({});
+    await CodeTemplate.deleteMany({});
+    console.log('Cleared existing questions, companies, survey questions, test cases, and code templates');
 
     // Seed aptitude questions
     await Question.insertMany(aptitudeQuestions);
     console.log(`Seeded ${aptitudeQuestions.length} aptitude questions`);
 
     // Seed DSA questions
-    await Question.insertMany(dsaQuestions);
+    const insertedDsaQuestions = await Question.insertMany(dsaQuestions);
     console.log(`Seeded ${dsaQuestions.length} DSA questions`);
 
     // Seed HR questions
@@ -1006,9 +1255,45 @@ const seedDB = async () => {
     await SurveyQuestion.insertMany(surveyQuestions);
     console.log(`Seeded ${surveyQuestions.length} survey questions`);
 
+    // Seed test cases and code templates for DSA questions
+    let testCaseCount = 0;
+    let templateCount = 0;
+
+    for (const dsaQ of insertedDsaQuestions) {
+      const testData = dsaTestCasesData[dsaQ.question];
+      if (testData) {
+        // Insert test cases
+        if (testData.testCases && testData.testCases.length > 0) {
+          const testCasesToInsert = testData.testCases.map(tc => ({
+            questionId: dsaQ._id,
+            ...tc
+          }));
+          await TestCase.insertMany(testCasesToInsert);
+          testCaseCount += testCasesToInsert.length;
+        }
+
+        // Insert code template
+        if (testData.template) {
+          await CodeTemplate.create({
+            questionId: dsaQ._id,
+            inputFormat: testData.template.inputFormat || '',
+            outputFormat: testData.template.outputFormat || '',
+            constraints: testData.template.constraints || [],
+            templates: testData.template.templates || {}
+          });
+          templateCount++;
+        }
+      }
+    }
+
+    console.log(`Seeded ${testCaseCount} test cases for DSA problems`);
+    console.log(`Seeded ${templateCount} code templates for DSA problems`);
+
     console.log('\nSeed complete!');
     console.log(`Total questions: ${aptitudeQuestions.length + dsaQuestions.length + hrQuestions.length}`);
     console.log(`Survey questions: ${surveyQuestions.length}`);
+    console.log(`Test cases: ${testCaseCount}`);
+    console.log(`Code templates: ${templateCount}`);
 
     process.exit(0);
   } catch (err) {

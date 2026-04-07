@@ -155,6 +155,17 @@
           </div>
         </div>
 
+        <!-- Recommendations Section -->
+        <div class="recommendations-section animate-fade-up delay-1">
+          <div class="section-header">
+            <h3>🎯 Recommended For You</h3>
+            <a href="survey.html">Retake Assessment →</a>
+          </div>
+          <div class="recommendations-grid" id="recommendationsGrid">
+            <div class="loading-text">Loading recommendations...</div>
+          </div>
+        </div>
+
         <!-- Charts Row -->
         <div class="dashboard-charts animate-fade-up delay-2">
           <!-- Progress Chart -->
@@ -435,8 +446,9 @@
           }
         }
 
-        // Load activity
+        // Load activity and recommendations
         loadActivity();
+        loadRecommendations();
       } catch (err) {
         console.error('Dashboard load error:', err);
       }
@@ -472,6 +484,85 @@
           </div>`;
         }).join('');
       } catch (err) { console.error('Activity load error:', err); }
+    }
+
+    async function loadRecommendations() {
+      try {
+        const res = await apiGetDashboardRecommendations();
+        const grid = document.getElementById('recommendationsGrid');
+        if (!grid) return;
+
+        if (!res || !res.success || !res.data || res.data.length === 0) {
+          grid.innerHTML = `
+            <div class="recommendation-empty">
+              <i class="fa-solid fa-lightbulb"></i>
+              <p>Complete the <a href="survey.html">Knowledge Assessment</a> to get personalized recommendations!</p>
+            </div>
+          `;
+          return;
+        }
+
+        const priorityLabels = {
+          100: 'Continue',
+          95: 'Important',
+          90: 'Focus Area',
+          85: 'Challenge',
+          80: 'Daily Goal'
+        };
+
+        const typeColors = {
+          'continue': 'purple',
+          'weak-topic': 'red',
+          'challenge': 'orange',
+          'daily-practice': 'red',
+          'assessment': 'blue',
+          'dsa': 'green',
+          'aptitude': 'purple',
+          'hr': 'orange'
+        };
+
+        grid.innerHTML = res.data.map(rec => {
+          const color = typeColors[rec.type] || 'purple';
+          const priorityLabel = priorityLabels[rec.priority] || 'Recommended';
+          const icon = rec.icon || 'fa-lightbulb';
+
+          return `
+            <div class="recommendation-card rec-${color}">
+              <div class="rec-header">
+                <div class="rec-icon"><i class="fa-solid ${icon}"></i></div>
+                <span class="rec-priority priority-${rec.priority >= 90 ? 'high' : rec.priority >= 80 ? 'medium' : 'low'}">${priorityLabel}</span>
+              </div>
+              <h4 class="rec-title">${rec.title}</h4>
+              <p class="rec-description">${rec.description}</p>
+              <a href="${rec.actionUrl}" class="rec-action btn btn-sm">
+                ${rec.actionText || 'Start'} <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error('Recommendations load error:', err);
+        const grid = document.getElementById('recommendationsGrid');
+        if (grid) {
+          grid.innerHTML = '<div class="loading-text">Unable to load recommendations.</div>';
+        }
+      }
+    }
+
+    function getRecommendationUrl(rec) {
+      if (rec.targetUrl) return rec.targetUrl;
+      switch (rec.type) {
+        case 'dsa':
+          return rec.questionId ? `editor.html?id=${rec.questionId}` : 'dsa.html';
+        case 'aptitude':
+          return 'aptitude.html';
+        case 'hr':
+          return 'hr.html';
+        case 'topic':
+          return rec.topic ? `dsa.html?topic=${encodeURIComponent(rec.topic)}` : 'dsa.html';
+        default:
+          return 'survey.html';
+      }
     }
 
     // ---- Chart rendering ----

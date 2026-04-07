@@ -182,7 +182,7 @@
                 <th>Problem</th>
                 <th>Topic</th>
                 <th>Difficulty</th>
-                <th>Solution</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -306,7 +306,12 @@
           <td><span class="problem-title" onclick="openProblemModal('${p._id}')">${p.question}</span></td>
           <td><span class="topic-tag" style="background:${tc.bg};color:${tc.color};">${p.topic}</span></td>
           <td><span class="difficulty-badge difficulty-${p.difficulty}">${p.difficulty.charAt(0).toUpperCase() + p.difficulty.slice(1)}</span></td>
-          <td><button class="btn btn-sm btn-outline" onclick="openProblemModal('${p._id}')"><i class="fa-solid fa-eye"></i> View</button></td>
+          <td>
+            <div class="action-btns">
+              <button class="btn btn-sm btn-primary" onclick="openEditor('${p._id}')" title="Solve in Code Editor"><i class="fa-solid fa-code"></i> Solve</button>
+              <button class="btn btn-sm btn-outline" onclick="openProblemModal('${p._id}')" title="View Solution"><i class="fa-solid fa-eye"></i></button>
+            </div>
+          </td>
         </tr>`;
       }).join('');
     }
@@ -385,7 +390,10 @@
           <div style="background:var(--bg);border-radius:var(--radius-sm);padding:16px;font-size:0.85rem;color:var(--text-light);line-height:1.7;">
             <p>${p.solution || 'No solution available.'}</p>
           </div>
-          <div style="margin-top:24px;display:flex;gap:12px;">
+          <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="btn btn-primary btn-sm" onclick="openEditor('${p._id}')">
+              <i class="fa-solid fa-code"></i> Solve in Editor
+            </button>
             <button class="btn ${p.solved ? 'btn-outline' : 'btn-success'} btn-sm" onclick="toggleSolvedModal('${p._id}')">
               <i class="fa-solid fa-check"></i> ${p.solved ? 'Unmark Solved' : 'Mark as Solved'}
             </button>
@@ -413,6 +421,10 @@
     document.getElementById('problemModal').addEventListener('click', function(e) {
       if (e.target === this) closeProblemModal();
     });
+
+    function openEditor(problemId) {
+      window.location.href = `editor.html?id=${problemId}`;
+    }
   </script>
 </body>
 </html>

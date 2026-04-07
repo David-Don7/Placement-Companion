@@ -438,8 +438,177 @@
       transition: background var(--transition);
     }
     
-    .panel-resizer:hover {
+      .panel-resizer:hover {
       background: var(--primary);
+    }
+    
+    /* Solution Tab Styles */
+    .solution-section {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .solution-section:last-child {
+      border-bottom: none;
+    }
+    
+    .solution-section h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .solution-section h4 i {
+      color: var(--primary);
+      font-size: 0.85rem;
+    }
+    
+    .solution-text {
+      color: var(--text-light);
+      line-height: 1.7;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+    }
+    
+    .complexity-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .complexity-item {
+      background: var(--bg);
+      padding: 12px;
+      border-radius: var(--radius-sm);
+    }
+    
+    .complexity-label {
+      font-weight: 600;
+      color: var(--text);
+      margin-right: 8px;
+    }
+    
+    .complexity-value {
+      font-family: 'Fira Code', monospace;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .complexity-explain {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    
+    .edge-cases-list, .mistakes-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .edge-cases-list li, .mistakes-list li {
+      background: var(--bg);
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+    }
+    
+    .edge-cases-list li strong, .mistakes-list li strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 4px;
+    }
+    
+    .edge-cases-list li p, .mistakes-list li p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+    
+    .code-solution-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+    
+    .code-solution-tabs select {
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.85rem;
+    }
+    
+    .code-block {
+      background: #1a1a2e;
+      color: #e2e8f0;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .video-section .video-container {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+      background: #000;
+    }
+    
+    .video-container iframe, .video-container video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    .video-meta {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    
+    .related-problems {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .related-problem-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      text-decoration: none;
+      transition: background var(--transition);
+    }
+    
+    .related-problem-link:hover {
+      background: var(--border);
+    }
+    
+    .related-problem-link .difficulty-tag {
+      font-size: 0.7rem;
+      padding: 2px 8px;
     }
     
     /* Mobile adjustments */
@@ -493,6 +662,7 @@
       <div class="problem-panel" id="problemPanel">
         <div class="panel-tabs">
           <div class="panel-tab active" data-tab="description">Description</div>
+          <div class="panel-tab" data-tab="solution">Solution</div>
           <div class="panel-tab" data-tab="submissions">Submissions</div>
         </div>
         
@@ -515,6 +685,13 @@
         <div class="panel-content" id="submissionsTab" style="display:none;">
           <div class="submissions-list" id="submissionsList">
             <p style="color:var(--text-muted);text-align:center;padding:20px;">No submissions yet</p>
+          </div>
+        </div>
+        
+        <!-- Solution Tab -->
+        <div class="panel-content" id="solutionTab" style="display:none;">
+          <div id="solutionContent">
+            <p style="color:var(--text-muted);text-align:center;padding:20px;">Loading solution...</p>
           </div>
         </div>
       </div>
@@ -616,6 +793,8 @@
     let currentLanguage = 'python';
     let templates = {};
     let questionId = null;
+    let solutionLoaded = false;
+    let solutionData = null;
     
     // Get question ID from URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -1064,6 +1243,263 @@ fn main() {
       }
     }
     
+    // ---- Load Solution ----
+    async function loadSolution() {
+      if (solutionLoaded) return;
+      
+      const container = document.getElementById('solutionContent');
+      container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:20px;"><i class="fa-solid fa-spinner fa-spin"></i> Loading solution...</p>';
+      
+      try {
+        const res = await apiGetSolution(questionId);
+        
+        if (!res || !res.success) {
+          container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:20px;">Failed to load solution</p>';
+          return;
+        }
+        
+        solutionData = res.data;
+        solutionLoaded = true;
+        
+        renderSolution(res.data);
+        
+      } catch (err) {
+        console.error('Load solution error:', err);
+        container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:20px;">Error loading solution</p>';
+      }
+    }
+    
+    // ---- Render Solution ----
+    function renderSolution(data) {
+      const container = document.getElementById('solutionContent');
+      let html = '';
+      
+      // Basic solution (fallback)
+      if (data.basicSolution && !data.hasDetailedSolution) {
+        html += `
+          <div class="solution-section">
+            <h4><i class="fa-solid fa-lightbulb"></i> Solution Approach</h4>
+            <div class="solution-text">${escapeHtml(data.basicSolution)}</div>
+          </div>
+        `;
+      }
+      
+      // Detailed solution parts
+      if (data.hasDetailedSolution) {
+        // Intuition
+        if (data.intuition) {
+          html += `
+            <div class="solution-section">
+              <h4><i class="fa-solid fa-lightbulb"></i> Intuition</h4>
+              <div class="solution-text">${escapeHtml(data.intuition)}</div>
+            </div>
+          `;
+        }
+        
+        // Algorithm Walkthrough
+        if (data.algorithmWalkthrough) {
+          html += `
+            <div class="solution-section">
+              <h4><i class="fa-solid fa-list-ol"></i> Algorithm</h4>
+              <div class="solution-text">${escapeHtml(data.algorithmWalkthrough)}</div>
+            </div>
+          `;
+        }
+        
+        // Complexity
+        if (data.complexity && (data.complexity.time || data.complexity.space)) {
+          html += `
+            <div class="solution-section">
+              <h4><i class="fa-solid fa-clock"></i> Complexity Analysis</h4>
+              <div class="complexity-grid">
+                ${data.complexity.time ? `
+                  <div class="complexity-item">
+                    <span class="complexity-label">Time:</span>
+                    <span class="complexity-value">${escapeHtml(data.complexity.time)}</span>
+                    ${data.complexity.timeExplanation ? `<p class="complexity-explain">${escapeHtml(data.complexity.timeExplanation)}</p>` : ''}
+                  </div>
+                ` : ''}
+                ${data.complexity.space ? `
+                  <div class="complexity-item">
+                    <span class="complexity-label">Space:</span>
+                    <span class="complexity-value">${escapeHtml(data.complexity.space)}</span>
+                    ${data.complexity.spaceExplanation ? `<p class="complexity-explain">${escapeHtml(data.complexity.spaceExplanation)}</p>` : ''}
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }
+        
+        // Edge Cases
+        if (data.edgeCases && data.edgeCases.length > 0) {
+          html += `
+            <div class="solution-section">
+              <h4><i class="fa-solid fa-triangle-exclamation"></i> Edge Cases</h4>
+              <ul class="edge-cases-list">
+                ${data.edgeCases.map(ec => `
+                  <li>
+                    <strong>${escapeHtml(ec.case)}</strong>
+                    ${ec.handling ? `<p>${escapeHtml(ec.handling)}</p>` : ''}
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          `;
+        }
+        
+        // Common Mistakes
+        if (data.commonMistakes && data.commonMistakes.length > 0) {
+          html += `
+            <div class="solution-section">
+              <h4><i class="fa-solid fa-xmark"></i> Common Mistakes</h4>
+              <ul class="mistakes-list">
+                ${data.commonMistakes.map(cm => `
+                  <li>
+                    <strong>${escapeHtml(cm.mistake)}</strong>
+                    ${cm.explanation ? `<p>${escapeHtml(cm.explanation)}</p>` : ''}
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          `;
+        }
+      }
+      
+      // Code Solutions
+      html += `
+        <div class="solution-section">
+          <h4><i class="fa-solid fa-code"></i> Code Solution</h4>
+          <div class="code-solution-tabs">
+            <select id="solutionLangSelect" onchange="switchSolutionLanguage(this.value)">
+              <option value="python">Python</option>
+              <option value="javascript">JavaScript</option>
+              <option value="java">Java</option>
+              <option value="cpp">C++</option>
+            </select>
+            <button class="btn btn-sm btn-outline" onclick="copySolutionCode()" title="Copy code">
+              <i class="fa-solid fa-copy"></i>
+            </button>
+            <button class="btn btn-sm btn-primary" onclick="loadSolutionToEditor()" title="Load to editor">
+              <i class="fa-solid fa-arrow-right"></i> Use This
+            </button>
+          </div>
+          <pre class="code-block" id="solutionCodeBlock">${getSolutionCode('python')}</pre>
+        </div>
+      `;
+      
+      // Video Solution
+      if (data.hasVideoSolution && data.video) {
+        html += `
+          <div class="solution-section video-section">
+            <h4><i class="fa-solid fa-video"></i> Video Explanation</h4>
+            <div class="video-container">
+              ${data.video.platform === 'youtube' ? `
+                <iframe 
+                  src="${data.video.embedUrl}" 
+                  title="${escapeHtml(data.video.title)}"
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen>
+                </iframe>
+              ` : data.video.platform === 'vimeo' ? `
+                <iframe 
+                  src="${data.video.embedUrl}" 
+                  title="${escapeHtml(data.video.title)}"
+                  frameborder="0" 
+                  allow="autoplay; fullscreen; picture-in-picture" 
+                  allowfullscreen>
+                </iframe>
+              ` : `
+                <video controls src="${data.video.url}"></video>
+              `}
+            </div>
+            ${data.video.author ? `<p class="video-meta">By: ${escapeHtml(data.video.author)}</p>` : ''}
+          </div>
+        `;
+      }
+      
+      // Related Problems
+      if (data.relatedProblems && data.relatedProblems.length > 0) {
+        html += `
+          <div class="solution-section">
+            <h4><i class="fa-solid fa-link"></i> Related Problems</h4>
+            <div class="related-problems">
+              ${data.relatedProblems.filter(rp => rp.questionId).map(rp => `
+                <a href="editor.html?id=${rp.questionId}" class="related-problem-link">
+                  <span class="difficulty-tag difficulty-${rp.difficulty || 'easy'}">${capitalize(rp.difficulty || 'easy')}</span>
+                  ${escapeHtml(rp.title)}
+                </a>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+      
+      // If no content
+      if (!html) {
+        html = '<p style="color:var(--text-muted);text-align:center;padding:20px;">No solution available for this problem yet.</p>';
+      }
+      
+      container.innerHTML = html;
+    }
+    
+    function getSolutionCode(language) {
+      if (!solutionData) return '// No solution available';
+      
+      // Check detailed solution first
+      if (solutionData.codeSolutions && solutionData.codeSolutions[language] && solutionData.codeSolutions[language].code) {
+        return escapeHtml(solutionData.codeSolutions[language].code);
+      }
+      
+      // Fallback to basic solution
+      return escapeHtml(solutionData.basicSolution || '// No code solution available for this language');
+    }
+    
+    function switchSolutionLanguage(language) {
+      document.getElementById('solutionCodeBlock').textContent = getSolutionCode(language);
+    }
+    
+    function copySolutionCode() {
+      const lang = document.getElementById('solutionLangSelect').value;
+      let code = '';
+      
+      if (solutionData && solutionData.codeSolutions && solutionData.codeSolutions[lang]) {
+        code = solutionData.codeSolutions[lang].code || '';
+      }
+      
+      if (!code && solutionData) {
+        code = solutionData.basicSolution || '';
+      }
+      
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Code copied to clipboard', 'success');
+      }).catch(() => {
+        showToast('Failed to copy', 'error');
+      });
+    }
+    
+    function loadSolutionToEditor() {
+      const lang = document.getElementById('solutionLangSelect').value;
+      let code = '';
+      
+      if (solutionData && solutionData.codeSolutions && solutionData.codeSolutions[lang]) {
+        code = solutionData.codeSolutions[lang].code || '';
+      }
+      
+      if (code) {
+        if (confirm('Load solution code into editor? Your current code will be replaced.')) {
+          document.getElementById('languageSelect').value = lang;
+          setCodeTemplate(lang);
+          editor.setValue(code);
+          switchPanelTab('description');
+          showToast('Solution loaded into editor', 'success');
+        }
+      } else {
+        showToast('No code available for this language', 'info');
+      }
+    }
+    
     // ---- Reset Code ----
     function resetCode() {
       if (confirm('Reset code to template? Your changes will be lost.')) {
@@ -1088,6 +1524,12 @@ fn main() {
       
       document.getElementById('descriptionTab').style.display = tabName === 'description' ? 'block' : 'none';
       document.getElementById('submissionsTab').style.display = tabName === 'submissions' ? 'block' : 'none';
+      document.getElementById('solutionTab').style.display = tabName === 'solution' ? 'block' : 'none';
+      
+      // Load solution on first view
+      if (tabName === 'solution' && !solutionLoaded) {
+        loadSolution();
+      }
     }
     
     document.querySelectorAll('.output-tab').forEach(tab => {

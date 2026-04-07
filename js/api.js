@@ -268,6 +268,63 @@ async function apiGetCodeStats() {
   return apiFetch('/code/stats');
 }
 
+// ---- Solution API methods ----
+async function apiGetSolution(questionId) {
+  return apiFetch(`/solutions/${questionId}`);
+}
+
+async function apiGetCodeSolution(questionId, language) {
+  return apiFetch(`/solutions/${questionId}/code/${language}`);
+}
+
+async function apiGetAllCodeSolutions(questionId) {
+  return apiFetch(`/solutions/${questionId}/code`);
+}
+
+async function apiGetVideoSolution(questionId) {
+  return apiFetch(`/solutions/${questionId}/video`);
+}
+
+async function apiGetRelatedProblems(questionId) {
+  return apiFetch(`/solutions/${questionId}/related`);
+}
+
+// ---- Recommendation API methods ----
+async function apiGetRecommendations(limit = 10, type = null) {
+  let url = `/recommendations?limit=${limit}`;
+  if (type) url += `&type=${type}`;
+  return apiFetch(url);
+}
+
+async function apiGetDashboardRecommendations() {
+  return apiFetch('/recommendations/dashboard');
+}
+
+async function apiGetProblemRecommendations(topic = null, limit = 5) {
+  let url = `/recommendations/problems?limit=${limit}`;
+  if (topic) url += `&topic=${encodeURIComponent(topic)}`;
+  return apiFetch(url);
+}
+
+async function apiGetQuizRecommendations() {
+  return apiFetch('/recommendations/quizzes');
+}
+
+async function apiGetLearningPath() {
+  return apiFetch('/recommendations/learning-path');
+}
+
+async function apiRecordRecommendationInteraction(recommendationId, action) {
+  return apiFetch(`/recommendations/${recommendationId}/interact`, {
+    method: 'POST',
+    body: JSON.stringify({ action })
+  });
+}
+
+async function apiRefreshRecommendations() {
+  return apiFetch('/recommendations/refresh', { method: 'POST' });
+}
+
 // ---- Update sidebar user info across pages ----
 function updateSidebarUser() {
   const user = getUser();

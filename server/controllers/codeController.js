@@ -255,19 +255,25 @@ exports.submitCode = async (req, res) => {
     
     // Get all test cases (including hidden)
     const testCases = await TestCase.find({ questionId }).sort('order');
-    
-    if (testCases.length === 0) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'No test cases found for this problem' 
-      });
-    }
-    
-    // Execute code against all test cases
-    const results = await executeCode(language, code, testCases);
-    
+    const hasOfficialTestCases = testCases.length > 0;
+
+    // If no official test cases exist, run a syntax/runtime-only validation pass
+    const executionCases = hasOfficialTestCases
+      ? testCases
+      : [{
+          input: '',
+          expectedOutput: '',
+          isCustom: true,
+          isHidden: false,
+          timeLimit: 5000,
+          memoryLimit: 256 * 1024 * 1024
+        }];
+
+    // Execute code against all available test cases
+    const results = await executeCode(language, code, executionCases);
+
     // Determine verdict
-    let verdict = 'accepted';
+    let verdict = hasOfficialTestCases ? 'accepted' : 'pending';
     const hasError = results.some(r => r.error);
     const allPassed = results.every(r => r.passed);
     
@@ -282,7 +288,7 @@ exports.submitCode = async (req, res) => {
       } else {
         verdict = 'runtime-error';
       }
-    } else if (!allPassed) {
+    } else if (hasOfficialTestCases && !allPassed) {
       verdict = 'wrong-answer';
     }
     
@@ -310,8 +316,8 @@ exports.submitCode = async (req, res) => {
       executedAt: new Date()
     });
     
-    // Update DSA progress if accepted
-    if (verdict === 'accepted') {
+    // Update DSA progress only when accepted against official test cases
+    if (verdict === 'accepted' && hasOfficialTestCases) {
       await DSAProgress.findOneAndUpdate(
         { userId: req.user._id, questionId },
         { 
@@ -335,7 +341,7 @@ exports.submitCode = async (req, res) => {
     }
     
     // Calculate percentiles (simplified - would need actual data for real percentiles)
-    if (verdict === 'accepted') {
+    if (verdict === 'accepted' && hasOfficialTestCases) {
       submission.metrics.runtimePercentile = Math.round(Math.random() * 40 + 50); // Mock: 50-90%
       submission.metrics.memoryPercentile = Math.round(Math.random() * 40 + 50);
       await submission.save();
@@ -357,7 +363,10 @@ exports.submitCode = async (req, res) => {
           expectedOutput: r.isHidden && verdict !== 'accepted' ? '[Hidden]' : r.expectedOutput,
           actualOutput: r.actualOutput
         })),
-        metrics: submission.metrics
+        metrics: submission.metrics,
+        note: hasOfficialTestCases
+          ? ''
+          : 'No official test cases configured for this problem yet. This result validates syntax/runtime only.'
       }
     });
   } catch (err) {

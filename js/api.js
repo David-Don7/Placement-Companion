@@ -349,17 +349,12 @@ async function apiSubmitAptitude(answers) {
   });
 }
 
-// ---- Post-auth redirect (handles first-login assessment check) ----
+// ---- Post-auth redirect (always go to dashboard) ----
 function getPostAuthRedirect() {
-  const user = getUser();
-  // Check for new assessment first, fallback to old aptitude test
-  if (user && !user.assessment_completed && !user.aptitude_test_completed) {
-    return 'survey.html';
-  }
   return 'dashboard.html';
 }
 
-// ---- Check if user has completed initial assessment ----
+// ---- Check if user has completed initial assessment (optional check) ----
 function hasCompletedAssessment() {
   const user = getUser();
   return user && (user.assessment_completed || user.aptitude_test_completed);

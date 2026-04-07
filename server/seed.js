@@ -8,6 +8,54 @@ const Company = require('./models/Company');
 const SurveyQuestion = require('./models/SurveyQuestion');
 const TestCase = require('./models/TestCase');
 const CodeTemplate = require('./models/CodeTemplate');
+const Solution = require('./models/Solution');
+
+const SUPPORTED_LANGUAGES = ['python', 'javascript', 'typescript', 'java', 'cpp', 'c', 'go', 'rust'];
+
+function toFunctionName(questionText) {
+  const cleaned = (questionText || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .trim();
+
+  if (!cleaned) return 'solve';
+
+  const words = cleaned.split(/\s+/).slice(0, 5);
+  const [first, ...rest] = words;
+  const camel = first + rest.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+  return camel || 'solve';
+}
+
+function getFallbackCode(language, functionName) {
+  const fn = functionName || 'solve';
+  const map = {
+    python: `def ${fn}(data):\n    # Write your solution here\n    return data\n\nif __name__ == "__main__":\n    import sys\n    raw = sys.stdin.read().strip()\n    print(${fn}(raw))`,
+    javascript: `function ${fn}(data) {\n  // Write your solution here\n  return data;\n}\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim();\nconsole.log(${fn}(input));`,
+    typescript: `function ${fn}(data: string): string {\n  // Write your solution here\n  return data;\n}\n\nimport * as fs from 'fs';\nconst input = fs.readFileSync(0, 'utf8').trim();\nconsole.log(${fn}(input));`,
+    java: `import java.util.*;\n\nclass Solution {\n    public String ${fn}(String data) {\n        // Write your solution here\n        return data;\n    }\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String input = sc.hasNextLine() ? sc.nextLine() : \"\";\n        Solution sol = new Solution();\n        System.out.println(sol.${fn}(input));\n    }\n}`,
+    cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nstring ${fn}(const string& data) {\n    // Write your solution here\n    return data;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    string input;\n    getline(cin, input);\n    cout << ${fn}(input);\n    return 0;\n}`,
+    c: `#include <stdio.h>\n\nvoid ${fn}(char* data) {\n    // Write your solution here\n    printf("%s", data);\n}\n\nint main() {\n    char input[10000] = {0};\n    fgets(input, sizeof(input), stdin);\n    ${fn}(input);\n    return 0;\n}`,
+    go: `package main\n\nimport (\n    \"bufio\"\n    \"fmt\"\n    \"os\"\n)\n\nfunc ${fn}(data string) string {\n    // Write your solution here\n    return data\n}\n\nfunc main() {\n    scanner := bufio.NewScanner(os.Stdin)\n    input := \"\"\n    if scanner.Scan() {\n        input = scanner.Text()\n    }\n    fmt.Println(${fn}(input))\n}`,
+    rust: `use std::io::{self, Read};\n\nfn ${fn}(data: String) -> String {\n    // Write your solution here\n    data\n}\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    println!(\"{}\", ${fn}(input.trim().to_string()));\n}`
+  };
+
+  return map[language] || `// Write your solution for ${language}`;
+}
+
+function buildCodeSolutions(questionText, basicSolution, templateMap = {}) {
+  const functionName = toFunctionName(questionText);
+  const codeSolutions = {};
+
+  for (const language of SUPPORTED_LANGUAGES) {
+    const templateCode = templateMap?.[language]?.code || '';
+    codeSolutions[language] = {
+      code: templateCode || getFallbackCode(language, functionName),
+      explanation: basicSolution || 'Reference implementation for this problem.'
+    };
+  }
+
+  return codeSolutions;
+}
 
 const connectDB = async () => {
   const conn = await mongoose.connect(process.env.MONGO_URI);
@@ -1233,7 +1281,8 @@ const seedDB = async () => {
     await SurveyQuestion.deleteMany({});
     await TestCase.deleteMany({});
     await CodeTemplate.deleteMany({});
-    console.log('Cleared existing questions, companies, survey questions, test cases, and code templates');
+    await Solution.deleteMany({});
+    console.log('Cleared existing questions, companies, survey questions, test cases, code templates, and solutions');
 
     // Seed aptitude questions
     await Question.insertMany(aptitudeQuestions);
@@ -1258,6 +1307,7 @@ const seedDB = async () => {
     // Seed test cases and code templates for DSA questions
     let testCaseCount = 0;
     let templateCount = 0;
+    let solutionCount = 0;
 
     for (const dsaQ of insertedDsaQuestions) {
       const testData = dsaTestCasesData[dsaQ.question];
@@ -1284,16 +1334,40 @@ const seedDB = async () => {
           templateCount++;
         }
       }
+
+      // Insert solution with all supported language code blocks
+      await Solution.create({
+        questionId: dsaQ._id,
+        intuition: dsaQ.solution || '',
+        algorithmWalkthrough: dsaQ.solution || '',
+        complexity: {
+          time: '',
+          space: '',
+          timeExplanation: '',
+          spaceExplanation: ''
+        },
+        codeSolutions: buildCodeSolutions(
+          dsaQ.question,
+          dsaQ.solution,
+          testData?.template?.templates || {}
+        ),
+        tags: [dsaQ.topic, dsaQ.difficulty],
+        difficultyToUnderstand: dsaQ.difficulty === 'hard' ? 'hard' : 'medium',
+        isComplete: true
+      });
+      solutionCount++;
     }
 
     console.log(`Seeded ${testCaseCount} test cases for DSA problems`);
     console.log(`Seeded ${templateCount} code templates for DSA problems`);
+    console.log(`Seeded ${solutionCount} detailed solution records`);
 
     console.log('\nSeed complete!');
     console.log(`Total questions: ${aptitudeQuestions.length + dsaQuestions.length + hrQuestions.length}`);
     console.log(`Survey questions: ${surveyQuestions.length}`);
     console.log(`Test cases: ${testCaseCount}`);
     console.log(`Code templates: ${templateCount}`);
+    console.log(`Solutions: ${solutionCount}`);
 
     process.exit(0);
   } catch (err) {

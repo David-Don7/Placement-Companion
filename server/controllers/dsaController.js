@@ -113,11 +113,40 @@ exports.getDSAStats = async (req, res) => {
     const solved = await DSAProgress.find({
       userId: req.user._id,
       solved: true
-    }).select('questionId');
+    }).select('questionId date');
     const solvedIds = solved.map(s => s.questionId);
 
-    const allProblems = await Question.find({ type: 'dsa' }).select('topic');
-    const solvedProblems = await Question.find({ _id: { $in: solvedIds }, type: 'dsa' }).select('topic');
+    const allProblems = await Question.find({ type: 'dsa' }).select('topic difficulty');
+    const solvedProblems = await Question.find({ _id: { $in: solvedIds }, type: 'dsa' }).select('topic difficulty');
+
+    // Calculate difficulty-based stats
+    const easySolved = solvedProblems.filter(p => p.difficulty === 'easy').length;
+    const mediumSolved = solvedProblems.filter(p => p.difficulty === 'medium').length;
+    const hardSolved = solvedProblems.filter(p => p.difficulty === 'hard').length;
+
+    // Calculate streak (consecutive days with at least one solve)
+    let streak = 0;
+    if (solved.length > 0) {
+      const sortedDates = solved
+        .map(s => new Date(s.date).toDateString())
+        .filter((date, index, self) => self.indexOf(date) === index)
+        .sort((a, b) => new Date(b) - new Date(a));
+      
+      const today = new Date().toDateString();
+      if (sortedDates[0] === today || sortedDates[0] === new Date(Date.now() - 86400000).toDateString()) {
+        streak = 1;
+        for (let i = 1; i < sortedDates.length; i++) {
+          const currentDate = new Date(sortedDates[i]);
+          const previousDate = new Date(sortedDates[i - 1]);
+          const diffDays = Math.floor((previousDate - currentDate) / 86400000);
+          if (diffDays === 1) {
+            streak++;
+          } else {
+            break;
+          }
+        }
+      }
+    }
 
     const topicTotal = {};
     const topicSolved = {};
@@ -134,7 +163,15 @@ exports.getDSAStats = async (req, res) => {
 
     res.json({
       success: true,
-      data: { totalProblems, solvedCount, topicStats }
+      data: { 
+        totalProblems, 
+        solvedCount, 
+        easySolved,
+        mediumSolved,
+        hardSolved,
+        streak,
+        topicStats 
+      }
     });
   } catch (err) {
     console.error(err);

@@ -11,27 +11,57 @@
   <link rel="stylesheet" href="css/style.css" />
   <style>
     /* Code Editor specific overrides */
+    body.editor-page {
+      min-height: 100vh;
+      overflow: hidden;
+      background: var(--bg);
+      --radius-md: var(--radius);
+    }
+
+    .editor-page .app-layout {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .editor-page .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 12px 20px;
+    }
+
+    .editor-page .topbar-right {
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
     .editor-layout {
       display: flex;
-      height: calc(100vh - 60px);
+      flex: 1;
+      min-height: 0;
       overflow: hidden;
     }
     
     .problem-panel {
-      width: 40%;
-      min-width: 350px;
-      max-width: 600px;
+      width: 44%;
+      flex: 0 0 44%;
+      min-width: 320px;
+      max-width: 70vw;
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       background: var(--surface);
+      min-height: 0;
     }
     
     .editor-panel {
-      flex: 1;
+      flex: 1 1 auto;
       display: flex;
       flex-direction: column;
-      min-width: 400px;
+      min-width: 320px;
+      min-height: 0;
     }
     
     .panel-tabs {
@@ -181,9 +211,9 @@
     
     /* Output Panel */
     .output-panel {
-      height: 200px;
+      height: 220px;
       min-height: 150px;
-      max-height: 400px;
+      max-height: 45vh;
       border-top: 1px solid var(--border);
       display: flex;
       flex-direction: column;
@@ -432,13 +462,28 @@
     
     /* Resizer */
     .panel-resizer {
-      width: 4px;
+      width: 10px;
+      flex: 0 0 10px;
       cursor: col-resize;
       background: transparent;
+      position: relative;
+      touch-action: none;
+    }
+
+    .panel-resizer::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      transform: translateX(-50%);
+      background: var(--border);
       transition: background var(--transition);
     }
-    
-      .panel-resizer:hover {
+
+    .panel-resizer:hover::before,
+    .panel-resizer.resizing::before {
       background: var(--primary);
     }
     
@@ -612,15 +657,17 @@
     }
     
     /* Mobile adjustments */
-    @media (max-width: 900px) {
+    @media (max-width: 1024px) {
       .editor-layout {
         flex-direction: column;
       }
       
       .problem-panel {
-        width: 100%;
+        width: 100% !important;
+        flex: 0 0 46%;
         max-width: none;
-        height: 40%;
+        min-width: 0;
+        min-height: 260px;
         border-right: none;
         border-bottom: 1px solid var(--border);
       }
@@ -632,14 +679,44 @@
       .panel-resizer {
         display: none;
       }
+
+      .editor-page .topbar {
+        padding: 10px 14px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-left {
+        gap: 10px;
+      }
+
+      .topbar-left h1 {
+        font-size: 0.95rem;
+      }
+
+      .topbar-left .breadcrumb {
+        display: none;
+      }
+
+      .panel-content {
+        padding: 14px;
+      }
+
+      .output-panel {
+        height: 190px;
+      }
+
+      .action-bar {
+        padding: 10px 12px;
+      }
     }
   </style>
 </head>
-<body>
+<body class="editor-page">
 
   <div class="app-layout">
     <!-- ===== Minimal Topbar for Editor ===== -->
-    <header class="topbar" style="position:sticky;top:0;z-index:50;">
+    <header class="topbar">
       <div class="topbar-left">
         <a href="dsa.html" class="btn btn-outline btn-sm" style="margin-right:12px;">
           <i class="fa-solid fa-arrow-left"></i> Back
@@ -1574,24 +1651,72 @@ fn main() {
     // ---- Panel Resizer ----
     const resizer = document.getElementById('panelResizer');
     const problemPanel = document.getElementById('problemPanel');
+    const editorLayout = document.querySelector('.editor-layout');
+    const mobileLayout = window.matchMedia('(max-width: 1024px)');
     let isResizing = false;
-    
-    resizer.addEventListener('mousedown', (e) => {
-      isResizing = true;
-      document.body.style.cursor = 'col-resize';
-    });
-    
-    document.addEventListener('mousemove', (e) => {
+
+    function relayoutEditor() {
+      if (editor && typeof editor.layout === 'function') {
+        requestAnimationFrame(() => editor.layout());
+      }
+    }
+
+    function setProblemPanelWidth(clientX) {
+      if (!editorLayout || mobileLayout.matches) return;
+      const rect = editorLayout.getBoundingClientRect();
+      const dividerWidth = 10;
+      const minPanelWidth = 320;
+      const minEditorWidth = 320;
+      const maxPanelWidth = rect.width - minEditorWidth - dividerWidth;
+      const targetWidth = clientX - rect.left;
+      const clampedWidth = Math.max(minPanelWidth, Math.min(targetWidth, maxPanelWidth));
+
+      problemPanel.style.flex = `0 0 ${clampedWidth}px`;
+      problemPanel.style.width = `${clampedWidth}px`;
+      relayoutEditor();
+    }
+
+    function stopResizing() {
       if (!isResizing) return;
-      const newWidth = e.clientX;
-      if (newWidth > 300 && newWidth < window.innerWidth - 400) {
-        problemPanel.style.width = newWidth + 'px';
+      isResizing = false;
+      resizer.classList.remove('resizing');
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      relayoutEditor();
+    }
+
+    resizer.addEventListener('pointerdown', (e) => {
+      if (mobileLayout.matches) return;
+      isResizing = true;
+      resizer.classList.add('resizing');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+      if (resizer.setPointerCapture) {
+        resizer.setPointerCapture(e.pointerId);
       }
     });
-    
-    document.addEventListener('mouseup', () => {
-      isResizing = false;
-      document.body.style.cursor = '';
+
+    resizer.addEventListener('pointermove', (e) => {
+      if (!isResizing) return;
+      setProblemPanelWidth(e.clientX);
+    });
+
+    resizer.addEventListener('dblclick', () => {
+      if (mobileLayout.matches) return;
+      problemPanel.style.flex = '0 0 44%';
+      problemPanel.style.width = '44%';
+      relayoutEditor();
+    });
+
+    window.addEventListener('pointerup', stopResizing);
+    window.addEventListener('pointercancel', stopResizing);
+
+    window.addEventListener('resize', () => {
+      if (mobileLayout.matches) {
+        problemPanel.style.width = '';
+        problemPanel.style.flex = '0 0 46%';
+      }
+      relayoutEditor();
     });
     
     // ---- Keyboard Shortcuts ----
